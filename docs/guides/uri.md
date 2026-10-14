@@ -39,7 +39,7 @@ names `github://host/...` and `gitlab://host/...`, which pin the kind.
   (`.../project/-/-/x`), and `path / "-"` writes it.
 - `ref` is the query parameter `?ref=`, carried to every child. Without it the default
   branch is read.
-- `owner`, `repo`, `repo_path`, `ref`, `instance` and `kind` are properties of the URI
+- `repo_owner`, `repo`, `repo_path`, `ref`, `instance` and `kind` are properties of the URI
   path. A URI with no owner or repository is a path that does not exist.
 
 ## The token

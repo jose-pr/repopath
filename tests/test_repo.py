@@ -37,10 +37,15 @@ def _gitlab_at(flavor, api_base, name="", **keywords):
 
 def test_owner_repo_repo_path():
     path = GitHubPath("src", "pkg", "mod.py", owner="acme", repo="widgets")
-    assert path.owner == "acme"
+    assert path.repo_owner == "acme"
     assert path.repo == "widgets"
     assert path.repo_path == "src/pkg/mod.py"
     assert path.instance == "github.com"
+
+
+def test_owner_is_left_to_the_user_that_owns_a_file():
+    path = GitHubPath("src", owner="acme", repo="widgets")
+    assert not isinstance(getattr(path, "owner", None), str)
 
 
 def test_repo_path_of_a_rooted_or_trailing_spelling_is_the_same():
@@ -124,7 +129,7 @@ def test_a_joined_path_keeps_the_backend_it_was_built_with():
     root = GitHubPath(owner="a", repo="w", token="mytoken")
     child = root / "sub" / "a.txt"
     assert child.backend is root.backend
-    assert (child.owner, child.repo, child.repo_path) == ("a", "w", "sub/a.txt")
+    assert (child.repo_owner, child.repo, child.repo_path) == ("a", "w", "sub/a.txt")
 
 
 # --- ref plumbing end-to-end, including through iterdir() ------------------
@@ -348,7 +353,7 @@ def test_gitlab_subgroup_project(flavor, gitlab_api_server):
         repo="widgets",
         backend=backend,
     )
-    assert (p.owner, p.repo, p.repo_path) == ("acme/team", "widgets", "sub/c.py")
+    assert (p.repo_owner, p.repo, p.repo_path) == ("acme/team", "widgets", "sub/c.py")
     assert p.read_bytes() == b"c"
     assert p.stat().st_size == 1
 

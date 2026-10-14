@@ -40,7 +40,7 @@ class GitLabPath(HostedRepoPath):
         # GitLab's own `/-/` ends the project path in its web URLs. It is
         # needed when the project is in a group, and when a name is `-`, which
         # would otherwise read as the separator.
-        owner = self.owner.split("/")
+        owner = self.repo_owner.split("/")
         if len(owner) > 1 or "-" in names:
             return [*owner, self.repo, "-", *names]
         return [*owner, self.repo, *names]
@@ -57,7 +57,7 @@ class GitLabPath(HostedRepoPath):
 
     @property
     def _project_id(self) -> str:
-        return _urlparse.quote(f"{self.owner}/{self.repo}", safe="")
+        return _urlparse.quote(f"{self.repo_owner}/{self.repo}", safe="")
 
     def _params(self, **extra) -> dict:
         ref = self.ref

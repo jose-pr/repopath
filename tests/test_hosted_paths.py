@@ -94,14 +94,14 @@ def test_the_ref_is_a_string_or_none_and_empty_means_none():
 def test_a_joined_path_keeps_the_place_and_a_keyword_moves_it(cls):
     root = cls(owner="o", repo="r", ref="v1", instance="h.example")
     same = cls(root, "a", "b")
-    assert (same.owner, same.repo, same.ref, same.instance) == (
+    assert (same.repo_owner, same.repo, same.ref, same.instance) == (
         "o",
         "r",
         "v1",
         "h.example",
     )
     moved = cls(root, "a", owner="p", repo="q", instance="g.example")
-    assert (moved.owner, moved.repo, moved.ref, moved.instance) == (
+    assert (moved.repo_owner, moved.repo, moved.ref, moved.instance) == (
         "p",
         "q",
         "v1",
@@ -327,7 +327,7 @@ def test_a_pickle_carries_the_place_and_the_names_and_never_a_token(cls):
     )
     again = pickle.loads(pickle.dumps(path))
     assert again == path
-    assert (again.owner, again.repo, again.ref, again.instance) == (
+    assert (again.repo_owner, again.repo, again.ref, again.instance) == (
         "o",
         "r",
         "v1",

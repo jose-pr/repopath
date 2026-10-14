@@ -41,7 +41,7 @@ class GitHubPath(HostedRepoPath):
 
     @property
     def _repo_url(self) -> str:
-        owner, repo = self._api_quote(self.owner), self._api_quote(self.repo)
+        owner, repo = self._api_quote(self.repo_owner), self._api_quote(self.repo)
         return f"{self._api_base}/repos/{owner}/{repo}"
 
     def _contents_url(self, path: "str | None" = None) -> str:

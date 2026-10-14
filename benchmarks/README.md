@@ -50,7 +50,7 @@ two kinds.
 
 | Suite | Operations | Groups |
 | --- | --- | --- |
-| `pure` | construct; construct and read `owner`, `repo`, `repo_path`, `ref`; join with `/`; `parent`; `str()`; `as_uri()`; `==` of equal paths; `hash()`; `URIPath(text)` by scheme (URI groups) | all six |
+| `pure` | construct; construct and read `repo_owner`, `repo`, `repo_path`, `ref`; join with `/`; `parent`; `str()`; `as_uri()`; `==` of equal paths; `hash()`; `URIPath(text)` by scheme (URI groups) | all six |
 | `read` | `stat()` of a file and of a directory; `iterdir()` of 100 entries; `read_bytes()` of a 1 KiB file; one `backend.request()` of the root listing, with no path | `github`, `gitlab`, and the two URI groups (the request alone: path groups only) |
 | `tree` | `walk()` of the whole tree; `stat()` of a file on a GitLab backend whose default branch is not cached | `github`, `gitlab`, and the two URI groups (the cached stat: GitLab groups only) |
 

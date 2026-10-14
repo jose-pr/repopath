@@ -178,9 +178,14 @@ def test_a_scheme_is_found_through_its_entry_point_without_importing_the_module(
 # --- the parts of a URI ------------------------------------------------------------------
 
 
+def test_a_uri_path_does_not_call_the_repository_owner_owner():
+    path = URIPath("github://github.com/acme/widgets/src")
+    assert not isinstance(getattr(path, "owner", None), str)
+
+
 def test_owner_repo_repo_path_and_ref_of_a_uri():
     path = URIPath("github://github.com/acme/widgets/src/pkg/mod.py?ref=v1.2.3")
-    assert (path.owner, path.repo, path.repo_path, path.ref) == (
+    assert (path.repo_owner, path.repo, path.repo_path, path.ref) == (
         "acme",
         "widgets",
         "src/pkg/mod.py",
@@ -215,7 +220,7 @@ def test_the_ref_is_read_from_the_query_and_defaults_to_none():
 )
 def test_gitlab_reads_the_separator_that_ends_the_project(text, owner, repo, repo_path):
     path = URIPath(text)
-    assert (path.owner, path.repo, path.repo_path) == (owner, repo, repo_path)
+    assert (path.repo_owner, path.repo, path.repo_path) == (owner, repo, repo_path)
 
 
 def test_a_gitlab_subgroup_project_reads_through_the_separator(gitlab_api_server):
@@ -491,8 +496,8 @@ def test_the_uri_of_a_path_names_the_path_it_was_made_from(core):
     path = URIPath(core.as_uri())
     twin = path._core_path
     assert type(twin) is type(core)
-    assert (twin.owner, twin.repo, twin.ref, twin.instance) == (
-        core.owner,
+    assert (twin.repo_owner, twin.repo, twin.ref, twin.instance) == (
+        core.repo_owner,
         core.repo,
         core.ref,
         core.instance,

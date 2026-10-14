@@ -45,7 +45,7 @@ class GitHubPath(RepoPath):
         token=None, backend=None,
     ): ...
     instance: str
-    owner: str
+    repo_owner: str
     repo: str
     ref: str | None
     repo_path: str
@@ -57,7 +57,7 @@ class GitLabPath(RepoPath):
         token=None, backend=None,
     ): ...
     instance: str
-    owner: str
+    repo_owner: str
     repo: str
     ref: str | None
     repo_path: str
@@ -247,7 +247,7 @@ module documents applies:
 class RepoURIPath(DelegatingURIPath):
     kind: str
     instance: str
-    owner: str
+    repo_owner: str
     repo: str
     repo_path: str
     ref: str | None
@@ -278,7 +278,7 @@ path too, and an error names the URI.
   path is built, naming `github://host/...` and `gitlab://host/...`, which pin the
   kind on any host. `git:`, `git+github:` and `git+gitlab:` are not schemes of
   this package.
-- `path.owner`, `repo`, `repo_path`, `ref`, `instance` and `kind` are read from
+- `path.repo_owner`, `repo`, `repo_path`, `ref`, `instance` and `kind` are read from
   the URI; a URI that holds no owner and repository (`github://github.com/acme`)
   is a path that does not exist (`FileNotFoundError`, no request).
 - The token is the user slot of the URI (`repo://TOKEN@host/...`) or its password

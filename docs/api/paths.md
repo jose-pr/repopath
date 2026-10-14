@@ -10,7 +10,7 @@ The paths need no URI and no library beyond `pathlib-next`.
       show_if_no_docstring: true
       filters: ["!^_"]
       inherited_members:
-        - owner
+        - repo_owner
         - repo
         - ref
         - instance

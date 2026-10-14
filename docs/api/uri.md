@@ -9,7 +9,7 @@ Needs `uripath`: `pip install "repopath[uri]"`.
       inherited_members:
         - kind
         - instance
-        - owner
+        - repo_owner
         - repo
         - repo_path
         - ref

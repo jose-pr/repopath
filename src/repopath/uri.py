@@ -143,7 +143,7 @@ class RepoURIPath(DelegatingURIPath):
         return (parts[0] if parts else ""), "", []
 
     @property
-    def owner(self) -> str:
+    def repo_owner(self) -> str:
         """The owner of the repository: the first segment (the group path of a
         GitLab project in a subgroup, ended by `/-/`)."""
         return self._split()[0]

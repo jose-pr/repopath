@@ -152,7 +152,7 @@ class HostedRepoPath(RepoPath):
         return self._place[0]
 
     @property
-    def owner(self) -> str:
+    def repo_owner(self) -> str:
         """The user, organization or group path that owns the repository."""
         return self._place[1]
 
@@ -173,7 +173,11 @@ class HostedRepoPath(RepoPath):
         return "/".join(name for name in self._segments if name)
 
     def __repr__(self) -> str:
-        shown = [repr(self.as_posix()), f"owner={self.owner!r}", f"repo={self.repo!r}"]
+        shown = [
+            repr(self.as_posix()),
+            f"owner={self.repo_owner!r}",
+            f"repo={self.repo!r}",
+        ]
         if self.ref:
             shown.append(f"ref={self.ref!r}")
         if self.instance.lower() != self.DEFAULT_INSTANCE:
@@ -190,7 +194,7 @@ class HostedRepoPath(RepoPath):
     def _uri_segments(self, names: "_ty.Sequence[str]") -> "list[str]":
         """The path segments of `as_uri()`: the owner, the repository and the
         names, with whatever separator the service's URLs use."""
-        return [self.owner, self.repo, *names]
+        return [self.repo_owner, self.repo, *names]
 
     @classmethod
     def _from_uri_segments(

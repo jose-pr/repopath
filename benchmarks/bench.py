@@ -334,10 +334,10 @@ def _pure_cases(group, backend):
 
     def parsed():
         made = make(name)
-        return made.owner, made.repo, made.repo_path, made.ref
+        return made.repo_owner, made.repo, made.repo_path, made.ref
 
     yield "construct", lambda: make(name)
-    yield "construct and read owner, repo, repo_path, ref", parsed
+    yield "construct and read repo_owner, repo, repo_path, ref", parsed
     yield "join with /", lambda: path / "other.py"
     yield "parent", lambda: path.parent
     yield "str()", lambda: str(path)

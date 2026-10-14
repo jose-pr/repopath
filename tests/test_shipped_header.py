@@ -305,10 +305,10 @@ def test_the_header_has_blocks_for_the_package():
             "Elsewhere is not a base",
         ),
         (
-            "    ): ...\n    instance: str\n    owner: str\n    repo: str\n"
+            "    ): ...\n    instance: str\n    repo_owner: str\n    repo: str\n"
             "    ref: str | None\n    repo_path: str\n"
             "    def as_uri(self) -> str: ...\n\nclass GitLabPath",
-            "    ): ...\n    instance: str\n    owner: str\n    repo: str\n"
+            "    ): ...\n    instance: str\n    repo_owner: str\n    repo: str\n"
             "    ref: int\n    repo_path: str\n"
             "    def as_uri(self, extra) -> str: ...\n\nclass GitLabPath",
             "as_uri",

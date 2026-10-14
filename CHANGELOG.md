@@ -25,6 +25,9 @@ it.
   `GitHubPath("src/x.py", owner="acme", repo="widgets", ref="v1.2", instance="github.com",
   token=None, backend=None)`; `GitLabPath` takes the same keywords and an owner that may
   be a group path (`"acme/team"`).
+- `repo_owner`, the property of a path and of a URI path that names the account or group
+  that owns the repository. It is not called `owner`, the name `pathlib.Path.owner()` has for
+  the user that owns a file.
 - `RepoPath(*segments, instance=..., type=None, **options)` returns a `GitHubPath` or a
   `GitLabPath`: `type` names the kind (`"github"`, `"gitlab"`), and without it the kind
   is detected from `instance` (`github.com` and `gitlab.com`, in any case, with or
@@ -75,7 +78,7 @@ it.
   `gitlab://host/...`.
 - A path that has an owner and a repository is built from them, not from a URI:
   `GitHubPath("src/x.py", owner="acme", repo="widgets")`. The URI classes keep the
-  properties `owner`, `repo`, `repo_path` and `ref`, and have `instance` and `kind`.
+  properties `repo_owner`, `repo`, `repo_path` and `ref`, and have `instance` and `kind`.
 - Rate limits and replies of the wrong shape have classes of their own. Was:
   `OSError(EAGAIN)` and `OSError(EIO)`. Is: `RateLimitError` and `BadReplyError`, which
   are those `OSError` types and carry the path as `filename`. What to do: nothing;

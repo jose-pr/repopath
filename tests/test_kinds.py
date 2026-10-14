@@ -257,6 +257,6 @@ def test_a_subclass_of_a_kind_is_of_its_family():
 
     mine = Mine("a", owner="o", repo="r")
     assert Mine._family() is GitHubPath
-    assert GitHubPath(mine, "b").owner == "o"
+    assert GitHubPath(mine, "b").repo_owner == "o"
     assert type(RepoPath(mine, "b")) is GitHubPath
     assert RepoPath.kinds() == ("github", "gitlab")

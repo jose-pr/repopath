@@ -139,7 +139,7 @@ own = GitLabPath("src/x.py", owner="acme/team", repo="widgets", token="t")
 anonymous = GitHubPath(owner="acme", repo="widgets", ref="v1", instance="ghe.example")
 child = own / "y"
 pure = own.parent.with_name("z")
-owner: str = own.owner
+owner: str = own.repo_owner
 ref: "str | None" = anonymous.ref
 generic = RepoPath("src", owner="acme", repo="widgets", instance="github.com")
 named = RepoPath("src", owner="acme", repo="widgets", instance="git.example", type="gitlab")
