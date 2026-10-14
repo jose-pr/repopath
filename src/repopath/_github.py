@@ -6,22 +6,27 @@ import errno as _errno
 from pathlib_next import FileStat
 from pathlib_next import providers as _providers
 from pathlib_next.http import drop_body, raise_for_status, server_size
-from ._gitrepo import _RepoAPIPath, _translate_repo_errors
+
+from ._backend import translate_repo_errors
+from ._hosted import HostedRepoPath
 
 
-class GitHubURIPath(_RepoAPIPath):
-    """`github:` scheme: read-only access to a GitHub repository tree via
-    the REST contents API (`GET /repos/{owner}/{repo}/contents/{path}`).
-    `host` defaults to `github.com` (API at `api.github.com`); any other
-    host is treated as GitHub Enterprise (API at `https://{host}/api/v3`).
-    File bodies are fetched with the `raw` media type (skips base64 and its
-    ~1MB inline-content cap) instead of the default JSON+base64 envelope.
-    `symlink`/`submodule` tree entries are treated as plain files (no
-    special handling -- see `docs/divergences.md`). No mtime (would need a
-    separate commits-history call per path). Needs no third-party
-    library (no PyGithub SDK)."""
+class GitHubPath(HostedRepoPath):
+    """A path in a GitHub repository, read-only, through the REST contents API
+    (`GET /repos/{owner}/{repo}/contents/{path}`).
 
-    __SCHEMES = ("github",)
+    `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")`; see
+    `HostedRepoPath` for the keywords. The default instance is `github.com`
+    (API at `api.github.com`); any other is GitHub Enterprise (API at
+    `https://{instance}/api/v3`). File bodies are fetched with the `raw` media
+    type (skips base64 and its ~1MB inline-content cap) instead of the default
+    JSON+base64 envelope. A `symlink` or `submodule` tree entry is treated as a
+    plain file. No mtime (would need a separate commits-history call per
+    path). Needs no third-party library."""
+
+    TYPE = "github"
+    INSTANCES = ("github.com", "www.github.com")
+    DEFAULT_INSTANCE = "github.com"
     __slots__ = ()
 
     _RAW_ACCEPT = "application/vnd.github.raw+json"
@@ -30,8 +35,7 @@ class GitHubURIPath(_RepoAPIPath):
     _CONTENTS_LIMIT = 1000
 
     def _default_api_base(self) -> str:
-        host = self.source.host or "github.com"
-        if str(host).lower() in ("github.com", "www.github.com"):
+        if self.instance.lower() in ("github.com", "www.github.com"):
             return "https://api.github.com"
         return f"https://{self._api_authority()}/api/v3"
 
@@ -54,16 +58,16 @@ class GitHubURIPath(_RepoAPIPath):
     def _request(self, headers=None, url=None, params=None):
         """A streamed `GET` that succeeded: the caller decodes or reads the
         body, which closes the response."""
-        with _translate_repo_errors(self):
-            resp = self.backend.request(
+        with translate_repo_errors(self):
+            resp = self._backend.request(
                 "GET",
                 url or self._contents_url(),
                 params=self._params() if params is None else params,
                 headers=headers,
                 stream=True,
             )
-            # A rate-limited reply (403/429) becomes EAGAIN in
-            # `_translate_repo_errors`.
+            # A rate-limited reply (403/429) becomes `RateLimitError` in
+            # `translate_repo_errors`.
             try:
                 raise_for_status(resp)
             except BaseException:
@@ -73,7 +77,7 @@ class GitHubURIPath(_RepoAPIPath):
 
     def _object(self, data: dict) -> dict:
         """`data` if it describes one entry of a repository (it has a
-        `type`), else `OSError(EIO)`."""
+        `type`), else `BadReplyError`."""
         if not isinstance(data.get("type"), str):
             raise self._bad_reply("an object without a type")
         return data
@@ -94,8 +98,8 @@ class GitHubURIPath(_RepoAPIPath):
         API answers a file with that type and the file's length and a
         directory with a JSON type; a reply without `X-GitHub-Media-Type` is
         not the API's own (a proxy, a server without `HEAD`)."""
-        with _translate_repo_errors(self):
-            resp = self.backend.request(
+        with translate_repo_errors(self):
+            resp = self._backend.request(
                 "HEAD",
                 self._contents_url(),
                 params=self._params(),
@@ -136,7 +140,7 @@ class GitHubURIPath(_RepoAPIPath):
         data = self._decode(self._request(url=self._contents_url(path)), list, dict)
         if isinstance(data, dict):
             self._object(data)
-            raise NotADirectoryError(self)
+            raise NotADirectoryError(_errno.ENOTDIR, "Not a directory", str(self))
         entries = [self._entry(item) for item in data]
         if len(entries) >= self._CONTENTS_LIMIT:
             entries = self._tree_entries(self._tree_sha(path))
@@ -152,7 +156,7 @@ class GitHubURIPath(_RepoAPIPath):
                 if not isinstance(sha, str):
                     raise self._bad_reply("a directory entry without a sha")
                 return sha
-        raise FileNotFoundError(self)
+        raise FileNotFoundError(_errno.ENOENT, "No such file", str(self))
 
     def _default_branch(self) -> str:
         cache = self._backend_cache()
@@ -173,7 +177,7 @@ class GitHubURIPath(_RepoAPIPath):
         if data.get("truncated"):
             # Only for trees far past any directory listing (100,000
             # entries); never return a partial listing as a complete one.
-            raise OSError(_errno.EIO, f"Git tree listing truncated for {self}")
+            raise OSError(_errno.EIO, "Git tree listing truncated", str(self))
         tree = data.get("tree")
         if not isinstance(tree, list):
             raise self._bad_reply("a tree without a tree list")
@@ -223,14 +227,14 @@ class GitHubURIPath(_RepoAPIPath):
             # a symlink/submodule entry, which carries its own JSON shape).
             data = self._decode(resp, list, dict)
             if isinstance(data, list):
-                raise IsADirectoryError(self)
+                raise IsADirectoryError(_errno.EISDIR, "Is a directory", str(self))
             content = data.get("content")
             if data.get("encoding") == "base64" and isinstance(content, str):
                 try:
                     return self._reader(_base64.b64decode(content))
                 except ValueError:
                     raise self._bad_reply("content that is not base64") from None
-            raise OSError(_errno.EIO, f"Unsupported content response for {self}")
+            raise self._bad_reply("an unsupported content response")
         media_type = content_type.partition(";")[0].strip().lower()
         if media_type == "text/html" and "X-GitHub-Media-Type" not in resp.headers:
             # Every reply of the API names its media type in that header, so

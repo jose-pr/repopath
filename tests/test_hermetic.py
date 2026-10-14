@@ -8,7 +8,6 @@ connection to anything.
 """
 
 import asyncio
-import importlib.util
 import os
 import pathlib
 import socket
@@ -18,7 +17,6 @@ import urllib.request
 
 import pytest
 
-import conftest
 import hermetic
 from hermetic import NetworkAccessBlocked, ProcessSpawnBlocked
 
@@ -239,12 +237,12 @@ def test_the_isolated_environment_has_no_proxy_cloud_or_home_setting(
             "NETRC": "x",
             "REQUESTS_CA_BUNDLE": "x",
             "SSH_AUTH_SOCK": "x",
-            "URIPATH_KEEP": "yes",
+            "REPOPATH_KEEP": "yes",
         }.items():
             patch.setenv(name, value)
         hermetic.isolate_environment(patch, tmp_path)
 
-        assert os.environ["URIPATH_KEEP"] == "yes"
+        assert os.environ["REPOPATH_KEEP"] == "yes"
         for gone in (
             "HTTP_PROXY",
             "https_proxy",
@@ -271,21 +269,6 @@ def test_the_isolated_environment_has_no_proxy_cloud_or_home_setting(
     )
 
 
-def test_a_proxy_in_the_developers_shell_is_not_used_for_a_loopback_server(
-    http_server, monkeypatch
-):
-    requests = pytest.importorskip("requests")
-    assert requests.get(f"{http_server}/a.txt", timeout=10).text == "a"
-
-
-def test_a_proxy_in_the_developers_shell_is_not_used_by_the_built_in_transport(
-    http_server, monkeypatch
-):
-    from uripath import URIPath
-
-    assert URIPath(f"{http_server}/a.txt").read_text() == "a"
-
-
 # --- the session itself, in a child pytest ------------------------------------
 
 
@@ -304,7 +287,7 @@ def _probe(name, tmp_path, extra_env=None):
         AWS_ENDPOINT_URL="http://127.0.0.1:9",
         HOME=str(home),
         USERPROFILE=str(home),
-        URIPATH_DEVELOPER_HOME=str(home),
+        REPOPATH_DEVELOPER_HOME=str(home),
     )
     env.update(extra_env or {})
     env["PYTHONPATH"] = os.pathsep.join(
@@ -341,4 +324,4 @@ def test_a_test_that_leaves_the_environment_changed_fails_at_teardown(tmp_path):
     assert result.returncode != 0
     assert "2 passed, 1 error" in result.stdout, result.stdout
     assert "left the process environment changed" in result.stdout
-    assert "URIPATH_LEAKED: None -> 'yes'" in result.stdout
+    assert "REPOPATH_LEAKED: None -> 'yes'" in result.stdout

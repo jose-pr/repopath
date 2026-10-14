@@ -1,4 +1,4 @@
-"""`github:` asks for a file's size without its body. The replies served here
+"""A GitHub path asks for a file's size without its body. The replies served here
 have the headers the public API gave a `HEAD` of a file and of a directory
 with the raw media type; whatever is not that shape is left to the `GET` of
 the contents object. Every request goes to a loopback server."""
@@ -11,8 +11,8 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("http_transport_kind")
 
-from uripath import URIPath
-from uripath.schemes._gitrepo import RepoBackend
+from repo_support import make_path
+from repopath import RepoBackend
 
 FILE = b"x" * 70_000
 API = {"X-GitHub-Media-Type": "github.v3; param=raw; format=json"}
@@ -70,9 +70,14 @@ def api(serve_http):
         yield api
 
 
-def _path(api, name="dir/f.bin", query="", **backend):
-    return URIPath(
-        f"github://github.com/o/r/{name}{query}",
+def _path(flavor, api, name="dir/f.bin", ref=None, **backend):
+    return make_path(
+        flavor,
+        "github",
+        name,
+        owner="o",
+        repo="r",
+        ref=ref,
         backend=RepoBackend(api_base=api.base, **backend),
     )
 
@@ -99,24 +104,26 @@ def _live(api):
 # --- the reply of the API ---------------------------------------------------------------------
 
 
-def test_stat_of_a_file_is_one_request_without_a_body(api):
+def test_stat_of_a_file_is_one_request_without_a_body(flavor, api):
     _live(api)
-    path = _path(api)
+    path = _path(flavor, api)
     stat = path.stat()
     assert (stat.st_size, stat.is_dir()) == (len(FILE), False)
     assert api.log == [("HEAD", "/repos/o/r/contents/dir/f.bin")]
 
 
 @pytest.mark.parametrize("ask", ["exists", "is_file", "is_dir"])
-def test_a_question_about_a_file_downloads_nothing(api, ask):
+def test_a_question_about_a_file_downloads_nothing(flavor, api, ask):
     _live(api)
-    assert getattr(_path(api), ask)() is (ask != "is_dir")
+    assert getattr(_path(flavor, api), ask)() is (ask != "is_dir")
     assert api.gets() == []
 
 
-def test_the_request_asks_for_the_raw_type_unencoded_at_the_ref_with_the_token(api):
+def test_the_request_asks_for_the_raw_type_unencoded_at_the_ref_with_the_token(
+    flavor, api
+):
     _live(api)
-    _path(api, query="?ref=v1", token="t0ken").stat()
+    _path(flavor, api, ref="v1", token="t0ken").stat()
     assert api.log == [("HEAD", "/repos/o/r/contents/dir/f.bin?ref=v1")]
     sent = {key.lower(): value for key, value in api.sent[0].items()}
     assert sent["accept"] == "application/vnd.github.raw+json"
@@ -124,45 +131,45 @@ def test_the_request_asks_for_the_raw_type_unencoded_at_the_ref_with_the_token(a
     assert sent["authorization"] == "Bearer t0ken"
 
 
-def test_an_empty_file_has_size_zero_and_is_a_file(api):
+def test_an_empty_file_has_size_zero_and_is_a_file(flavor, api):
     api.head = lambda path: (200, RAW, b"")
-    stat = _path(api).stat()
+    stat = _path(flavor, api).stat()
     assert (stat.st_size, stat.is_dir()) == (0, False)
     assert api.gets() == []
 
 
-def test_stat_of_a_directory_reads_the_listing(api):
+def test_stat_of_a_directory_reads_the_listing(flavor, api):
     _live(api)
-    assert _path(api, "dir").stat().is_dir()
+    assert _path(flavor, api, "dir").stat().is_dir()
     assert api.log == [
         ("HEAD", "/repos/o/r/contents/dir"),
         ("GET", "/repos/o/r/contents/dir"),
     ]
 
 
-def test_the_root_of_a_repository_is_asked_for_its_listing_only(api):
+def test_the_root_of_a_repository_is_asked_for_its_listing_only(flavor, api):
     api.get = lambda path: (200, JSON, LISTING)
-    assert _path(api, "").stat().is_dir()
+    assert _path(flavor, api, "").stat().is_dir()
     assert api.log == [("GET", "/repos/o/r/contents")]
 
 
-def test_a_missing_path_is_settled_by_the_first_request(api):
+def test_a_missing_path_is_settled_by_the_first_request(flavor, api):
     _live(api)
-    path = _path(api, "dir/none.bin")
+    path = _path(flavor, api, "dir/none.bin")
     with pytest.raises(FileNotFoundError):
         path.stat()
     assert path.exists() is False
     assert api.gets() == [] and len(api.heads()) == 2
 
 
-def test_a_rate_limited_reply_is_eagain(api):
+def test_a_rate_limited_reply_is_eagain(flavor, api):
     api.head = lambda path: (
         403,
         {**JSON, "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "1"},
         b"{}",
     )
     with pytest.raises(OSError) as raised:
-        _path(api).stat()
+        _path(flavor, api).stat()
     assert raised.value.errno == errno.EAGAIN
     assert api.gets() == []
 
@@ -170,17 +177,17 @@ def test_a_rate_limited_reply_is_eagain(api):
 # --- a reply that does not settle it: the GET of the contents object decides -----------------
 
 
-def _falls_back(api, head):
+def _falls_back(flavor, api, head):
     api.head = lambda path: head
     api.get = lambda path: (200, JSON, OBJECT)
-    stat = _path(api).stat()
+    stat = _path(flavor, api).stat()
     assert (stat.st_size, stat.is_dir()) == (len(FILE), False)
     assert [method for method, _path_ in api.log] == ["HEAD", "GET"]
 
 
 @pytest.mark.parametrize("status", [405, 501])
-def test_a_server_without_head_is_asked_with_get(api, status):
-    _falls_back(api, (status, {}, b""))
+def test_a_server_without_head_is_asked_with_get(flavor, api, status):
+    _falls_back(flavor, api, (status, {}, b""))
 
 
 @pytest.mark.parametrize(
@@ -193,8 +200,8 @@ def test_a_server_without_head_is_asked_with_get(api, status):
     ],
     ids=["raw-type-200", "html-200", "html-404", "html-403"],
 )
-def test_a_reply_that_is_not_the_api_s_own_is_not_believed(api, head):
-    _falls_back(api, head)
+def test_a_reply_that_is_not_the_api_s_own_is_not_believed(flavor, api, head):
+    _falls_back(flavor, api, head)
 
 
 @pytest.mark.parametrize(
@@ -209,14 +216,14 @@ def test_a_reply_that_is_not_the_api_s_own_is_not_believed(api, head):
     ],
     ids=["gzip", "length-text", "length-negative", "octet-stream", "no-type", "json"],
 )
-def test_a_reply_that_states_no_file_size_is_followed_by_the_get(api, headers):
-    _falls_back(api, (200, headers, b"12345"))
+def test_a_reply_that_states_no_file_size_is_followed_by_the_get(flavor, api, headers):
+    _falls_back(flavor, api, (200, headers, b"12345"))
 
 
-def test_what_the_get_answers_is_what_stat_reports_after_an_unsettled_head(api):
+def test_what_the_get_answers_is_what_stat_reports_after_an_unsettled_head(flavor, api):
     api.head = lambda path: (501, {}, b"")
     api.get = lambda path: (404, JSON, MISSING)
-    path = _path(api)
+    path = _path(flavor, api)
     with pytest.raises(FileNotFoundError):
         path.stat()
     api.get = lambda path: (200, {"Content-Type": "text/html"}, b"<html>login</html>")

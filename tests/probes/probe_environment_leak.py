@@ -5,8 +5,8 @@ import os
 
 
 def test_a_clean_test():
-    assert "URIPATH_LEAKED" not in os.environ
+    assert "REPOPATH_LEAKED" not in os.environ
 
 
 def test_writes_the_environment():
-    os.environ["URIPATH_LEAKED"] = "yes"
+    os.environ["REPOPATH_LEAKED"] = "yes"

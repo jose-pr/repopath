@@ -7,73 +7,53 @@ import urllib.parse as _urlparse
 from pathlib_next import FileStat
 from pathlib_next import providers as _providers
 from pathlib_next.http import drop_body, raise_for_status, server_size
-from ._gitrepo import _RepoAPIPath, _translate_repo_errors
+
+from ._backend import translate_repo_errors
+from ._hosted import HostedRepoPath
 
 
-class GitLabURIPath(_RepoAPIPath):
-    """`gitlab:` scheme: read-only access to a GitLab project's repository
-    tree via the REST API v4 (project identified as URL-encoded
-    `owner/repo`). A project in a subgroup is addressed with GitLab's own
-    `/-/` separator, as in its web URLs:
-    `gitlab://host/group/subgroup/project/-/path/in/repo`; without the
-    separator the first two segments are owner/repo. `host` defaults to
-    `gitlab.com`; a self-hosted instance is just a different host (and
-    port), always at `https://{host}/api/v4` (no enterprise/SaaS API-path
-    split like GitHub). The tree-listing endpoint
+class GitLabPath(HostedRepoPath):
+    """A path in a GitLab project's repository, read-only, through the REST
+    API v4 (the project is the URL-encoded `owner/repo`).
+
+    `GitLabPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")`; see
+    `HostedRepoPath` for the keywords. A project in a subgroup has the group
+    path as its owner: `owner="acme/team", repo="widgets"`. The default
+    instance is `gitlab.com`; a self-hosted one is just another instance (and
+    port), always at `https://{instance}/api/v4`. The tree-listing endpoint
     doesn't carry file size, so `_scandir()` only pre-seeds a stat hint for
     `tree` (directory) entries (`size=0` is truthful for a directory, not a
-    placeholder) -- `blob` (file) entries get a real `stat()` lazily
-    instead of guessing a size that could poison a caller trusting the
-    hint. No mtime. Needs no third-party library (no
-    python-gitlab SDK)."""
+    placeholder) -- `blob` (file) entries get a real `stat()` lazily instead of
+    guessing a size that could poison a caller trusting the hint. No mtime.
+    Needs no third-party library."""
 
-    __SCHEMES = ("gitlab",)
+    TYPE = "gitlab"
+    INSTANCES = ("gitlab.com", "www.gitlab.com")
+    DEFAULT_INSTANCE = "gitlab.com"
+    OWNER_NESTS = True
     __slots__ = ()
 
     def _default_api_base(self) -> str:
-        if not self.source.host:
-            return "https://gitlab.com/api/v4"
         return f"https://{self._api_authority()}/api/v4"
 
-    def _separator_index(self) -> "int | None":
-        # GitLab's `/-/` ends the project path; it needs at least
-        # `owner/repo` in front of it.
+    def _uri_segments(self, names):
+        # GitLab's own `/-/` ends the project path in its web URLs. It is
+        # needed when the project is in a group, and when a name is `-`, which
+        # would otherwise read as the separator.
+        owner = self.owner.split("/")
+        if len(owner) > 1 or "-" in names:
+            return [*owner, self.repo, "-", *names]
+        return [*owner, self.repo, *names]
+
+    @classmethod
+    def _from_uri_segments(cls, parts):
+        # The first `-` after an owner and a repository ends the project path;
+        # without one the first two segments are the owner and the repository.
         try:
-            return self.segments.index("-", 3)
+            index = list(parts).index("-", 2)
         except ValueError:
-            return None
-
-    @property
-    def owner(self) -> str:
-        index = self._separator_index()
-        if index is None:
-            return super().owner
-        return "/".join(self.segments[1 : index - 1])
-
-    @property
-    def repo(self) -> str:
-        index = self._separator_index()
-        if index is None:
-            return super().repo
-        return self.segments[index - 1]
-
-    @property
-    def repo_path(self) -> str:
-        index = self._separator_index()
-        if index is None:
-            return super().repo_path
-        return "/".join(self.segments[index + 1 :]).rstrip("/")
-
-    def _make_child_relpath(self, name: str, **kwargs):
-        parent = self
-        if name == "-" and self._separator_index() is None and len(self.segments) > 2:
-            # A directory literally named "-" would read as the separator:
-            # spell the parent with `/-/` so the child stays that directory.
-            segments = self.segments[:3] + ("-",) + self.segments[3:]
-            parent = self._from_parsed_parts(
-                self.source, "/".join(segments), self.query, self.fragment
-            )
-        return super(GitLabURIPath, parent)._make_child_relpath(name, **kwargs)
+            return super()._from_uri_segments(parts)
+        return "/".join(parts[: index - 1]), parts[index - 1], list(parts[index + 1 :])
 
     @property
     def _project_id(self) -> str:
@@ -95,8 +75,8 @@ class GitLabURIPath(_RepoAPIPath):
     def _request(self, method, url, **kwargs):
         """A streamed request that succeeded: the caller decodes or reads the
         body, which closes the response."""
-        with _translate_repo_errors(self):
-            resp = self.backend.request(method, url, stream=True, **kwargs)
+        with translate_repo_errors(self):
+            resp = self._backend.request(method, url, stream=True, **kwargs)
             try:
                 raise_for_status(resp)
             except BaseException:
@@ -132,8 +112,8 @@ class GitLabURIPath(_RepoAPIPath):
         url = self._file_url(path)
         params = {"ref": self._resolved_ref()}
         try:
-            with _translate_repo_errors(self):
-                resp = self.backend.request("HEAD", url, params=params)
+            with translate_repo_errors(self):
+                resp = self._backend.request("HEAD", url, params=params)
                 if resp.status not in (405, 501):
                     raise_for_status(resp)
             size = server_size(resp.headers.get("X-Gitlab-Size"))
@@ -193,10 +173,10 @@ class GitLabURIPath(_RepoAPIPath):
                 "GET", self._tree_url(), params=self._params(path=path, per_page=1)
             )
         except FileNotFoundError:
-            raise FileNotFoundError(self) from None
+            raise FileNotFoundError(_errno.ENOENT, "No such file", str(self)) from None
         if self._decode(resp, list):
             return FileStat(is_dir=True)
-        raise FileNotFoundError(self)
+        raise FileNotFoundError(_errno.ENOENT, "No such file", str(self))
 
     def _scandir(self):
         entries = self._tree_entries(self.repo_path)
@@ -214,7 +194,7 @@ class GitLabURIPath(_RepoAPIPath):
             # non-root path is a file or a missing path (a server may answer
             # either with an empty 200): pathlib's iterdir() raises for both.
             if self.repo_path:
-                self._stat_hint = None
+                self._hint = None
                 if not self.stat().is_dir():
                     raise NotADirectoryError(
                         _errno.ENOTDIR, "Not a directory", str(self)
@@ -239,7 +219,7 @@ class GitLabURIPath(_RepoAPIPath):
         self._check_read_mode(mode)
         path = self.repo_path
         if not path:
-            raise IsADirectoryError(self)
+            raise IsADirectoryError(_errno.EISDIR, "Is a directory", str(self))
         try:
             resp = self._request(
                 "GET",

@@ -1,4 +1,4 @@
-"""What `github:` and `gitlab:` do with API replies that are not the shape
+"""What a `GitHubPath` and a `GitLabPath` do with API replies that are not the shape
 the API documents: a captive portal's page, a gateway's JSON, `null`, a
 truncated body. Each is `OSError(EIO)` naming the path, never an
 `AttributeError`, `KeyError` or client-library exception, and `exists()` answers
@@ -15,10 +15,8 @@ pytestmark = pytest.mark.usefixtures("http_transport_kind")
 import http.server
 
 from http_fakes import is_client_error
-from uripath import URIPath
-from uripath.schemes._gitrepo import RepoBackend
-from uripath.schemes import GitHubURIPath
-from uripath.schemes import GitLabURIPath
+from repo_support import make_path
+from repopath import BadReplyError, RepoBackend
 
 
 class _Api:
@@ -65,16 +63,26 @@ def api(serve_http):
         yield api
 
 
-def _github(api, name="dir/f.txt", query=""):
-    return URIPath(
-        f"github://github.com/o/r/{name}{query}",
+def _github(flavor, api, name="dir/f.txt", ref=None):
+    return make_path(
+        flavor,
+        "github",
+        name,
+        owner="o",
+        repo="r",
+        ref=ref,
         backend=RepoBackend(api_base=api.base),
     )
 
 
-def _gitlab(api, name="dir/f.txt", query="?ref=main"):
-    return URIPath(
-        f"gitlab://gitlab.com/o/r/{name}{query}",
+def _gitlab(flavor, api, name="dir/f.txt", ref="main"):
+    return make_path(
+        flavor,
+        "gitlab",
+        name,
+        owner="o",
+        repo="r",
+        ref=ref,
         backend=RepoBackend(api_base=api.base + "/api/v4"),
     )
 
@@ -95,6 +103,7 @@ _ALL_BAD = {**_NOT_JSON, **_WRONG_TYPE}
 
 def _assert_eio(error, path):
     assert error.errno == errno.EIO, error
+    assert isinstance(error, BadReplyError)
     assert not is_client_error(error)
     assert str(path) in str(error)
 
@@ -112,9 +121,11 @@ def _assert_eio(error, path):
     ],
     ids=[*_ALL_BAD, "object-without-type", "size-text", "size-negative"],
 )
-def test_github_stat_of_a_reply_that_is_not_a_contents_object_is_eio(api, reply):
+def test_github_stat_of_a_reply_that_is_not_a_contents_object_is_eio(
+    flavor, api, reply
+):
     api.route = lambda path: reply
-    path = _github(api)
+    path = _github(flavor, api)
     with pytest.raises(OSError) as raised:
         path.stat()
     _assert_eio(raised.value, path)
@@ -133,18 +144,18 @@ def test_github_stat_of_a_reply_that_is_not_a_contents_object_is_eio(api, reply)
     ],
     ids=[*_ALL_BAD, "strings", "no-name-or-type", "size-text", "object-without-type"],
 )
-def test_github_listing_of_a_reply_that_is_not_a_directory_is_eio(api, reply):
+def test_github_listing_of_a_reply_that_is_not_a_directory_is_eio(flavor, api, reply):
     api.route = lambda path: reply
-    path = _github(api, "dir")
+    path = _github(flavor, api, "dir")
     with pytest.raises(OSError) as raised:
         list(path.iterdir())
     _assert_eio(raised.value, path)
 
 
-def test_github_listing_of_a_file_object_is_still_not_a_directory(api):
+def test_github_listing_of_a_file_object_is_still_not_a_directory(flavor, api):
     api.route = lambda path: _json({"type": "file", "size": 3})
     with pytest.raises(NotADirectoryError):
-        list(_github(api, "dir").iterdir())
+        list(_github(flavor, api, "dir").iterdir())
 
 
 @pytest.mark.parametrize(
@@ -159,23 +170,23 @@ def test_github_listing_of_a_file_object_is_still_not_a_directory(api):
         _NOT_JSON["truncated"],
     ],
 )
-def test_github_read_of_a_json_envelope_that_is_not_a_file_is_eio(api, reply):
+def test_github_read_of_a_json_envelope_that_is_not_a_file_is_eio(flavor, api, reply):
     api.route = lambda path: reply
-    path = _github(api)
+    path = _github(flavor, api)
     with pytest.raises(OSError) as raised:
         path.read_bytes()
     _assert_eio(raised.value, path)
 
 
-def test_github_read_of_a_json_envelope_still_decodes(api):
+def test_github_read_of_a_json_envelope_still_decodes(flavor, api):
     content = base64.b64encode(b"hello").decode()
     api.route = lambda path: _json(
         {"type": "file", "encoding": "base64", "content": content}
     )
-    assert _github(api).read_bytes() == b"hello"
+    assert _github(flavor, api).read_bytes() == b"hello"
     api.route = lambda path: _json([{"name": "a", "type": "file"}])
     with pytest.raises(IsADirectoryError):
-        _github(api).read_bytes()
+        _github(flavor, api).read_bytes()
 
 
 def _capped(tree_reply, repo_reply=None):
@@ -216,9 +227,9 @@ def _capped(tree_reply, repo_reply=None):
         "list",
     ],
 )
-def test_github_trees_reply_that_is_not_a_tree_is_eio(api, tree_reply):
+def test_github_trees_reply_that_is_not_a_tree_is_eio(flavor, api, tree_reply):
     api.route = _capped(tree_reply)
-    path = _github(api, "dir")
+    path = _github(flavor, api, "dir")
     with pytest.raises(OSError) as raised:
         list(path.iterdir())
     _assert_eio(raised.value, path)
@@ -229,7 +240,9 @@ def test_github_trees_reply_that_is_not_a_tree_is_eio(api, tree_reply):
     [*_ALL_BAD.values(), _json({"message": "x"}), _json({"default_branch": 7})],
     ids=[*_ALL_BAD, "no-branch", "branch-number"],
 )
-def test_github_default_branch_reply_that_is_not_a_repository_is_eio(api, repo_reply):
+def test_github_default_branch_reply_that_is_not_a_repository_is_eio(
+    flavor, api, repo_reply
+):
     # The root listing at the cap needs the default branch for its tree.
     def route(path):
         if path.split("?")[0].endswith("/repos/o/r"):
@@ -237,16 +250,16 @@ def test_github_default_branch_reply_that_is_not_a_repository_is_eio(api, repo_r
         return _json([{"name": f"f{i}", "type": "file"} for i in range(1000)])
 
     api.route = route
-    path = _github(api, "")
+    path = _github(flavor, api, "")
     with pytest.raises(OSError) as raised:
         list(path.iterdir())
     _assert_eio(raised.value, path)
 
 
-def test_github_truncated_tree_is_still_eio(api):
+def test_github_truncated_tree_is_still_eio(flavor, api):
     api.route = _capped(_json({"tree": [], "truncated": True}))
     with pytest.raises(OSError) as raised:
-        list(_github(api, "dir").iterdir())
+        list(_github(flavor, api, "dir").iterdir())
     assert raised.value.errno == errno.EIO
 
 
@@ -264,11 +277,13 @@ _PORTAL = (200, {"Content-Type": "text/html; charset=utf-8"}, b"<html>login</htm
     "content_type",
     ["text/html", "text/html; charset=utf-8", "TEXT/HTML;charset=UTF-8"],
 )
-def test_github_read_of_an_html_page_the_api_did_not_send_is_eio(api, content_type):
+def test_github_read_of_an_html_page_the_api_did_not_send_is_eio(
+    flavor, api, content_type
+):
     api.route = _by_accept(
         api, (200, {"Content-Type": content_type}, b"<html>login</html>")
     )
-    path = _github(api)
+    path = _github(flavor, api)
     with pytest.raises(OSError) as raised:
         path.read_bytes()
     _assert_eio(raised.value, path)
@@ -277,16 +292,16 @@ def test_github_read_of_an_html_page_the_api_did_not_send_is_eio(api, content_ty
     assert path.exists() is True  # the metadata request was the API's own
 
 
-def test_github_exists_is_false_when_every_reply_is_a_portals_page(api):
+def test_github_exists_is_false_when_every_reply_is_a_portals_page(flavor, api):
     api.route = lambda path: _PORTAL
-    path = _github(api)
+    path = _github(flavor, api)
     with pytest.raises(OSError) as raised:
         path.read_bytes()
     _assert_eio(raised.value, path)
     assert path.exists() is False
 
 
-def test_github_read_of_an_html_file_the_api_sent_still_reads(api):
+def test_github_read_of_an_html_file_the_api_sent_still_reads(flavor, api):
     sent = (
         200,
         {
@@ -296,7 +311,7 @@ def test_github_read_of_an_html_file_the_api_sent_still_reads(api):
         b"<html>a file of the repository</html>",
     )
     api.route = _by_accept(api, sent)
-    path = _github(api, "page.html")
+    path = _github(flavor, api, "page.html")
     assert path.read_bytes() == b"<html>a file of the repository</html>"
     assert "raw" in api.accept
 
@@ -304,10 +319,12 @@ def test_github_read_of_an_html_file_the_api_sent_still_reads(api):
 @pytest.mark.parametrize(
     "content_type", ["text/plain", "application/octet-stream", "text/htmlish", ""]
 )
-def test_github_read_of_other_content_types_is_returned_as_sent(api, content_type):
+def test_github_read_of_other_content_types_is_returned_as_sent(
+    flavor, api, content_type
+):
     headers = {"Content-Type": content_type} if content_type else {}
     api.route = _by_accept(api, (200, headers, b"<html>not refused</html>"))
-    assert _github(api).read_bytes() == b"<html>not refused</html>"
+    assert _github(flavor, api).read_bytes() == b"<html>not refused</html>"
 
 
 # --- GitLab ---
@@ -318,10 +335,10 @@ def test_github_read_of_other_content_types_is_returned_as_sent(api, content_typ
     [*_ALL_BAD.values(), _json({"message": "x"}), _json({"size": "big"})],
     ids=[*_ALL_BAD, "object", "size-text"],
 )
-def test_gitlab_stat_of_file_metadata_that_is_not_a_file_is_eio(api, reply):
+def test_gitlab_stat_of_file_metadata_that_is_not_a_file_is_eio(flavor, api, reply):
     # The HEAD reply carries no size, so the metadata is asked for.
     api.route = lambda path: reply
-    path = _gitlab(api)
+    path = _gitlab(flavor, api)
     with pytest.raises(OSError) as raised:
         path.stat()
     _assert_eio(raised.value, path)
@@ -333,9 +350,9 @@ def test_gitlab_stat_of_file_metadata_that_is_not_a_file_is_eio(api, reply):
     [*_ALL_BAD.values(), _json({"message": "x"}), _json({"default_branch": ""})],
     ids=[*_ALL_BAD, "no-branch", "empty-branch"],
 )
-def test_gitlab_default_branch_reply_that_is_not_a_project_is_eio(api, reply):
+def test_gitlab_default_branch_reply_that_is_not_a_project_is_eio(flavor, api, reply):
     api.route = lambda path: reply
-    path = _gitlab(api, query="")
+    path = _gitlab(flavor, api, ref=None)
     with pytest.raises(OSError) as raised:
         path.stat()
     _assert_eio(raised.value, path)
@@ -352,9 +369,9 @@ def test_gitlab_default_branch_reply_that_is_not_a_project_is_eio(api, reply):
     ],
     ids=[*_ALL_BAD, "object", "strings", "no-name-or-type"],
 )
-def test_gitlab_tree_reply_that_is_not_a_tree_is_eio(api, reply):
+def test_gitlab_tree_reply_that_is_not_a_tree_is_eio(flavor, api, reply):
     api.route = lambda path: reply
-    path = _gitlab(api, "dir")
+    path = _gitlab(flavor, api, "dir")
     with pytest.raises(OSError) as raised:
         list(path.iterdir())
     _assert_eio(raised.value, path)
@@ -365,9 +382,9 @@ def test_gitlab_tree_reply_that_is_not_a_tree_is_eio(api, reply):
     [*_ALL_BAD.values(), _json({"message": "x"})],
     ids=[*_ALL_BAD, "object"],
 )
-def test_gitlab_stat_of_the_root_needs_a_tree_array(api, reply):
+def test_gitlab_stat_of_the_root_needs_a_tree_array(flavor, api, reply):
     api.route = lambda path: reply
-    path = _gitlab(api, "")
+    path = _gitlab(flavor, api, "")
     with pytest.raises(OSError) as raised:
         path.stat()
     _assert_eio(raised.value, path)
@@ -389,9 +406,9 @@ def _files_route(size=5, head=None):
     return route
 
 
-def test_gitlab_stat_of_a_file_is_a_head_request(api):
+def test_gitlab_stat_of_a_file_is_a_head_request(flavor, api):
     api.route = _files_route(size=7)
-    assert _gitlab(api, "dir/a b.txt").stat().st_size == 7
+    assert _gitlab(flavor, api, "dir/a b.txt").stat().st_size == 7
     assert [m for m, _p in api.log] == ["HEAD"]
     assert api.log[0][1].startswith("/api/v4/projects/o%2Fr/repository/files/")
     assert "dir%2Fa%20b.txt?ref=main" in api.log[0][1]
@@ -406,7 +423,9 @@ def test_gitlab_stat_of_a_file_is_a_head_request(api):
     ],
     ids=["refused", "no-size", "bad-size"],
 )
-def test_gitlab_stat_falls_back_to_the_metadata_without_a_usable_head(api, head):
+def test_gitlab_stat_falls_back_to_the_metadata_without_a_usable_head(
+    flavor, api, head
+):
     def route(path):
         if "/repository/files/" in path:
             if api.log[-1][0] == "HEAD":
@@ -415,21 +434,15 @@ def test_gitlab_stat_falls_back_to_the_metadata_without_a_usable_head(api, head)
         return _json([])
 
     api.route = route
-    assert _gitlab(api).stat().st_size == 9
+    assert _gitlab(flavor, api).stat().st_size == 9
     assert [m for m, _p in api.log] == ["HEAD", "GET"]
 
 
-def test_gitlab_stat_of_a_missing_file_is_not_found_after_one_head_and_one_tree(api):
+def test_gitlab_stat_of_a_missing_file_is_not_found_after_one_head_and_one_tree(
+    flavor, api
+):
     api.route = lambda path: _json({"message": "404"}, status=404)
     with pytest.raises(FileNotFoundError):
-        _gitlab(api).stat()
+        _gitlab(flavor, api).stat()
     assert [m for m, _p in api.log] == ["HEAD", "GET"]
     assert "/repository/tree" in api.log[1][1]
-
-
-# --- the two providers list through _scandir only ---
-
-
-@pytest.mark.parametrize("cls", [GitHubURIPath, GitLabURIPath])
-def test_provider_listing_is_scandir_alone(cls):
-    assert "_listdir" not in vars(cls)
