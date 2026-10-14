@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-14
+
 The first release of `repopath`: the `github:`, `gitlab:` and `git:` schemes of
 `pathlib-next` 0.9 (`pathlib_next.uri.schemes`) as a distribution of their own, and as
 paths that need no URI. It needs Python 3.9 or newer and `pathlib-next>=0.10.0,<0.11`,
@@ -98,4 +100,5 @@ it.
 - `uritools` is not a dependency of anything here, and `requests` is not installed with
   the package.
 
-[Unreleased]: https://github.com/jose-pr/repopath/commits/main
+[Unreleased]: https://github.com/jose-pr/repopath/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/jose-pr/repopath/releases/tag/v0.1.0
