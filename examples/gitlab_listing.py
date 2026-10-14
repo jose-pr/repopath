@@ -1,15 +1,12 @@
-"""List files in a GitLab project using GitLabURIPath.
-Needs only `uripath` -- the
-standard library sends the requests, no python-gitlab SDK. Works unauthenticated for public
-projects; set GITLAB_TOKEN for a private one -- guarded under
-`if __name__ == "__main__"` so importing this module is always safe, and
-skipped (prints setup instructions, exit 0) unless GITLAB_EXAMPLE_PROJECT
-is set.
+"""List the files of a GitLab project using `GitLabPath`.
 
-Run directly:
+Needs nothing beyond `repopath` itself: the standard library sends the
+requests. It works unauthenticated for public projects; set GITLAB_TOKEN for a
+private one. Importing this module is always safe; run as a script it does
+nothing, and exits 0, unless GITLAB_EXAMPLE_PROJECT is set.
 
     export GITLAB_EXAMPLE_PROJECT=gitlab-org/gitlab
-    export GITLAB_EXAMPLE_PATH=doc         # optional, defaults to project root
+    export GITLAB_EXAMPLE_PATH=doc         # optional, defaults to the project root
     export GITLAB_EXAMPLE_REF=master       # optional, defaults to the default branch
     export GITLAB_EXAMPLE_HOST=gitlab.com  # optional, for a self-hosted instance
     export GITLAB_TOKEN=...                # optional
@@ -19,27 +16,31 @@ Run directly:
 import os
 import sys
 
-from uripath.schemes import GitLabURIPath, RepoBackend
+from repopath import GitLabPath
 
 
 def list_gitlab(host: str, owner_repo: str, path: str, ref: str, token: str):
-    query = f"?ref={ref}" if ref else ""
-    uri = f"gitlab://{host}/{owner_repo}/{path.lstrip('/')}{query}"
-    backend = RepoBackend(token=token) if token else None
-    root = GitLabURIPath(uri, backend=backend) if backend else GitLabURIPath(uri)
-    print(f"Listing GitLab location: {uri}")
+    owner, _, repo = owner_repo.rpartition("/")
+    root = GitLabPath(
+        path.strip("/"),
+        owner=owner,
+        repo=repo,
+        ref=ref or None,
+        instance=host,
+        token=token or None,
+    )
+    print(f"Listing GitLab location: {root}")
     for child in root.iterdir():
         kind = "dir " if child.is_dir() else "file"
-        size = "" if child.is_dir() else f" ({child.stat().st_size} bytes)"
-        print(f"  [{kind}] {child.name}{size}")
+        print(f"  [{kind}] {child.name}")
 
 
 if __name__ == "__main__":
     owner_repo = os.environ.get("GITLAB_EXAMPLE_PROJECT")
-    if not owner_repo:
+    if not owner_repo or "/" not in owner_repo:
         print(
-            "GITLAB_EXAMPLE_PROJECT is not set -- skipping. See this file's "
-            "module docstring for the required environment variables.",
+            "GITLAB_EXAMPLE_PROJECT (group/project) is not set -- skipping. See "
+            "this file's module docstring for the required environment variables.",
             file=sys.stderr,
         )
         raise SystemExit(0)
