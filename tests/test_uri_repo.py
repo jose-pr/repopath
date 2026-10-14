@@ -208,6 +208,7 @@ def test_the_ref_is_read_from_the_query_and_defaults_to_none():
         ("gitlab://gitlab.com/acme/widgets/sub/c.py", "acme", "widgets", "sub/c.py"),
         ("gitlab://gitlab.com/acme/widgets/-/sub/c.py", "acme", "widgets", "sub/c.py"),
         ("gitlab://gitlab.com/acme/widgets/-/-/f", "acme", "widgets", "-/f"),
+        ("gitlab://gitlab.com/acme/-/f", "acme", "-", "f"),
         ("gitlab://gitlab.com/acme", "acme", "", ""),
         ("gitlab://gitlab.com/", "", "", ""),
     ],
