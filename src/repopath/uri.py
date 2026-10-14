@@ -97,18 +97,6 @@ class RepoURIPath(DelegatingURIPath):
             )
         return kind
 
-    @classmethod
-    def _format_parsed_parts(
-        cls, source: Source, path: str, query: str, fragment: str, /, sanitize=True
-    ) -> str:
-        # A bare `TOKEN@host` puts the secret in the user slot, which the
-        # base sanitizing keeps -- drop the whole userinfo instead.
-        if sanitize and source.userinfo:
-            source = source._replace(userinfo=None)
-        return super()._format_parsed_parts(
-            source, path, query, fragment, sanitize=sanitize
-        )
-
     def as_posix(self) -> str:
         # `user@host:path` would show the token when it is the user slot.
         host = self.source.host
