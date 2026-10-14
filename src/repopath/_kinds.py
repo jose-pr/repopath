@@ -10,8 +10,8 @@ import stat as _stat
 import threading as _threading
 import typing as _ty
 
-from pathlib_next import FileStat
-from pathlib_next.providers import TreePath
+from pathapi import FileStat
+from pathapi.providers import TreePath
 
 if _ty.TYPE_CHECKING:
     from ._backend import BaseRepoBackend

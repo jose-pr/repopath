@@ -12,7 +12,7 @@ import traceback
 
 import pytest
 
-import pathlib_next.http as core_http
+import pathapi.http as core_http
 from http_wire import Reply, Wire, response
 from repo_support import make_path
 from repopath import GitHubPath, GitLabPath, RepoBackend

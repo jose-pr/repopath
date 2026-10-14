@@ -14,8 +14,8 @@ repopath` imports no third-party library and never `uripath`. The classes are
 read-only clients of the REST APIs of GitHub and GitLab and speak no git
 protocol: there is no clone, no `git:` URL and no commit.
 
-Install with `pip install repopath`, which needs only `pathlib-next`; the
-requests go through `pathlib_next.http`, so no HTTP library is installed. One
+Install with `pip install repopath`, which needs only `pathapi`; the
+requests go through `pathapi.http`, so no HTTP library is installed. One
 extra adds the URI layer; `repopath.uri` without it raises an `ImportError`
 that names the extra:
 
@@ -66,7 +66,7 @@ class GitLabPath(RepoPath):
 
 `RepoPath` is the family of a repository tree on a hosting service, and
 `GitHubPath` and `GitLabPath` are its two kinds. Each is a
-`pathlib_next.Path` (so `pathlib.Path`'s read methods, `copy()` out of the tree,
+`pathapi.Path` (so `pathlib.Path`'s read methods, `copy()` out of the tree,
 `walk()`, `glob()` and `PathSyncer` as a source work on it) and needs no URI.
 `segments` are the path inside the repository, joined and normalized like a
 POSIX path: `x` and `/x` name one file, empty and `.` segments go, `..` is kept
@@ -178,7 +178,7 @@ Every failure is the `OSError` `pathlib` raises for the same condition:
 | 403 or 429 with `RateLimit-Remaining: 0` or `Retry-After`, any 429 | `RateLimitError`, a `BlockingIOError` with errno `EAGAIN`; the message says when to retry |
 | another status | `OSError(EIO)` naming the status |
 | a reply that is not the documented shape (a page of a proxy, `null`, an array where an object belongs, a truncated body, a size that is not a number) | `BadReplyError`, an `OSError(EIO)` naming the path; `exists()` is `False` |
-| a JSON reply over `pathlib_next.http.MAX_REPLY_BYTES` | `OSError(EFBIG)` |
+| a JSON reply over `pathapi.http.MAX_REPLY_BYTES` | `OSError(EFBIG)` |
 | a path that is a file where a directory is needed, or the reverse | `NotADirectoryError`, `IsADirectoryError` |
 | no answer in time, a refused connection | `TimeoutError`, `ConnectionError` naming the path |
 
@@ -212,10 +212,10 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
 ```
 
 `BaseRepoBackend` is the contract: `request()` sends one request to the API and
-returns a `pathlib_next.http.HTTPResponse`. A backend may carry `api_base` (the
+returns a `pathapi.http.HTTPResponse`. A backend may carry `api_base` (the
 API root, replacing the one a path derives from its instance) and `cache` (a
 dict that memoizes the default branch); a path uses either only when the backend
-has one. `RepoBackend` sends through `pathlib_next.http`, so everything that
+has one. `RepoBackend` sends through `pathapi.http`, so everything that
 module documents applies:
 
 - `token` is sent as `Authorization: Bearer <token>`. It is never shown by
@@ -224,11 +224,11 @@ module documents applies:
   `headers=`) to a plain `http://` URL on a host other than loopback is still
   sent, with an `InsecureTransportWarning`.
 - `transport` is any object with a `send()` method as
-  `pathlib_next.http.HTTPTransport.send()`. Without one, the backend builds the
-  transport that `PATHLIB_NEXT_HTTP_TRANSPORT` names, `builtin` (standard
+  `pathapi.http.HTTPTransport.send()`. Without one, the backend builds the
+  transport that `PATHAPI_HTTP_TRANSPORT` names, `builtin` (standard
   library, certificates verified) by default. `session=` (a `requests.Session`)
   and `requests_args` (`verify=`, `proxies=`, ...) select the `requests`
-  transport of the distribution `pathlib-next-requests`, and raise
+  transport of the distribution `pathapi-requests`, and raise
   `ImportError` naming it without it; with `transport=` they are a `TypeError`.
 - `headers` go with every request, under the request's own; the `User-Agent` is
   `repopath/<version>`. Every request gets `timeout=(10, 60)` seconds
@@ -302,7 +302,7 @@ class BadReplyError(RepoPathError, OSError): ...
 class InsecureTransportWarning(UserWarning): ...
 ```
 
-`RepoPathError` (under `pathlib_next.PathError`) is the base of what this package
+`RepoPathError` (under `pathapi.PathError`) is the base of what this package
 raises on its own at run time. `RateLimitError` and `BadReplyError` are the two
 failures no builtin names, and keep the builtin a caller already catches. A
 caller's bad argument is a plain `ValueError` or `TypeError`; an unsupported
@@ -325,7 +325,7 @@ plain `http://` to a host that is not this machine.
   `_scandir()`, `_open()`); `RepoPath(type="name", **keywords)` then returns it.
 - `GitHubPath(...)` and `RepoPath(..., instance="github.com")` are the same
   class; the second spelling is for a name the caller reads from data.
-- The settings of the transport (`PATHLIB_NEXT_HTTP_TRANSPORT`, proxies, the
-  limit `pathlib_next.http.MAX_REPLY_BYTES` on a JSON reply) belong to
-  `pathlib_next.http`: assigning the limit changes it for every package that
+- The settings of the transport (`PATHAPI_HTTP_TRANSPORT`, proxies, the
+  limit `pathapi.http.MAX_REPLY_BYTES` on a JSON reply) belong to
+  `pathapi.http`: assigning the limit changes it for every package that
   sends through it.

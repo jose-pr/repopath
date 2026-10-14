@@ -1,5 +1,5 @@
 """The backends of a repository path: the contract, and the one that sends the
-requests through `pathlib_next.http`."""
+requests through `pathapi.http`."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ import ipaddress as _ipaddress
 import urllib.parse as _urlparse
 import warnings as _warnings
 
-from pathlib_next import providers as _providers
-from pathlib_next.http import (
+from pathapi import providers as _providers
+from pathapi.http import (
     DEFAULT_TIMEOUT,
     HTTPClient,
     HTTPResponse,
@@ -116,7 +116,7 @@ def translate_repo_errors(path):
 class BaseRepoBackend(object):
     """Protocol for issuing an authenticated HTTP request against the REST API
     of a hosting service. Subclass this to plug in custom auth or session
-    handling; `RepoBackend` is the one that sends through `pathlib_next.http`.
+    handling; `RepoBackend` is the one that sends through `pathapi.http`.
 
     A backend may carry an `api_base` (the API root, replacing the one derived
     from the instance of a path) and a `cache` (a dict, to memoize the default
@@ -138,10 +138,10 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
     manager: leaving the block closes a transport the backend built.
 
     `transport` is any object with a `send()` method as
-    `pathlib_next.http.HTTPTransport.send()`; without one the built-in
+    `pathapi.http.HTTPTransport.send()`; without one the built-in
     `HTTPTransport` is built on first use. `session=` (a `requests.Session`)
     and `requests_args` (`verify=`, `proxies=`, ...) select the `requests`
-    transport of `pathlib-next-requests`; without it they raise `ImportError`.
+    transport of `pathapi-requests`; without it they raise `ImportError`.
     `headers` go with every request, under the request's own. `api_base`, when
     set, overrides the API root a path derives from its instance entirely
     (e.g. `https://api.github.com` or `https://{host}/api/v3`) -- the seam a

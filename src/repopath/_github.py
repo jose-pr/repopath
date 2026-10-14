@@ -3,9 +3,9 @@ from __future__ import annotations
 import base64 as _base64
 import errno as _errno
 
-from pathlib_next import FileStat
-from pathlib_next import providers as _providers
-from pathlib_next.http import drop_body, raise_for_status, server_size
+from pathapi import FileStat
+from pathapi import providers as _providers
+from pathapi.http import drop_body, raise_for_status, server_size
 
 from ._backend import translate_repo_errors
 from ._hosted import HostedRepoPath

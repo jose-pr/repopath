@@ -4,7 +4,7 @@
 `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")` has the method names,
 signatures and exception types of `pathlib.Path`; `GitLabPath` does the same for GitLab,
 and `RepoPath` is the class that returns either. None needs a URI, and all build on
-[`pathlib-next`](https://jose-pr.github.io/pathlib-next/) alone, which holds the `Path`
+[`pathapi`](https://jose-pr.github.io/pathapi/) alone, which holds the `Path`
 base class, `glob`, `walk` and `PathSyncer`. With
 [`uripath`](https://jose-pr.github.io/uripath/) installed the same package also provides
 the `repo:`, `github:` and `gitlab:` schemes:
@@ -23,7 +23,7 @@ pip install repopath
 pip install "repopath[uri]"           # adds uripath and with it the schemes
 ```
 
-No other library is required: requests go through `pathlib_next.http`, on the standard
+No other library is required: requests go through `pathapi.http`, on the standard
 library.
 
 | Install | Adds |

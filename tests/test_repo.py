@@ -15,7 +15,7 @@ import pytest
 pytestmark = pytest.mark.usefixtures("http_transport_kind")
 
 from http_fakes import FakeTransport, reply
-from pathlib_next.http import HTTPTransport
+from pathapi.http import HTTPTransport
 from repo_support import github, gitlab, make_path
 from repopath import BaseRepoBackend, GitHubPath, GitLabPath, RepoBackend
 

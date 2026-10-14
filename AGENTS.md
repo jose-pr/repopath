@@ -9,7 +9,7 @@ commands, CI and release. It is not the API reference and it does not ship.
 
 [`docs/divergences.md`](docs/divergences.md) records every deliberate difference
 from `pathlib.Path` that this package owns; the ones of the generic `Path`
-operations are on the site of `pathlib-next`. `pathlib.Path` parity is the
+operations are on the site of `pathapi`. `pathlib.Path` parity is the
 contract; a behavioral divergence that is not recorded is a bug.
 
 ## Layout
@@ -21,7 +21,7 @@ contract; a behavioral divergence that is not recorded is a bug.
 | `src/repopath/_kinds.py` | `RepoPath` and the registry of kinds: calling `RepoPath` returns the class that `type=` or the instance names, and a subclass that sets `TYPE` registers itself. It holds the names, the stat hints of a listing, equality and pickling; a kind supplies the place and the reads. |
 | `src/repopath/_hosted.py` | `HostedRepoPath`, what `GitHubPath` and `GitLabPath` share: the place (instance, owner, repository, ref), the constructor, the URI text, and the helpers that read a JSON reply. |
 | `src/repopath/_github.py`, `_gitlab.py` | The two kinds: the endpoints, stat, listing and reading of each service. |
-| `src/repopath/_backend.py` | `BaseRepoBackend`, `RepoBackend` (an `HTTPClient` of `pathlib_next.http` with a bearer token), the rate-limit and error mapping and the warning for a token over plain http. |
+| `src/repopath/_backend.py` | `BaseRepoBackend`, `RepoBackend` (an `HTTPClient` of `pathapi.http` with a bearer token), the rate-limit and error mapping and the warning for a token over plain http. |
 | `tests/` | The pytest suite. `tests/api_fakes.py` holds the loopback fakes of the two APIs, `tests/repo_support.py` the helper that builds a path of either flavor (the path, or the URI path that delegates to it); `tests/mutation/` is the mutation list; `tests/probes/` are child processes that tests run. |
 | `benchmarks/` | `bench.py` and committed JSON results; see [`benchmarks/README.md`](benchmarks/README.md). Not shipped. |
 | `examples/` | Runnable scripts. Networked ones skip (exit 0) unless their environment variables are set. |
@@ -49,9 +49,9 @@ without it, so check `pytest -rs` before trusting a green run. A venv without
 `uripath` runs everything but the schemes (`test.yml` has a job for it), and one
 holding only this package and `pytest` runs the tests that need nothing else.
 
-`pathlib-next` and `uripath` are dependencies. While the releases this package asks
+`pathapi` and `uripath` are dependencies. While the releases this package asks
 for are not on PyPI, install both editable from their checkouts first (`pip install
--e ../pathlib-next -e ../uripath`), then this package.
+-e ../pathapi -e ../uripath`), then this package.
 
 ## Checks
 
@@ -85,7 +85,7 @@ python -m pytest -q -rs tests/test_public_surface.py -k "mypy_accepts or pyright
   without `uripath`), built by `repo_support.make_path()`. A test of an internal runs
   once, on the path.
 - `http_transport_kind` runs a test once per HTTP transport; `--http-transports
-  builtin,requests` adds the `requests` one when `pathlib-next-requests` is installed.
+  builtin,requests` adds the `requests` one when `pathapi-requests` is installed.
 - **Typing**: the two typing tests run `mypy` and `pyright` (or `basedpyright`)
   on a consumer script and skip where neither is installed; the `typing` job
   installs them.
@@ -106,7 +106,7 @@ performance claims in the changelog or release notes come from CI runs
 
 Workflows live in `.github/workflows/`:
 
-- `test.yml` runs on `workflow_dispatch` (inputs: `ref`, `pathlib_next_ref`,
+- `test.yml` runs on `workflow_dispatch` (inputs: `ref`, `pathapi_ref`,
   `uripath_ref`, `benchmark`) or on a pushed `ci-*` tag, never on ordinary
   pushes. To test a commit without the dashboard, push a uniquely named
   throwaway tag (`ci-<topic>-<timestamp>`), follow the run to completion, then
@@ -125,15 +125,15 @@ Workflows live in `.github/workflows/`:
 - `docs.yml` owns every GitHub Pages deploy: on a push to `main` that touches the
   docs sources and on `workflow_dispatch`, which `release.yml` fires for a final
   tag.
-- **Which `pathlib-next` and `uripath` the jobs install.** Every job that
+- **Which `pathapi` and `uripath` the jobs install.** Every job that
   installs the package first installs them from
   `git+https://github.com/jose-pr/<repository>@<ref>` when a ref is given: the
-  `pathlib_next_ref` and `uripath_ref` inputs of a manual run of `test.yml` or
-  `docs.yml`, else the repository variables `PATHLIB_NEXT_REF` and `URIPATH_REF`
+  `pathapi_ref` and `uripath_ref` inputs of a manual run of `test.yml` or
+  `docs.yml`, else the repository variables `PATHAPI_REF` and `URIPATH_REF`
   (the only source for a `ci-*` tag and for `release.yml`). With neither, pip
   takes the release range from PyPI. A ref must hold a version inside that
   range. Set the variables while the releases are not on PyPI (`gh variable set
-  PATHLIB_NEXT_REF --body <branch-or-sha>`), delete them afterwards.
+  PATHAPI_REF --body <branch-or-sha>`), delete them afterwards.
   `release.yml` refuses a final tag while either is set.
 
 ## Conventions
@@ -175,9 +175,9 @@ Workflows live in `.github/workflows/`:
    it by exit code.
 5. Push `main`, then the `v*` tag. Publishing is irreversible, so the tag is
    pushed only with the maintainer's explicit consent for that specific
-   release. The releases the dependency ranges ask of `pathlib-next` and
+   release. The releases the dependency ranges ask of `pathapi` and
    `uripath` must be on PyPI first, and the repository variables
-   `PATHLIB_NEXT_REF` and `URIPATH_REF` deleted.
+   `PATHAPI_REF` and `URIPATH_REF` deleted.
 
 Once per repository, before the first release: create `jose-pr/repopath` on
 GitHub; register PyPI Trusted Publishing for the project `repopath` (workflow

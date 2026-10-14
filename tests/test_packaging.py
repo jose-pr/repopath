@@ -31,7 +31,7 @@ def _declared_requirements(project):
     for spec in specs:
         requirement = packaging_requirements.Requirement(spec)
         # The extras of this distribution name itself, with no bounds.
-        if requirement.name.replace("_", "-") not in ("pathlib-next", "repopath"):
+        if requirement.name.replace("_", "-") not in ("pathapi", "repopath"):
             yield requirement
 
 
@@ -80,7 +80,7 @@ def test_the_only_required_dependency_is_the_core(project):
         packaging_requirements.Requirement(spec)
         for spec in project["project"]["dependencies"]
     ]
-    assert [r.name for r in required] == ["pathlib-next"]
+    assert [r.name for r in required] == ["pathapi"]
 
 
 def test_the_schemes_are_declared_unconditionally_as_entry_points(project):

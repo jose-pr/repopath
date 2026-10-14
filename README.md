@@ -10,7 +10,7 @@
 `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")` has the method
 names, signatures and exception types of `pathlib.Path`, and `GitLabPath` does the same
 for GitLab; `RepoPath` is the class that returns either. None needs a URI, and all
-build on [`pathlib-next`](https://github.com/jose-pr/pathlib-next) alone; with
+build on [`pathapi`](https://github.com/jose-pr/pathapi) alone; with
 [`uripath`](https://github.com/jose-pr/uripath) installed the same package also
 provides the `repo:`, `github:` and `gitlab:` schemes. It is documented at
 <https://jose-pr.github.io/repopath/>.
@@ -27,7 +27,7 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
 
 - **A `pathlib` path in a repository**: `open`, `read_text`, `iterdir`, `glob`, `stat`
   and the rest, plus `walk`, `copy` out of the tree and `PathSyncer` as a source, from
-  `pathlib-next`. Nothing connects until the first request.
+  `pathapi`. Nothing connects until the first request.
 - **One class for the kind**: `RepoPath("f", owner="acme", repo="widgets",
   instance="github.com")` is a `GitHubPath`; another instance needs `type=`, and
   `RepoPath.kinds()` lists the kinds. A kind is a subclass that registers itself.
@@ -38,7 +38,7 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
 - **Authentication that stays out of sight**: `token=` is sent as a bearer token to the
   API's own origin only, and shown by no `str()`, `repr()`, pickle or error message. A
   token over plain `http://` to another host warns.
-- **No library to install**: requests go through `pathlib_next.http`, on the standard
+- **No library to install**: requests go through `pathapi.http`, on the standard
   library, with a replaceable transport. Errors are the `OSError` types `pathlib` raises,
   `RateLimitError` (a `BlockingIOError`) for a rate limit and `BadReplyError` for a reply
   that is not the shape the API documents.
@@ -52,7 +52,7 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
 pip install repopath
 ```
 
-Requires `pathlib-next`, which pip installs with it, and Python 3.9 or newer.
+Requires `pathapi`, which pip installs with it, and Python 3.9 or newer.
 
 | Install | Adds |
 | --- | --- |
@@ -90,11 +90,11 @@ private = RepoPath(
 assert isinstance(doc, GitLabPath)
 ```
 
-**Copy a tree** out of a repository with `pathlib-next`:
+**Copy a tree** out of a repository with `pathapi`:
 
 <!-- example: skip: reads from GitHub -->
 ```python
-from pathlib_next import LocalPath
+from pathapi import LocalPath
 from repopath import GitHubPath
 
 GitHubPath("docs", owner="psf", repo="requests", ref="main").copy(

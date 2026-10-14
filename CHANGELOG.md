@@ -11,17 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 The first release of `repopath`: the `github:`, `gitlab:` and `git:` schemes of
 `pathlib-next` 0.9 (`pathlib_next.uri.schemes`) as a distribution of their own, and as
-paths that need no URI. It needs Python 3.9 or newer and `pathlib-next>=0.10.0,<0.11`,
+paths that need no URI. It needs Python 3.9 or newer and `pathapi>=0.1.0,<0.2`,
 and nothing else; its one extra, `uri`, adds `uripath>=0.1.0,<0.2` and with it the
 schemes. Under *Changed*, the migration from `pathlib-next` comes in this order: the
 table of names, the table of URIs, then every change of behaviour with what to do about
 it.
 
+It is built on `pathapi`, which was published as `pathlib-next` up to 0.10.0 (import
+name `pathlib_next`); the old names below are the ones before the move.
+
 ### Added
 
-- `RepoPath`, `GitHubPath` and `GitLabPath`: read-only `pathlib_next.Path` classes for a
+- `RepoPath`, `GitHubPath` and `GitLabPath`: read-only `pathapi.Path` classes for a
   repository tree on GitHub (and GitHub Enterprise) or GitLab (and self-hosted GitLab),
-  over the services' REST APIs, with no URI and no library beyond `pathlib-next`.
+  over the services' REST APIs, with no URI and no library beyond `pathapi`.
   `GitHubPath("src/x.py", owner="acme", repo="widgets", ref="v1.2", instance="github.com",
   token=None, backend=None)`; `GitLabPath` takes the same keywords and an owner that may
   be a group path (`"acme/team"`).
@@ -45,7 +48,7 @@ it.
   `BadReplyError` (also an `OSError`, errno `EIO`); `InsecureTransportWarning` is there
   too.
 - `RepoBackend` and `BaseRepoBackend` are in `repopath`. `RepoBackend` is a context
-  manager and sends through `pathlib_next.http`.
+  manager and sends through `pathapi.http`.
 
 ### Changed
 
@@ -95,9 +98,9 @@ it.
   Was: the host name was looked up.
 - Requests send `User-Agent: repopath/<version>` instead of `User-Agent: pathlib-next`;
   the version is `repopath.__version__`. A backend's `headers=` still replaces it.
-- The `requests` HTTP transport is provided by `pathlib-next-requests`.
+- The `requests` HTTP transport is provided by `pathapi-requests`.
   `RepoBackend(session=...)` and `RepoBackend(**requests_args)` raise an `ImportError`
-  naming that distribution without it. What to do: install `pathlib-next-requests`
+  naming that distribution without it. What to do: install `pathapi-requests`
   where one of them is used; with it installed they send through its transport and
   nothing else is configured.
 - `uritools` is not a dependency of anything here, and `requests` is not installed with

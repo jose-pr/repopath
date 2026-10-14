@@ -29,7 +29,7 @@ def test_importing_the_package_loads_no_uripath_and_no_third_party_library():
 def test_building_deriving_and_reading_paths_needs_only_the_core():
     result = run(
         """
-        from pathlib_next.http import HTTPResponse
+        from pathapi.http import HTTPResponse
         from repopath import GitHubPath, GitLabPath, RepoBackend, RepoPath
 
         class Transport:

@@ -8,15 +8,15 @@ import errno as _errno
 import typing as _ty
 import urllib.parse as _urlparse
 
-from pathlib_next import providers as _providers
-from pathlib_next.http import json_body, peer_text
+from pathapi import providers as _providers
+from pathapi.http import json_body, peer_text
 
 from ._backend import BaseRepoBackend, RepoBackend
 from ._kinds import RepoPath
 from .exceptions import BadReplyError
 
 if _ty.TYPE_CHECKING:
-    from pathlib_next import FileStat
+    from pathapi import FileStat
 
 #: What a path segment keeps unescaped when the path is spelled as a URI.
 _SAFE_SEGMENT = "!$&'()*+,;=:@"

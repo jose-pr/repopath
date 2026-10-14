@@ -10,7 +10,7 @@ import pickle
 
 import pytest
 
-from pathlib_next import Path
+from pathapi import Path
 from repopath import BaseRepoBackend, GitHubPath, GitLabPath, RepoBackend
 from repopath import _kinds
 
@@ -35,7 +35,7 @@ class _Picklable(_Refuses):
         self.tag = tag
 
 
-def test_a_repository_path_is_a_pathlib_next_path_that_needs_no_uri():
+def test_a_repository_path_is_a_pathapi_path_that_needs_no_uri():
     assert isinstance(GitHubPath(owner="o", repo="r"), Path)
     assert isinstance(GitLabPath(owner="o", repo="r"), Path)
 

@@ -1,6 +1,6 @@
 # Repository paths
 
-`GitHubPath` and `GitLabPath` are `pathlib_next.Path` classes over the REST API of a
+`GitHubPath` and `GitLabPath` are `pathapi.Path` classes over the REST API of a
 hosting service. `RepoPath` is the family they belong to: calling it returns one of them.
 Everything `pathlib` does to read a tree works; every write raises `NotImplementedError`.
 
@@ -67,8 +67,8 @@ with RepoBackend(token="ghp_...", timeout=(5, 30)) as backend:
         print(child)
 ```
 
-The backend sends through `pathlib_next.http`: the standard-library transport by default
-(`PATHLIB_NEXT_HTTP_TRANSPORT` chooses another), `timeout=(10, 60)` seconds unless given,
+The backend sends through `pathapi.http`: the standard-library transport by default
+(`PATHAPI_HTTP_TRANSPORT` chooses another), `timeout=(10, 60)` seconds unless given,
 and the token only to the origin of the API. `api_base=` replaces the API root a path
 derives from its instance. A token over plain `http://` to a host other than this machine
 warns (`InsecureTransportWarning`).
@@ -82,7 +82,7 @@ warns (`InsecureTransportWarning`).
 - `stat()` of a GitHub file is a `HEAD` of the contents URL asked for the raw media type;
   a directory is then listed. A directory of more than 1,000 entries is read through the
   Git Trees API, and GitLab's pages are read to the last one.
-- A file is read whole into memory. A JSON reply over `pathlib_next.http.MAX_REPLY_BYTES`
+- A file is read whole into memory. A JSON reply over `pathapi.http.MAX_REPLY_BYTES`
   (8 MiB) is `OSError(EFBIG)`.
 - Anonymous requests are rate limited by the service; the limit is `RateLimitError`, a
   `BlockingIOError` whose message says when to retry.

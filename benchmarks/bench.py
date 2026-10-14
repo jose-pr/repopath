@@ -29,7 +29,7 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 # is started from.
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from pathlib_next.http import HTTPTransport  # noqa: E402
+from pathapi.http import HTTPTransport  # noqa: E402
 from repopath import BaseRepoBackend, RepoBackend  # noqa: E402
 
 SCHEMA = "repopath.bench/1"

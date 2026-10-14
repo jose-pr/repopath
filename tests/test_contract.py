@@ -4,7 +4,7 @@ loopback fakes of `api_fakes`; nothing reaches a real host."""
 
 import pytest
 
-from pathlib_next.testing import ReadPathContract
+from pathapi.testing import ReadPathContract
 from repo_support import github, gitlab, make_path
 
 

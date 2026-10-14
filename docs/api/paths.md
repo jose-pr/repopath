@@ -1,6 +1,6 @@
 # Paths and backends
 
-The paths need no URI and no library beyond `pathlib-next`.
+The paths need no URI and no library beyond `pathapi`.
 
 `GitHubPath` and `GitLabPath` share a base class: the properties it defines
 (`owner`, `repo`, `ref`, `instance`, `repo_path`) are listed under each of them.
