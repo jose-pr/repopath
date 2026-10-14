@@ -7,10 +7,10 @@ import os
 
 
 def pytest_sessionstart(session):
-    import uripath
+    import repopath
 
     expected = os.path.normcase(os.path.abspath(os.environ["MUTATION_ROOT"]))
-    loaded = os.path.normcase(os.path.abspath(uripath.__file__))
+    loaded = os.path.normcase(os.path.abspath(repopath.__file__))
     if not loaded.startswith(expected + os.sep):
-        raise RuntimeError(f"uripath was loaded from {loaded}, not {expected}")
-    print(f"\nmutation copy loaded: {uripath.__file__}")
+        raise RuntimeError(f"repopath was loaded from {loaded}, not {expected}")
+    print(f"\nmutation copy loaded: {repopath.__file__}")

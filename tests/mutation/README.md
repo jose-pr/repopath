@@ -16,7 +16,7 @@ Run it with the interpreter of the environment you test in, from the
 repository root, with the same `PYTHONPATH` the test suite needs. It is run on
 demand and never in CI; nothing in this directory is collected by pytest.
 
-For each mutant `run.py` copies `src/uripath` to a temporary directory
+For each mutant `run.py` copies `src/repopath` to a temporary directory
 (nothing under `src/` is written), applies the replacement there, and runs the
 named tests with the copy first on the import path. A pytest plugin
 (`mutation_check.py`) stops the run if the checkout was imported instead.
@@ -39,12 +39,12 @@ Append a call to `mutants.py`:
 
 ```python
 mutant(
-    "http-unlink-of-a-directory",            # a unique id: what breaks, in words
-    "schemes/_http/_path.py",                # relative to src/uripath
-    "        if self.is_dir():\n            raise IsADirectoryError(\n",   # exact text, once
-    "        if False:\n            raise IsADirectoryError(\n",           # its replacement
-    "tests/test_http.py::test_http_unlink_on_directory_sends_no_delete",
-    "HTTPURIPath.unlink() sends DELETE for a collection",             # the note
+    "github-listing-keeps-unsafe-names",     # a unique id: what breaks, in words
+    "_github.py",                            # relative to src/repopath
+    "            if not _providers.is_safe_child_name(entry[\"name\"]):\n                continue\n",
+    "            if False:\n                continue\n",                  # its replacement
+    "tests/test_repo.py::test_github_listing_skips_names_that_are_not_one_component",
+    "GitHubPath listing filter no-op",                              # the note
 )
 ```
 

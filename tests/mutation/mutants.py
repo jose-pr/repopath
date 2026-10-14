@@ -1,9 +1,9 @@
 """The mutation list: one single-line change to a guard of the library per
 entry, and the tests that must fail because of it.
 
-`run.py` applies each entry to a temporary copy of `src/uripath`. `old`
+`run.py` applies each entry to a temporary copy of `src/repopath`. `old`
 is the exact text of the line (or lines) to replace and must occur once in
-`file`, which is relative to `src/uripath`; when the code moves on and
+`file`, which is relative to `src/repopath`; when the code moves on and
 the text goes, the entry is reported stale until it is re-expressed. `tests`
 are pytest arguments (node ids, or a file when any of its tests may be the
 one to catch the mutant) that all pass on the unmutated code. README.md says
@@ -44,533 +44,370 @@ def mutant(
     MUTANTS.append(Mutant(id, file, old, new, tuple(tests), note, platform))
 
 
-# --- http: and dav: deletes ---------------------------------------------------
+# --- the backend: what is sent, what is warned about, what an error says -----------
+
+_REQUESTS = "tests/test_requests.py"
+_TRANSPORT = "tests/test_transport.py"
+_REPO = "tests/test_repo.py"
+_REPLIES = "tests/test_replies.py"
 
 mutant(
-    "http-unlink-of-a-directory",
-    "schemes/_http/_path.py",
-    "        if self.is_dir():\n            raise IsADirectoryError(\n",
-    "        if False:\n            raise IsADirectoryError(\n",
-    "tests/test_http.py::test_http_unlink_on_directory_sends_no_delete",
-    "HTTPURIPath.unlink() sends DELETE for a collection",
+    "backend-token-is-not-sent",
+    "_backend.py",
+    '            auth=f"Bearer {self.token}" if self.token else None,\n',
+    "            auth=None,\n",
+    f"{_REQUESTS}::test_token_over_plain_http_to_another_host_warns_and_is_still_sent",
+    "the bearer token never reaches the API",
 )
 mutant(
-    "http-rmdir-of-a-file",
-    "schemes/_http/_path.py",
-    "        if not self.is_dir():\n            raise NotADirectoryError(self)\n",
-    "        if False:\n            raise NotADirectoryError(self)\n",
-    "tests/test_http.py::test_http_rmdir_on_file_raises_notadirectoryerror",
-    "HTTPURIPath.rmdir() sends DELETE for a file",
+    "backend-warns-without-a-credential",
+    "_backend.py",
+    "    if not authorized:\n        return\n",
+    "    if False:\n        return\n",
+    f"{_REQUESTS}::test_plain_http_without_a_credential_does_not_warn",
+    "plain http warns although nothing secret is sent",
 )
 mutant(
-    "http-rmdir-of-a-non-empty-directory",
-    "schemes/_http/_path.py",
-    '        for _ in self._scandir():\n            raise OSError(_errno.ENOTEMPTY, "Directory not empty", str(self))\n        self._delete()\n',
-    "        self._delete()\n",
-    "tests/test_http.py::test_http_rmdir_not_empty",
-    "HTTPURIPath.rmdir() sends DELETE for a directory that lists children",
+    "backend-warns-for-loopback",
+    "_backend.py",
+    "    if _is_loopback(host):\n        return\n",
+    "    if False:\n        return\n",
+    f"{_REQUESTS}::test_token_to_loopback_or_https_does_not_warn",
+    "a token sent to this machine over plain http warns",
 )
 mutant(
-    "http-delete-answered-404-with-missing-ok",
-    "schemes/_http/_path.py",
-    "                if missing_ok:\n                    return\n                raise FileNotFoundError(self)\n",
-    "                if False:\n                    return\n                raise FileNotFoundError(self)\n",
-    "tests/test_http.py::test_http_unlink_missing_ok_accepts_a_delete_answered_404",
-    "unlink(missing_ok=True) raises for a DELETE answered 404",
+    "backend-header-credential-does-not-warn",
+    "_backend.py",
+    '        authorized = bool(self.token) or any(\n            name.lower() == "authorization" for name in (*self.headers, *sent)\n        )\n',
+    "        authorized = bool(self.token)\n",
+    f"{_REQUESTS}::test_authorization_header_over_plain_http_warns",
+    "an Authorization header given in headers= goes over plain http without a warning",
 )
 mutant(
-    "dav-delete-answered-404-without-missing-ok",
-    "schemes/_dav.py",
-    "        except FileNotFoundError:\n            if not missing_ok:\n                raise\n",
-    "        except FileNotFoundError:\n            if False:\n                raise\n",
-    "tests/test_webdav.py::test_unlink_without_missing_ok_raises_for_a_delete_answered_404",
-    "unlink() swallows a DELETE answered 404 although missing_ok is False",
+    "backend-reason-phrase-unescaped",
+    "_backend.py",
+    '        reason = peer_text(response.reason or "")\n',
+    '        reason = response.reason or ""\n',
+    f"{_TRANSPORT}::test_the_reason_phrase_of_an_api_reply_is_shown_escaped",
+    "an API error's reason phrase reaches the message as the server sent it",
+)
+mutant(
+    "backend-reset-header-unescaped",
+    "_backend.py",
+    '        when = f"resets at {peer_text(reset, 40)}"\n',
+    '        when = f"resets at {reset}"\n',
+    f"{_TRANSPORT}::test_a_rate_limit_header_is_shown_escaped_and_cut",
+    "a rate-limit header reaches the message as the server sent it",
+)
+mutant(
+    "backend-plain-403-is-a-rate-limit",
+    "_backend.py",
+    '    if response.status == 403 and remaining != "0" and retry_after is None:\n        return None\n',
+    "    if False:\n        return None\n",
+    f"{_REPO}::test_plain_403_is_still_permission_error",
+    "a 403 that is not a rate limit is reported as one",
+)
+mutant(
+    "backend-retry-after-is-ignored",
+    "_backend.py",
+    "    if retry_after is not None:\n        when =",
+    "    if False:\n        when =",
+    f"{_REPO}::test_github_primary_and_secondary_rate_limits_raise_eagain",
+    "a secondary rate limit does not say when to retry",
+)
+mutant(
+    "backend-repr-shows-the-token",
+    "_backend.py",
+    '        return f"{type(self).__name__}(api_base={self.api_base!r})"\n',
+    '        return f"{type(self).__name__}(api_base={self.api_base!r}, token={self.token!r})"\n',
+    f"{_REQUESTS}::test_no_display_form_of_a_repository_path_shows_the_token",
+    "repr() of a backend, and of a path with a custom backend, names the token",
+)
+mutant(
+    "backend-session-is-dropped",
+    "_backend.py",
+    '            transport = get_transport("requests")(session, **requests_args)\n',
+    "            transport = None\n",
+    "tests/test_session.py::test_a_backend_builds_the_installed_transport_from_a_session",
+    "RepoBackend(session=...) sends with the built-in transport and drops the session",
 )
 
-# --- guards of the library ---------------------------------------------------
+# --- the place and the identity of a path ---------------------------------------------
+
+_HOSTED = "tests/test_hosted_paths.py"
+
 mutant(
-    "source-repr-shows-the-password",
-    "source/_source.py",
-    'f"userinfo={self._redacted_userinfo()!r}, host={self.host!r}, "',
-    'f"userinfo={self.userinfo!r}, host={self.host!r}, "',
-    "tests/test_uri_parse.py::test_source_str_and_repr_redact_password",
-    "Source.__repr__ shows the password",
+    "hosted-owner-or-repo-may-be-a-dot-segment",
+    "_hosted.py",
+    '    if any(part in ("", ".", "..") for part in parts) or (not nested and "/" in value):\n',
+    "    if False:\n",
+    "tests/test_requests.py::test_github_owner_or_repo_that_is_not_one_name_is_refused",
+    "an owner or a repository can climb out of the repository's API root",
 )
 mutant(
-    "source-str-shows-the-password",
-    "source/_source.py",
-    "        scheme, userinfo, host, port = _source_parts(self, True)\n",
-    "        scheme, userinfo, host, port = _source_parts(self, False)\n",
-    "tests/test_uri_parse.py::test_source_str_and_repr_redact_password",
-    "Source.__str__ shows the password",
+    "hosted-instance-may-hold-anything",
+    "_hosted.py",
+    "    if not text or _FORBIDDEN_IN_INSTANCE & set(text):\n",
+    "    if not text:\n",
+    f"{_HOSTED}::test_an_instance_is_a_host_and_an_optional_port",
+    "an instance can hold a slash, an at sign or a space and so redirect the API URL",
 )
 mutant(
-    "http-listing-keeps-unsafe-names",
-    "schemes/_http/_path.py",
-    "            if not _providers.is_safe_child_name(name):\n",
-    "            if False:\n",
-    "tests/test_http.py::test_http_listing_leaves_out_a_name_that_is_not_a_safe_component",
-    "HTTPURIPath listing filter no-op",
+    "hosted-instance-case-matters",
+    "_hosted.py",
+    '        return instance.lower(), owner, repo, ref or ""\n',
+    '        return instance, owner, repo, ref or ""\n',
+    f"{_HOSTED}::test_paths_are_equal_when_class_place_and_names_are",
+    "two spellings of one host are two trees",
 )
 mutant(
-    "dav-listing-keeps-unsafe-names",
-    "schemes/_dav.py",
-    "            if _providers.is_safe_child_name(name):\n",
-    "            if True:\n",
-    "tests/test_webdav.py::test_propfind_dot_entries_are_not_children",
-    "DAVURIPath listing filter no-op",
-)
-mutant(
-    "uri-same-filesystem-always-true",
-    "schemes/_path.py",
-    "        return mine is None or theirs is None or mine is theirs\n",
-    "        return True\n",
-    "tests/test_same_filesystem_uri.py::test_two_supplied_backends_are_two_hosts",
-    "URIPath._same_filesystem always True",
-)
-mutant(
-    "uri-same-filesystem-always-false",
-    "schemes/_path.py",
-    "        return mine is None or theirs is None or mine is theirs\n",
-    "        return False\n",
-    "tests/test_same_filesystem_uri.py::test_separately_built_paths_to_one_url_are_the_same_file",
-    "URIPath._same_filesystem always False (self-copy guard off for remote)",
-)
-mutant(
-    "rename-accepts-another-location",
-    "_uri.py",
-    "        if not self._same_location(result):\n",
+    "hosted-dot-segment-reaches-the-api-url",
+    "_hosted.py",
+    '        if any(part in (".", "..") for part in text.split("/")):\n',
     "        if False:\n",
-    "tests/test_routing.py::test_ftp_rename_to_another_server_raises_not_implemented",
-    "rename() no longer refuses a target on another host/bucket",
+    f"{_REQUESTS}::test_github_dot_segment_cannot_reach_the_api_url",
+    "a .. name makes a request outside the repository",
 )
 mutant(
-    "uri-str-shows-the-password",
-    "_uri.py",
-    "        return self.as_uri(sanitize=True)\n",
-    "        return self.as_uri(sanitize=False)\n",
-    "tests/test_transport_security.py::test_http_error_text_and_traceback_carry_no_password",
-    "str(URI) shows the password",
+    "hosted-reply-shape-is-not-checked",
+    "_hosted.py",
+    "        if not isinstance(data, expected):\n",
+    "        if False:\n",
+    f"{_REPLIES}::test_github_listing_of_a_reply_that_is_not_a_directory_is_eio",
+    "JSON of the wrong shape is read as if it were right",
 )
 mutant(
-    "uri-backend-inherited-by-another-endpoint",
-    "schemes/_path.py",
-    "            if source is mine or _same_authority(source, mine):\n                return backend, self._backend_derived\n",
-    "            if True:\n                return backend, self._backend_derived\n",
-    "tests/test_uri_path.py::test_a_same_endpoint_uri_destination_keeps_the_configured_backend",
-    "a copy() destination on another host reuses this path's backend and its credentials",
+    "hosted-negative-size-is-accepted",
+    "_hosted.py",
+    "        if isinstance(size, int) and not isinstance(size, bool) and size >= 0:\n",
+    "        if isinstance(size, int) and not isinstance(size, bool):\n",
+    f"{_REPLIES}::test_github_stat_of_a_reply_that_is_not_a_contents_object_is_eio",
+    "a negative size is reported as the size of a file",
 )
 mutant(
-    "uri-join-keeps-a-backend-of-another-endpoint",
-    "schemes/_path.py",
-    "            if not _same_authority(segment.source, source):\n                continue\n            if backend is not None:",
-    "            if False:\n                continue\n            if backend is not None:",
-    "tests/test_backend_family.py::test_a_path_that_crosses_to_another_endpoint_builds_its_own",
-    "a backend held by a join segment crosses to a path on another endpoint",
+    "hosted-backend-with-a-token-is-accepted",
+    "_hosted.py",
+    "        if backend is not None and token is not None:\n",
+    "        if False:\n",
+    f"{_HOSTED}::test_backend_and_token_together_are_a_type_error",
+    "a token given beside a backend is silently dropped",
 )
 mutant(
-    "http-write-stream-uploads-before-it-is-ready",
-    "schemes/_http/_streams.py",
-    "            if self._ready:\n                self._upload(self.getvalue())\n",
-    "            if True:\n                self._upload(self.getvalue())\n",
-    "tests/test_http_writes.py",
-    "a write stream whose constructor raised uploads its half-built buffer when collected",
+    "hosted-pickle-carries-the-backend",
+    "_kinds.py",
+    '        if getattr(self._backend, "picklable", False) is True:\n',
+    "        if True:\n",
+    f"{_HOSTED}::test_a_pickle_carries_the_place_and_the_names_and_never_a_token",
+    "a pickle of a path with a token carries the token",
 )
-# --- github: a HEAD reply that is not the API's own -----------------------------
+mutant(
+    "kinds-a-name-another-class-holds-is-replaced",
+    "_kinds.py",
+    "        if held is not None and not (replace or _same_definition(held, cls)):\n",
+    "        if False:\n",
+    "tests/test_kinds.py::test_a_name_another_class_holds_is_refused",
+    "a second kind silently takes the name of the first",
+)
+mutant(
+    "kinds-an-instance-another-kind-holds-is-replaced",
+    "_kinds.py",
+    "                owner is not None\n                and owner is not held\n                and not (replace or _same_definition(owner, cls))\n",
+    "                False\n",
+    "tests/test_kinds.py::test_an_instance_another_kind_is_detected_for_is_refused",
+    "a new kind takes the detection of github.com from the one that ships",
+)
+mutant(
+    "kinds-detection-is-case-sensitive",
+    "_kinds.py",
+    "                return detected[instance.lower()]\n",
+    "                return detected[instance]\n",
+    "tests/test_kinds.py::test_the_kind_is_detected_from_a_public_instance",
+    "GitHub.COM is not recognised as github.com",
+)
+mutant(
+    "kinds-type-wins-over-the-instance-no-more",
+    "_kinds.py",
+    "        if name is not None:\n            if not isinstance(name, str):",
+    "        if False:\n            if not isinstance(name, str):",
+    "tests/test_kinds.py::test_type_wins_over_the_instance_it_is_detected_for",
+    "type= is ignored when the instance can be detected",
+)
+mutant(
+    "kinds-paths-of-two-kinds-join",
+    "_kinds.py",
+    '        return next((c for c in cls.__mro__ if c.__dict__.get("TYPE")), RepoPath)\n',
+    "        return RepoPath\n",
+    "tests/test_kinds.py::test_a_path_of_one_kind_does_not_join_with_one_of_another",
+    "a GitHubPath takes the place of a GitLabPath it is joined with",
+)
+mutant(
+    "kinds-type-only-hint-is-returned-as-a-stat",
+    "_kinds.py",
+    "        if hint is not None and not hint.size_known:\n            return None\n        return hint\n",
+    "        return hint\n",
+    "tests/test_listing_hints.py::test_gitlab_stat_of_a_listed_blob_is_exact_and_one_request",
+    "stat() of a listed GitLab file answers with a size the listing never had",
+)
+
+# --- GitHub ---------------------------------------------------------------------------
 
 mutant(
     "github-head-believes-a-reply-that-is-not-the-api-s",
-    "schemes/_github.py",
+    "_github.py",
     '            if "X-GitHub-Media-Type" not in resp.headers:\n                return None\n            raise_for_status(resp)',
     "            raise_for_status(resp)",
     "tests/test_github_stat.py::test_a_reply_that_is_not_the_api_s_own_is_not_believed",
     "a proxy's reply to a HEAD is read as the size of the file, or as its absence",
 )
-# --- the scheme registry: a name is held by one class -----------------------------
-
-_SCHEME_TESTS = "tests/test_scheme_registry.py"
-
 mutant(
-    "scheme-registry-second-claim-is-dropped-silently",
-    "schemes/_registry.py",
-    "            elif name in _REPLACED and _is_builtin_class(name, cls):\n",
-    "            elif True:\n",
-    (
-        f"{_SCHEME_TESTS}::test_a_second_class_listing_a_scheme_raises_at_definition",
-        f"{_SCHEME_TESTS}::test_a_class_refused_for_one_name_registers_none_of_its_names",
-    ),
-    "a second class listing a held scheme is neither refused nor registered",
+    "github-head-takes-an-encoded-length",
+    "_github.py",
+    '            or headers.get("Content-Encoding", "identity").strip().lower() != "identity"\n',
+    "            or False\n",
+    "tests/test_github_stat.py::test_a_reply_that_states_no_file_size_is_followed_by_the_get",
+    "the Content-Length of a gzip reply is read as the size of the file",
 )
 mutant(
-    "scheme-registry-built-in-name-is-free-until-its-module-is-imported",
-    "schemes/_registry.py",
-    "                if name in _BUILTIN_SCHEMES and not _is_builtin_class(name, cls):\n",
-    "                if False:\n",
-    f"{_SCHEME_TESTS}::test_a_built_in_scheme_is_refused_before_its_module_is_imported",
-    "a class takes a built-in scheme whose module has not been imported yet",
+    "github-listing-keeps-unsafe-names",
+    "_github.py",
+    '            if not _providers.is_safe_child_name(entry["name"]):\n                continue\n',
+    "            if False:\n                continue\n",
+    f"{_REPO}::test_github_listing_skips_names_that_are_not_one_component",
+    "a listed name such as .. becomes a child",
 )
 mutant(
-    "scheme-registry-built-in-class-refused-after-a-replacement",
-    "schemes/_registry.py",
-    "            elif name in _REPLACED and _is_builtin_class(name, cls):\n",
-    "            elif False:\n",
-    f"{_SCHEME_TESTS}::test_a_replaced_built_in_scheme_stays_replaced_when_its_module_is_imported",
-    "importing a built-in module fails once a class has replaced one of its schemes",
+    "github-cap-is-not-noticed",
+    "_github.py",
+    "        if len(entries) >= self._CONTENTS_LIMIT:\n",
+    "        if len(entries) > self._CONTENTS_LIMIT:\n",
+    f"{_REPO}::test_github_listing_past_contents_cap_is_complete",
+    "a directory of more than 1,000 entries lists the first 1,000",
 )
 mutant(
-    "scheme-lookup-asks-entry-points-before-the-built-in-table",
-    "schemes/_path.py",
-    "            cls._load_builtin_scheme(scheme, strict=strict)\n"
-    "            or cls._load_entry_point(scheme)\n",
-    "            cls._load_entry_point(scheme)\n"
-    "            or cls._load_builtin_scheme(scheme, strict=strict)\n",
-    f"{_SCHEME_TESTS}::test_an_entry_point_named_like_a_built_in_scheme_does_not_displace_it",
-    "a distribution's entry point for a built-in name is loaded ahead of the built-in",
-)
-mutant(
-    "scheme-listing-leaves-out-schemes-not-imported-yet",
-    "schemes/_path.py",
-    "                    *_BUILTIN_SCHEMES,\n                    *_elsewhere.SCHEMES,\n                    *_declared_entry_points(),\n",
-    "",
-    (
-        f"{_SCHEME_TESTS}::test_schemes_lists_every_built_in_name_without_importing_its_module",
-        f"{_SCHEME_TESTS}::test_schemes_lists_an_entry_point_whose_module_is_not_imported",
-    ),
-    "schemes() lists only the classes already imported",
-)
-mutant(
-    "scheme-listing-leaves-out-the-schemes-provided-elsewhere",
-    "schemes/_path.py",
-    "                    *_elsewhere.SCHEMES,\n",
-    "",
-    "tests/test_elsewhere.py::test_a_scheme_provided_elsewhere_is_listed",
-    "schemes() does not list sftp, s3, gs and az",
-)
-mutant(
-    "scheme-class-of-a-scheme-provided-elsewhere-does-not-raise",
-    "schemes/_path.py",
-    "            if strict:\n                raise _elsewhere.not_installed(scheme)\n",
-    "            if False:\n                raise _elsewhere.not_installed(scheme)\n",
-    "tests/test_elsewhere.py::test_the_scheme_class_of_a_scheme_provided_elsewhere_names_what_to_install",
-    "scheme_class('sftp') returns the stand-in instead of raising ImportError",
-)
-mutant(
-    "with-session-ignores-the-installed-transport",
-    "schemes/_http/_path.py",
-    '            get_transport("requests")(session, **requests_args),\n',
-    "            None,\n",
-    "tests/test_with_session.py::test_with_session_sends_through_the_installed_transport",
-    "with_session() sends with the built-in transport and drops the session",
-)
-mutant(
-    "repository-backend-ignores-the-session",
-    "schemes/_gitrepo.py",
-    '            transport = get_transport("requests")(session, **requests_args)\n',
-    "            transport = None\n",
-    "tests/test_with_session.py::test_a_repository_backend_builds_the_installed_transport_from_a_session",
-    "RepoBackend(session=...) sends with the built-in transport and drops the session",
-)
-mutant(
-    "scheme-registry-same-qualified-name-in-another-module-is-the-same-class",
-    "schemes/_registry.py",
-    "    return a.__module__ == b.__module__ and a.__qualname__ == b.__qualname__\n",
-    "    return a.__qualname__ == b.__qualname__\n",
-    f"{_SCHEME_TESTS}::test_a_class_of_the_same_qualified_name_in_another_module_is_still_refused",
-    "a class of another module takes a scheme from a class that has the same name",
-)
-
-
-# --- http paths: the guards above the transport ----------------------------------
-
-_PEER = "tests/test_http_peer_text.py"
-
-mutant(
-    "git-reason-phrase-unescaped",
-    "schemes/_gitrepo.py",
-    '        reason = peer_text(response.reason or "")\n',
-    '        reason = response.reason or ""\n',
-    f"{_PEER}::test_the_reason_phrase_of_a_git_api_reply_is_shown_escaped",
-    "a git API error's reason phrase reaches the message as the server sent it",
-)
-_LIMITS = "tests/test_http_reply_limits.py"
-
-mutant(
-    "dav-propfind-reply-read-unbounded",
-    "schemes/_dav.py",
-    "        body = read_limited(resp, self)\n",
-    "        body = resp.read()\n",
-    f"{_LIMITS}::test_a_propfind_reply_over_the_limit_is_efbig_counted_in_decoded_bytes",
-    "a PROPFIND reply is read whole whatever its size",
-)
-
-# --- query and fragment through a derivation ----------------------------------
-
-_DERIVATION = "tests/test_uri_derivation_query.py"
-_LISTING = "tests/test_http_listing.py"
-mutant(
-    "destination-takes-the-sources-query",
-    "_uri.py",
-    "        return parent._from_parsed_parts(parent.source, parent.path, None, None)\n",
-    "        return parent\n",
-    (
-        f"{_DERIVATION}::test_a_str_destination_takes_neither_the_query_nor_the_fragment_of_its_source",
-        f"{_LISTING}::test_rename_destination_carries_the_targets_query_not_the_sources",
-    ),
-    "a rename or copy destination named by a string carries the source's signature",
-)
-mutant(
-    "http-listed-child-takes-the-index-query",
-    "schemes/_http/_path.py",
-    '        child = self._from_parsed_parts(self.source, directory + name, "", "", **kwargs)\n',
-    "        child = self._from_parsed_parts(\n"
-    "            self.source, directory + name, self.query, self.fragment, **kwargs\n"
-    "        )\n",
-    (
-        f"{_LISTING}::test_http_joined_child_keeps_the_directory_query_but_a_listed_one_has_none",
-        f"{_LISTING}::test_dav_joined_child_keeps_the_collection_query_but_a_listed_one_has_none",
-    ),
-    "a listed file is requested with the query that shaped its index",
-)
-mutant(
-    "join-drops-the-query",
-    "_uri.py",
-    "        return self._from_parsed_parts(self.source, path, self.query, self.fragment)\n\n    def _join_children",
-    '        return self._from_parsed_parts(self.source, path, "", "")\n\n    def _join_children',
-    f"{_DERIVATION}::test_a_path_only_derivation_keeps_the_query_and_the_fragment",
-    "a token in the query stops following the names joined onto it",
-)
-
-# --- file: text and == with text -----------------------------------------------
-
-_FILE_TEXT = "tests/test_file_uri_text.py"
-mutant(
-    "empty-authority-is-dropped",
-    "source/_source.py",
-    "    host = source.host if source.host is not None else None\n",
-    "    host = source.host if source.host else None\n",
-    (
-        f"{_FILE_TEXT}::test_a_file_uri_is_written_back_as_it_was_read",
-        f"{_FILE_TEXT}::test_a_file_path_is_written_as_pathlib_writes_it",
-    ),
-    "file:///x is written file:/x and no longer equals the text pathlib gives",
-)
-mutant(
-    "uri-equals-text-as-written",
-    "_uri.py",
-    "                uri = URI(other)._identity()\n",
-    "                uri = other\n",
-    f"{_FILE_TEXT}::test_a_uri_equals_the_text_that_names_it",
-    "a URI is false against the canonical text of its own file",
-)
-
-# --- data: URIs ---------------------------------------------------------------
-
-_DATA = "tests/test_data_uri.py"
-mutant(
-    "data-uri-payload-is-sliced-into-names",
-    "_uri.py",
-    '        if self.source.scheme == "data":\n            raise NotImplementedError(\n',
-    "        if False:\n            raise NotImplementedError(\n",
-    f"{_DATA}::test_the_pure_path_derivations_of_a_data_uri_raise",
-    "a join or a parent of a data: URI cuts the payload and names another file",
-)
-mutant(
-    "data-uri-text-ignores-the-declared-charset",
-    "schemes/_data.py",
-    "            encoding = self.charset\n",
-    "            encoding = None\n",
-    f"{_DATA}::test_text_is_read_in_the_charset_the_uri_declares",
-    "read_text() decodes a data: payload with the locale instead of its declared charset",
-)
-
-# --- a write block that raised ------------------------------------------------
-
-_WRITES = "tests/test_http_writes.py"
-mutant(
-    "upload-stream-sends-after-a-failed-block",
-    "schemes/_http/_streams.py",
-    "        self._ready = False\n        if not self.closed:\n            self.truncate(0)\n",
-    "        pass\n",
-    (
-        f"{_WRITES}::test_a_failed_write_block_sends_no_put_and_keeps_the_file",
-        f"{_WRITES}::test_a_failed_write_block_does_not_create_the_file",
-    ),
-    "a producer that fails half way replaces a complete remote file with the partial one",
-)
-mutant(
-    "upload-stream-without-the-discard-mixin",
-    "schemes/_http/_streams.py",
-    "class _UploadStream(_providers.DiscardOnError, _io.BytesIO):\n",
-    "class _UploadStream(_io.BytesIO):\n",
-    f"{_WRITES}::test_a_failed_write_block_sends_no_put_and_keeps_the_file",
-    "the stream is closed, and so uploaded, by the block that raised through it",
-)
-
-# --- the case of a host -------------------------------------------------------
-
-_HOST = "tests/test_host_case.py"
-mutant(
-    "uri-equality-reads-the-case-of-the-host",
-    "_uri.py",
-    "        host = fold_host(source.host)\n        if host == source.host:\n",
-    "        host = source.host\n        if host == source.host:\n",
-    f"{_HOST}::test_uris_that_differ_in_the_case_of_the_host_are_equal",
-    "a file is not recognised as itself when its host is spelled in another case",
-)
-mutant(
-    "same-authority-reads-the-case-of-the-host",
-    "source/_source.py",
-    "        str(host).lower() if host else None,\n",
-    "        str(host) if host else None,\n",
-    (
-        f"{_HOST}::test_the_same_authority_is_decided_without_regard_to_the_case_of_the_host",
-        f"{_HOST}::test_a_rename_within_one_server_is_not_a_move_to_another",
-    ),
-    "a backend or a rename stops following a host spelled in another case",
-)
-mutant(
-    "containment-reads-the-case-of-the-host",
-    "_uri.py",
-    "            _same_authority(other.source, self.source)\n",
-    "            (other.source == self.source)\n",
-    f"{_HOST}::test_relative_to_and_containment_do_not_depend_on_the_case_of_the_host",
-    "a copy of a directory into itself is not recognised when the host is spelled in another case",
-)
-mutant(
-    "localhost-reads-the-case",
-    "source/_source.py",
-    '        host = fold_host(self.host)\n        if not host or host == "localhost":\n',
-    '        host = self.host\n        if not host or host == "localhost":\n',
-    f"{_HOST}::test_localhost_is_this_machine_in_any_case",
-    "LOCALHOST is looked up as a remote name",
-)
-
-# --- constructor keywords -----------------------------------------------------
-
-mutant(
-    "constructor-accepts-a-misspelt-backend",
-    "_uri.py",
-    "            if name not in accepted:\n",
-    "            if False:\n",
-    "tests/test_uri_constructor_options.py::test_an_unknown_keyword_argument_is_a_type_error_naming_it",
-    "a misspelt backend= is ignored and the path uses the default backend and ambient credentials",
-)
-
-# --- the command line: nothing is deleted or replaced unless it is asked for --------
-
-_CLI = "tests/test_cli.py"
-_TOOLS = "tests/test_cli_surface.py"
-
-mutant(
-    "cli-rm-removes-a-tree-without-recursive",
-    "cli/rm.py",
-    "            recursive=self.recursive,\n",
-    "            recursive=True,\n",
-    (
-        f"{_CLI}::test_rm_removes_a_file_and_refuses_a_directory_with_content",
-        f"{_TOOLS}::test_a_tool_call_removes_a_tree_only_when_it_says_recursive",
-    ),
-    "uripath rm deletes a directory with everything in it when --recursive was not given",
-)
-mutant(
-    "cli-rm-succeeds-on-a-missing-path",
-    "cli/rm.py",
-    "            missing_ok=self.missing_ok,\n",
-    "            missing_ok=True,\n",
-    f"{_CLI}::test_rm_of_a_missing_path_fails_unless_told_to_accept_it",
-    "uripath rm reports success for a path that was never there when --missing-ok was not given",
-)
-mutant(
-    "cli-sync-removes-what-the-source-lacks",
-    "cli/sync.py",
-    "            remove_missing=self.remove_missing,\n",
-    "            remove_missing=True,\n",
-    (
-        f"{_CLI}::test_sync_keeps_what_the_source_lacks_unless_told_to_remove_it",
-        f"{_TOOLS}::test_a_tool_call_deletes_from_the_target_only_when_it_says_remove_missing",
-    ),
-    "uripath sync deletes entries of the target that the source lacks when --remove-missing was not given",
-)
-mutant(
-    "cli-sync-dry-run-changes-the-target",
-    "cli/sync.py",
-    "        ).sync(as_path(self.source), as_path(self.target), dry_run=self.dry_run)\n",
-    "        ).sync(as_path(self.source), as_path(self.target), dry_run=False)\n",
-    f"{_CLI}::test_sync_dry_run_prints_planned_changes_and_changes_nothing",
-    "uripath sync --dry-run makes the changes it only meant to print",
-)
-mutant(
-    "cli-sync-goes-into-a-mount-point-it-was-told-not-to",
-    "cli/sync.py",
-    "            follow_mounts=self.follow_mounts,\n",
-    "            follow_mounts=True,\n",
-    f"{_CLI}::test_sync_no_follow_mounts_fails_on_a_mount_point_and_leaves_it",
-    "uripath sync --no-follow-mounts writes into a mount point inside the target",
-)
-mutant(
-    "cli-cp-replaces-an-existing-target-by-default",
-    "cli/cp.py",
-    "            overwrite=self.overwrite,\n            follow_symlinks",
-    "            overwrite=True,\n            follow_symlinks",
-    f"{_CLI}::test_cp_refuses_an_existing_target_without_overwrite",
-    "uripath cp replaces an existing target when --overwrite was not given",
-)
-mutant(
-    "cli-cp-stream-replaces-an-existing-target-by-default",
-    "cli/cp.py",
-    "                exclusive=not self.overwrite,\n",
-    "                exclusive=False,\n",
-    f"{_CLI}::test_cp_stdin_refuses_an_existing_target_without_overwrite",
-    "uripath cp - TARGET truncates an existing TARGET when --overwrite was not given",
-)
-mutant(
-    "cli-cp-recursive-with-a-stream",
-    "cli/cp.py",
-    "        if streamed and self.recursive:\n",
+    "github-truncated-tree-is-a-listing",
+    "_github.py",
+    '        if data.get("truncated"):\n',
     "        if False:\n",
-    f"{_CLI}::test_cp_recursive_with_dash_is_a_wrong_invocation",
-    "uripath cp -r with - is accepted and copies a stream as if it were a tree",
+    f"{_REPLIES}::test_github_truncated_tree_is_still_eio",
+    "a partial Git tree is returned as a complete listing",
 )
 mutant(
-    "cli-tool-reads-the-standard-input-of-the-server",
-    "cli/_common.py",
-    '    if running_mode() == "mcp":\n',
-    "    if False:\n",
-    f"{_TOOLS}::test_a_tool_cannot_read_the_standard_input_the_server_listens_on",
-    "a command served as a tool reads the requests of the protocol as if they were its input",
+    "github-a-portal-page-is-a-file",
+    "_github.py",
+    '        if media_type == "text/html" and "X-GitHub-Media-Type" not in resp.headers:\n',
+    "        if False:\n",
+    f"{_REPLIES}::test_github_read_of_an_html_page_the_api_did_not_send_is_eio",
+    "a captive portal's page is read as the content of a file",
 )
 mutant(
-    "copy-stream-exclusive-create-replaces-the-target",
-    "_transfer.py",
-    '    with _path_of(target).open("xb" if exclusive else "wb") as writer:\n',
-    '    with _path_of(target).open("wb") as writer:\n',
-    (
-        "tests/test_copy_stream.py::test_exclusive_refuses_an_existing_target_and_keeps_it",
-        f"{_CLI}::test_cp_stdin_refuses_an_existing_target_without_overwrite",
-    ),
-    "copy_stream(exclusive=True) truncates an existing target path",
+    "repo-write-mode-reads",
+    "_kinds.py",
+    '        if mode.replace("b", "").replace("t", "") != "r":\n',
+    "        if False:\n",
+    f"{_REPO}::test_github_write_modes_raise_not_implemented",
+    "open('w') on a repository path returns a reader",
+)
+
+# --- GitLab ---------------------------------------------------------------------------
+
+mutant(
+    "gitlab-listing-stops-at-the-first-page",
+    "_gitlab.py",
+    "            if not next_page.isdigit() or int(next_page) <= page:\n",
+    "            if True:\n",
+    f"{_REPO}::test_gitlab_listing_over_one_page_is_complete",
+    "a directory of more than 100 entries lists the first 100",
 )
 mutant(
-    "copy-stream-reports-a-broken-connection-of-a-target-path-as-output-closed",
-    "_transfer.py",
-    '"wb") as writer:\n        _shutil.copyfileobj(reader, writer, chunk_size)\n',
-    '"wb") as writer:\n        _shutil.copyfileobj(reader, _PipeWriter(writer), chunk_size)\n',
-    "tests/test_copy_stream.py::test_a_broken_pipe_of_a_target_path_is_not_output_closed",
-    "a connection that breaks while a path is written is taken for the reader of the output going away",
+    "gitlab-refused-head-is-an-error",
+    "_gitlab.py",
+    "                if resp.status not in (405, 501):\n",
+    "                if True:\n",
+    "tests/test_replies.py::test_gitlab_stat_falls_back_to_the_metadata_without_a_usable_head",
+    "a server that refuses HEAD makes stat() fail instead of asking for the metadata",
 )
 mutant(
-    "delegated-error-names-the-core-path",
-    "schemes/_delegate.py",
-    "            _relabel(error, names)\n            raise\n",
-    "            raise\n",
-    "tests/test_delegating_uri_path.py::test_an_error_of_the_core_path_names_the_uri_and_not_the_core_path",
-    "an OSError of the core path reaches the caller naming the core path, not the URI",
+    "gitlab-listing-keeps-unsafe-names",
+    "_gitlab.py",
+    '            if not _providers.is_safe_child_name(entry["name"]):\n                continue\n',
+    "            if False:\n                continue\n",
+    f"{_REPO}::test_gitlab_listing_skips_names_that_are_not_one_component",
+    "a listed name such as .. becomes a child",
 )
 mutant(
-    "delegated-extra-pairs-are-ignored",
-    "schemes/_delegate.py",
-    "            names = {**({core: str(self)} if core else {}), **dict(extra)}\n",
-    "            names = {core: str(self)} if core else {}\n",
-    "tests/test_delegating_uri_path.py::test_delegated_extra_pairs_rename_the_text_of_a_hand_written_call",
-    "a second path in an error of a hand-written call keeps the core name",
+    "gitlab-a-blob-hint-claims-a-size",
+    "_gitlab.py",
+    "                hint = FileStat(is_dir=False, size_known=False)\n",
+    "                hint = FileStat(is_dir=False)\n",
+    f"{_REPO}::test_gitlab_scandir_blob_entries_are_type_only_hints",
+    "a listed GitLab file is given a size of 0",
+)
+mutant(
+    "gitlab-separator-is-not-written",
+    "_gitlab.py",
+    '        if len(owner) > 1 or "-" in names:\n',
+    "        if len(owner) > 1:\n",
+    f"{_HOSTED}::test_a_path_is_spelled_as_the_uri_of_its_kind",
+    "the URI of a path with a name - reads as a project in a subgroup",
+)
+mutant(
+    "gitlab-separator-is-searched-too-early",
+    "_gitlab.py",
+    '            index = list(parts).index("-", 2)\n',
+    '            index = list(parts).index("-", 1)\n',
+    "tests/test_uri_repo.py::test_gitlab_reads_the_separator_that_ends_the_project",
+    "a - right after the owner is read as the separator",
+)
+
+# --- the schemes of uripath ---------------------------------------------------------------
+
+_URI = "tests/test_uri_repo.py"
+
+mutant(
+    "uri-posix-text-shows-the-user",
+    "uri.py",
+    '        return f"{host}:{self.path}" if host else self.path\n',
+    "        return str(self.source.reveal()) + self.path\n",
+    f"{_URI}::test_the_token_is_the_password_or_else_the_bare_user_and_is_never_shown",
+    "as_posix() of a repository path shows the token",
+)
+mutant(
+    "uri-token-is-the-user-only",
+    "uri.py",
+    "        return RepoBackend(token=password or user or None)\n",
+    "        return RepoBackend(token=user or None)\n",
+    f"{_URI}::test_the_token_is_the_password_or_else_the_bare_user_and_is_never_shown",
+    "the password slot of a git-style userinfo is not read as the token",
+)
+mutant(
+    "uri-repo-detects-any-host",
+    "uri.py",
+    "        if kind is None or not issubclass(kind, HostedRepoPath):\n",
+    "        if False:\n",
+    f"{_URI}::test_repo_refuses_a_host_it_cannot_detect_and_names_the_pinned_schemes",
+    "repo:// on a host no kind is detected for is accepted",
+)
+mutant(
+    "uri-dash-child-reads-as-the-separator",
+    "uri.py",
+    '        if name == "-" and self._separator_index() is None and len(self.segments) > 2:\n',
+    "        if False:\n",
+    f"{_URI}::test_a_directory_named_dash_gets_the_separator_in_front_of_it",
+    "the child of a project called - reads as the end of the project path",
+)
+mutant(
+    "uri-error-keeps-the-name-of-the-core-path",
+    "uri.py",
+    '                for attribute in ("strerror", "filename", "filename2"):\n',
+    '                for attribute in ("filename", "filename2"):\n',
+    f"{_URI}::test_an_error_names_the_uri_and_not_the_path_it_was_delegated_to",
+    "an error of a repo: path names github:// in its message",
+)
+mutant(
+    "uri-path-is-resolved-as-local",
+    "uri.py",
+    '    def is_local(self) -> bool:\n        """Whether the tree is on this machine: never. The host of the URI is\n        a hosting service and is not resolved."""\n        return False\n',
+    '    def is_local(self) -> bool:\n        """Whether the tree is on this machine: never. The host of the URI is\n        a hosting service and is not resolved."""\n        return True\n',
+    f"{_URI}::test_a_uri_path_is_never_this_machine",
+    "a repository path is taken for a local one",
 )
