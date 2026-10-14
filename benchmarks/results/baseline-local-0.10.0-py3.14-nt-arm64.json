@@ -1,0 +1,814 @@
+{
+  "schema": "repopath.bench/1",
+  "name": "baseline-local-0.10.0-py3.14-nt-arm64",
+  "suite": "default",
+  "source": "local",
+  "note": "Local sanity baseline of the suite; not CI, not a performance claim.",
+  "created_utc": "2026-10-14T09:56:05+00:00",
+  "package": {
+    "name": "repopath",
+    "version": "0.10.0"
+  },
+  "git": {
+    "commit": "63b34b32a4b3cf487c515e3e36cafa013e7547a7",
+    "dirty": true
+  },
+  "python": "CPython 3.14.7",
+  "interpreter": "3.14-nt-arm64",
+  "processor": "Windows-ARM64",
+  "cpu_count": 12,
+  "metrics": {
+    "github-uri: == of equal paths": {
+      "group": "github-uri",
+      "min_ms": 0.000597,
+      "median_ms": 0.0006,
+      "max_ms": 0.000617,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: URIPath(text), by scheme": {
+      "group": "github-uri",
+      "min_ms": 0.009982,
+      "median_ms": 0.010296,
+      "max_ms": 0.010507,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: as_uri()": {
+      "group": "github-uri",
+      "min_ms": 6.3e-05,
+      "median_ms": 6.3e-05,
+      "max_ms": 6.3e-05,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: construct": {
+      "group": "github-uri",
+      "min_ms": 0.008641,
+      "median_ms": 0.008814,
+      "max_ms": 0.009081,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: construct and read owner, repo, repo_path, ref": {
+      "group": "github-uri",
+      "min_ms": 0.010946,
+      "median_ms": 0.011094,
+      "max_ms": 0.011635,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: hash()": {
+      "group": "github-uri",
+      "min_ms": 0.000248,
+      "median_ms": 0.000254,
+      "max_ms": 0.000265,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: iterdir() of 100 entries": {
+      "group": "github-uri",
+      "min_ms": 13.5844,
+      "median_ms": 14.0522,
+      "max_ms": 38.7066,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github-uri: join with /": {
+      "group": "github-uri",
+      "min_ms": 0.002556,
+      "median_ms": 0.002753,
+      "max_ms": 0.002805,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: parent": {
+      "group": "github-uri",
+      "min_ms": 0.002272,
+      "median_ms": 0.002358,
+      "max_ms": 0.002437,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: read_bytes() of a 1 KiB file": {
+      "group": "github-uri",
+      "min_ms": 13.0499,
+      "median_ms": 13.8064,
+      "max_ms": 14.421,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github-uri: stat() of a directory": {
+      "group": "github-uri",
+      "min_ms": 28.5277,
+      "median_ms": 31.6191,
+      "max_ms": 50.585,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github-uri: stat() of a file": {
+      "group": "github-uri",
+      "min_ms": 12.4896,
+      "median_ms": 13.18,
+      "max_ms": 16.5731,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github-uri: str()": {
+      "group": "github-uri",
+      "min_ms": 0.003066,
+      "median_ms": 0.00317,
+      "max_ms": 0.003239,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github-uri: walk() of the tree (19 directories, 197 files)": {
+      "group": "github-uri",
+      "min_ms": 282.816,
+      "median_ms": 356.4478,
+      "max_ms": 411.1933,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github: == of equal paths": {
+      "group": "github",
+      "min_ms": 0.000792,
+      "median_ms": 0.000822,
+      "max_ms": 0.000832,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: as_uri()": {
+      "group": "github",
+      "min_ms": 0.002684,
+      "median_ms": 0.002792,
+      "max_ms": 0.002931,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: backend.request() of the root listing, no path": {
+      "group": "github",
+      "min_ms": 14.4119,
+      "median_ms": 19.2013,
+      "max_ms": 34.0913,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github: construct": {
+      "group": "github",
+      "min_ms": 0.004299,
+      "median_ms": 0.005496,
+      "max_ms": 0.006052,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: construct and read owner, repo, repo_path, ref": {
+      "group": "github",
+      "min_ms": 0.004755,
+      "median_ms": 0.005484,
+      "max_ms": 0.006039,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: hash()": {
+      "group": "github",
+      "min_ms": 0.000417,
+      "median_ms": 0.000489,
+      "max_ms": 0.00054,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: iterdir() of 100 entries": {
+      "group": "github",
+      "min_ms": 11.885,
+      "median_ms": 12.779,
+      "max_ms": 37.8368,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github: join with /": {
+      "group": "github",
+      "min_ms": 0.002291,
+      "median_ms": 0.002448,
+      "max_ms": 0.003757,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: parent": {
+      "group": "github",
+      "min_ms": 0.000536,
+      "median_ms": 0.000584,
+      "max_ms": 0.000607,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: read_bytes() of a 1 KiB file": {
+      "group": "github",
+      "min_ms": 15.6159,
+      "median_ms": 18.6445,
+      "max_ms": 28.6793,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github: stat() of a directory": {
+      "group": "github",
+      "min_ms": 22.6103,
+      "median_ms": 27.3945,
+      "max_ms": 33.7522,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github: stat() of a file": {
+      "group": "github",
+      "min_ms": 11.4745,
+      "median_ms": 13.5712,
+      "max_ms": 32.2447,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "github: str()": {
+      "group": "github",
+      "min_ms": 0.002874,
+      "median_ms": 0.002993,
+      "max_ms": 0.00371,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "github: walk() of the tree (19 directories, 197 files)": {
+      "group": "github",
+      "min_ms": 290.9324,
+      "median_ms": 403.1392,
+      "max_ms": 462.381,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab-uri: == of equal paths": {
+      "group": "gitlab-uri",
+      "min_ms": 0.000563,
+      "median_ms": 0.000572,
+      "max_ms": 0.000598,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: URIPath(text), by scheme": {
+      "group": "gitlab-uri",
+      "min_ms": 0.01068,
+      "median_ms": 0.010942,
+      "max_ms": 0.011136,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: as_uri()": {
+      "group": "gitlab-uri",
+      "min_ms": 5.9e-05,
+      "median_ms": 5.9e-05,
+      "max_ms": 6.2e-05,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: construct": {
+      "group": "gitlab-uri",
+      "min_ms": 0.008678,
+      "median_ms": 0.00899,
+      "max_ms": 0.009371,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: construct and read owner, repo, repo_path, ref": {
+      "group": "gitlab-uri",
+      "min_ms": 0.011603,
+      "median_ms": 0.011851,
+      "max_ms": 0.012121,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: hash()": {
+      "group": "gitlab-uri",
+      "min_ms": 0.000244,
+      "median_ms": 0.000246,
+      "max_ms": 0.000248,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: iterdir() of 100 entries": {
+      "group": "gitlab-uri",
+      "min_ms": 13.8638,
+      "median_ms": 15.7792,
+      "max_ms": 32.8211,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab-uri: join with /": {
+      "group": "gitlab-uri",
+      "min_ms": 0.003147,
+      "median_ms": 0.00316,
+      "max_ms": 0.003185,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: parent": {
+      "group": "gitlab-uri",
+      "min_ms": 0.00236,
+      "median_ms": 0.002409,
+      "max_ms": 0.002468,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: read_bytes() of a 1 KiB file": {
+      "group": "gitlab-uri",
+      "min_ms": 14.0253,
+      "median_ms": 18.4814,
+      "max_ms": 32.1296,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab-uri: stat() of a directory": {
+      "group": "gitlab-uri",
+      "min_ms": 30.131,
+      "median_ms": 30.6701,
+      "max_ms": 53.6534,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab-uri: stat() of a file": {
+      "group": "gitlab-uri",
+      "min_ms": 13.883,
+      "median_ms": 15.5209,
+      "max_ms": 15.9714,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab-uri: stat() of a file, default branch not cached": {
+      "group": "gitlab-uri",
+      "min_ms": 23.3126,
+      "median_ms": 35.2364,
+      "max_ms": 47.7397,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab-uri: str()": {
+      "group": "gitlab-uri",
+      "min_ms": 0.002898,
+      "median_ms": 0.003295,
+      "max_ms": 0.003315,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab-uri: walk() of the tree (19 directories, 197 files)": {
+      "group": "gitlab-uri",
+      "min_ms": 333.7889,
+      "median_ms": 345.2363,
+      "max_ms": 373.3984,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: == of equal paths": {
+      "group": "gitlab",
+      "min_ms": 0.000746,
+      "median_ms": 0.000762,
+      "max_ms": 0.000772,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: as_uri()": {
+      "group": "gitlab",
+      "min_ms": 0.002773,
+      "median_ms": 0.002951,
+      "max_ms": 0.003,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: backend.request() of the root listing, no path": {
+      "group": "gitlab",
+      "min_ms": 12.6828,
+      "median_ms": 13.2586,
+      "max_ms": 15.3708,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: construct": {
+      "group": "gitlab",
+      "min_ms": 0.004206,
+      "median_ms": 0.004295,
+      "max_ms": 0.007661,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: construct and read owner, repo, repo_path, ref": {
+      "group": "gitlab",
+      "min_ms": 0.004412,
+      "median_ms": 0.00469,
+      "max_ms": 0.004762,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: hash()": {
+      "group": "gitlab",
+      "min_ms": 0.000414,
+      "median_ms": 0.000416,
+      "max_ms": 0.000522,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: iterdir() of 100 entries": {
+      "group": "gitlab",
+      "min_ms": 13.316,
+      "median_ms": 14.6404,
+      "max_ms": 15.6197,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: join with /": {
+      "group": "gitlab",
+      "min_ms": 0.001868,
+      "median_ms": 0.003526,
+      "max_ms": 0.003954,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: parent": {
+      "group": "gitlab",
+      "min_ms": 0.000456,
+      "median_ms": 0.000486,
+      "max_ms": 0.000496,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: read_bytes() of a 1 KiB file": {
+      "group": "gitlab",
+      "min_ms": 15.1484,
+      "median_ms": 30.0885,
+      "max_ms": 39.1153,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: stat() of a directory": {
+      "group": "gitlab",
+      "min_ms": 32.6176,
+      "median_ms": 46.9124,
+      "max_ms": 58.3345,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: stat() of a file": {
+      "group": "gitlab",
+      "min_ms": 16.7299,
+      "median_ms": 25.104,
+      "max_ms": 42.7764,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: stat() of a file, default branch not cached": {
+      "group": "gitlab",
+      "min_ms": 23.1808,
+      "median_ms": 40.0574,
+      "max_ms": 46.7947,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "gitlab: str()": {
+      "group": "gitlab",
+      "min_ms": 0.002865,
+      "median_ms": 0.00289,
+      "max_ms": 0.003847,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "gitlab: walk() of the tree (19 directories, 197 files)": {
+      "group": "gitlab",
+      "min_ms": 356.0721,
+      "median_ms": 387.1702,
+      "max_ms": 438.5084,
+      "samples": 5,
+      "calls_per_sample": 1
+    },
+    "repo-uri: == of equal paths": {
+      "group": "repo-uri",
+      "min_ms": 0.000567,
+      "median_ms": 0.000603,
+      "max_ms": 0.000611,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: URIPath(text), by scheme": {
+      "group": "repo-uri",
+      "min_ms": 0.010662,
+      "median_ms": 0.010972,
+      "max_ms": 0.011484,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: as_uri()": {
+      "group": "repo-uri",
+      "min_ms": 6.2e-05,
+      "median_ms": 6.3e-05,
+      "max_ms": 6.3e-05,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: construct": {
+      "group": "repo-uri",
+      "min_ms": 0.009319,
+      "median_ms": 0.009686,
+      "max_ms": 0.009913,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: construct and read owner, repo, repo_path, ref": {
+      "group": "repo-uri",
+      "min_ms": 0.014054,
+      "median_ms": 0.014261,
+      "max_ms": 0.014771,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: hash()": {
+      "group": "repo-uri",
+      "min_ms": 0.000231,
+      "median_ms": 0.000232,
+      "max_ms": 0.000263,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: join with /": {
+      "group": "repo-uri",
+      "min_ms": 0.003546,
+      "median_ms": 0.003566,
+      "max_ms": 0.003579,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: parent": {
+      "group": "repo-uri",
+      "min_ms": 0.002762,
+      "median_ms": 0.002795,
+      "max_ms": 0.002897,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo-uri: str()": {
+      "group": "repo-uri",
+      "min_ms": 0.003012,
+      "median_ms": 0.003026,
+      "max_ms": 0.003041,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: == of equal paths": {
+      "group": "repo",
+      "min_ms": 0.000731,
+      "median_ms": 0.000752,
+      "max_ms": 0.000774,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: as_uri()": {
+      "group": "repo",
+      "min_ms": 0.002706,
+      "median_ms": 0.00273,
+      "max_ms": 0.002877,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: construct": {
+      "group": "repo",
+      "min_ms": 0.006005,
+      "median_ms": 0.006164,
+      "max_ms": 0.006383,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: construct and read owner, repo, repo_path, ref": {
+      "group": "repo",
+      "min_ms": 0.006494,
+      "median_ms": 0.006685,
+      "max_ms": 0.006866,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: hash()": {
+      "group": "repo",
+      "min_ms": 0.000425,
+      "median_ms": 0.00045,
+      "max_ms": 0.000469,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: join with /": {
+      "group": "repo",
+      "min_ms": 0.002001,
+      "median_ms": 0.002062,
+      "max_ms": 0.002175,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: parent": {
+      "group": "repo",
+      "min_ms": 0.00049,
+      "median_ms": 0.000497,
+      "max_ms": 0.000516,
+      "samples": 9,
+      "calls_per_sample": 1000
+    },
+    "repo: str()": {
+      "group": "repo",
+      "min_ms": 0.002839,
+      "median_ms": 0.002914,
+      "max_ms": 0.002939,
+      "samples": 9,
+      "calls_per_sample": 1000
+    }
+  },
+  "counters": {
+    "github-uri: requests of iterdir() of 100 entries": {
+      "group": "github-uri",
+      "requests": 1,
+      "GET": 1
+    },
+    "github-uri: requests of read_bytes() of a 1 KiB file": {
+      "group": "github-uri",
+      "requests": 1,
+      "GET": 1
+    },
+    "github-uri: requests of stat() of a directory": {
+      "group": "github-uri",
+      "requests": 2,
+      "GET": 1,
+      "HEAD": 1
+    },
+    "github-uri: requests of stat() of a file": {
+      "group": "github-uri",
+      "requests": 1,
+      "HEAD": 1
+    },
+    "github-uri: requests of walk() of the tree": {
+      "group": "github-uri",
+      "requests": 19,
+      "GET": 19,
+      "directories": 19,
+      "files": 197
+    },
+    "github: requests of iterdir() of 100 entries": {
+      "group": "github",
+      "requests": 1,
+      "GET": 1
+    },
+    "github: requests of read_bytes() of a 1 KiB file": {
+      "group": "github",
+      "requests": 1,
+      "GET": 1
+    },
+    "github: requests of stat() of a directory": {
+      "group": "github",
+      "requests": 2,
+      "GET": 1,
+      "HEAD": 1
+    },
+    "github: requests of stat() of a file": {
+      "group": "github",
+      "requests": 1,
+      "HEAD": 1
+    },
+    "github: requests of walk() of the tree": {
+      "group": "github",
+      "requests": 19,
+      "GET": 19,
+      "directories": 19,
+      "files": 197
+    },
+    "gitlab-uri: default-branch lookups over 5 reads, a backend per read": {
+      "group": "gitlab-uri",
+      "requests": 9,
+      "GET": 7,
+      "HEAD": 2,
+      "reads": 5,
+      "lookups": 4
+    },
+    "gitlab-uri: default-branch lookups over 5 reads, one shared backend": {
+      "group": "gitlab-uri",
+      "requests": 6,
+      "GET": 4,
+      "HEAD": 2,
+      "reads": 5,
+      "lookups": 1
+    },
+    "gitlab-uri: requests of iterdir() of 100 entries": {
+      "group": "gitlab-uri",
+      "requests": 1,
+      "GET": 1
+    },
+    "gitlab-uri: requests of iterdir() of 100 entries, default branch not known": {
+      "group": "gitlab-uri",
+      "requests": 1,
+      "GET": 1
+    },
+    "gitlab-uri: requests of read_bytes() of a 1 KiB file": {
+      "group": "gitlab-uri",
+      "requests": 1,
+      "GET": 1
+    },
+    "gitlab-uri: requests of read_bytes() of a 1 KiB file, default branch not known": {
+      "group": "gitlab-uri",
+      "requests": 2,
+      "GET": 2
+    },
+    "gitlab-uri: requests of stat() of a directory": {
+      "group": "gitlab-uri",
+      "requests": 2,
+      "GET": 1,
+      "HEAD": 1
+    },
+    "gitlab-uri: requests of stat() of a directory, default branch not known": {
+      "group": "gitlab-uri",
+      "requests": 3,
+      "GET": 2,
+      "HEAD": 1
+    },
+    "gitlab-uri: requests of stat() of a file": {
+      "group": "gitlab-uri",
+      "requests": 1,
+      "HEAD": 1
+    },
+    "gitlab-uri: requests of stat() of a file, default branch not known": {
+      "group": "gitlab-uri",
+      "requests": 2,
+      "GET": 1,
+      "HEAD": 1
+    },
+    "gitlab-uri: requests of walk() of the tree": {
+      "group": "gitlab-uri",
+      "requests": 19,
+      "GET": 19,
+      "directories": 19,
+      "files": 197
+    },
+    "gitlab: default-branch lookups over 5 reads, a backend per read": {
+      "group": "gitlab",
+      "requests": 9,
+      "GET": 7,
+      "HEAD": 2,
+      "reads": 5,
+      "lookups": 4
+    },
+    "gitlab: default-branch lookups over 5 reads, one shared backend": {
+      "group": "gitlab",
+      "requests": 6,
+      "GET": 4,
+      "HEAD": 2,
+      "reads": 5,
+      "lookups": 1
+    },
+    "gitlab: requests of iterdir() of 100 entries": {
+      "group": "gitlab",
+      "requests": 1,
+      "GET": 1
+    },
+    "gitlab: requests of iterdir() of 100 entries, default branch not known": {
+      "group": "gitlab",
+      "requests": 1,
+      "GET": 1
+    },
+    "gitlab: requests of read_bytes() of a 1 KiB file": {
+      "group": "gitlab",
+      "requests": 1,
+      "GET": 1
+    },
+    "gitlab: requests of read_bytes() of a 1 KiB file, default branch not known": {
+      "group": "gitlab",
+      "requests": 2,
+      "GET": 2
+    },
+    "gitlab: requests of stat() of a directory": {
+      "group": "gitlab",
+      "requests": 2,
+      "GET": 1,
+      "HEAD": 1
+    },
+    "gitlab: requests of stat() of a directory, default branch not known": {
+      "group": "gitlab",
+      "requests": 3,
+      "GET": 2,
+      "HEAD": 1
+    },
+    "gitlab: requests of stat() of a file": {
+      "group": "gitlab",
+      "requests": 1,
+      "HEAD": 1
+    },
+    "gitlab: requests of stat() of a file, default branch not known": {
+      "group": "gitlab",
+      "requests": 2,
+      "GET": 1,
+      "HEAD": 1
+    },
+    "gitlab: requests of walk() of the tree": {
+      "group": "gitlab",
+      "requests": 19,
+      "GET": 19,
+      "directories": 19,
+      "files": 197
+    }
+  },
+  "errors": {},
+  "skipped": {}
+}
