@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "repopath"
-version = "0.10.0"
+version = "0.1.0"
 authors = [{ name = "Jose A" }]
 description = "pathlib-style, read-only paths for the repository trees of GitHub and GitLab, and the repo:, github: and gitlab: schemes for uripath"
 readme = "README.md"
@@ -34,7 +34,7 @@ dependencies = [
 [project.optional-dependencies]
 # The repo:, github: and gitlab: schemes of uripath. `import repopath` never
 # imports uripath.
-uri = ["uripath>=0.10.0,<0.11"]
+uri = ["uripath>=0.1.0,<0.2"]
 all = ["repopath[uri]"]
 dev = [
     'build',
