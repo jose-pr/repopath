@@ -1,5 +1,5 @@
 """Stand-ins for an HTTP transport, for tests of the path code that need no
-server: a table-driven fake and a wrapper that records what a real one sends."""
+server: a table-driven fake, and a spy on what a real transport sends."""
 
 from __future__ import annotations
 
@@ -26,12 +26,6 @@ _REASONS = {
 def current_kind():
     """The transport kind the test runs with: what `http_transport_kind` set."""
     return os.environ.get("PATHLIB_NEXT_HTTP_TRANSPORT", "builtin")
-
-
-def on_current_transport(path, **backend_args):
-    """`path` with a backend on a real transport of the kind under test;
-    `backend_args` are those of `with_transport()`."""
-    return path.with_transport(make_transport(current_kind()), **backend_args)
 
 
 def is_client_error(error):
@@ -113,27 +107,3 @@ class FakeTransport:
 
     def close(self):
         self.closed += 1
-
-
-class RecordingTransport:
-    """Passes every call to `inner` and records it in `sent`."""
-
-    def __init__(self, inner):
-        self.inner = inner
-        self.sent: "list[Sent]" = []
-
-    def send(self, method, url, *, headers, body=None, timeout, stream=False):
-        self.sent.append(Sent(method, url, dict(headers), body, timeout, stream))
-        return self.inner.send(
-            method, url, headers=headers, body=body, timeout=timeout, stream=stream
-        )
-
-    def close(self):
-        self.inner.close()
-
-    @property
-    def methods(self):
-        return [call.method for call in self.sent]
-
-    def clear(self):
-        self.sent.clear()
