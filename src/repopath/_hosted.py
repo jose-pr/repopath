@@ -37,7 +37,7 @@ def checked_instance(text: object) -> str:
         host, _port = parts.hostname, parts.port
     except ValueError:
         host = None
-    if not host or parts.netloc != text:
+    if not host:
         raise ValueError(f"instance= must be a host and an optional port, not {text!r}")
     return text
 
