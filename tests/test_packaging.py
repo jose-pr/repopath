@@ -71,7 +71,7 @@ def test_the_extras_are_the_schemes_and_their_union(project):
         extra: {packaging_requirements.Requirement(spec).name for spec in extras[extra]}
         for extra in ("uri", "all")
     }
-    assert names == {"uri": {"uripath"}, "all": {"repopath"}}
+    assert names == {"uri": {"pathapi-uri"}, "all": {"repopath"}}
     assert extras["all"] == ["repopath[uri]"]
 
 
