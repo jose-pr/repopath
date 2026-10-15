@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 The first release of `repopath`: the `github:`, `gitlab:` and `git:` schemes of
 `pathlib-next` 0.9 (`pathlib_next.uri.schemes`) as a distribution of their own, and as
 paths that need no URI. It needs Python 3.9 or newer and `pathapi>=0.1.0,<0.2`,
-and nothing else; its one extra, `uri`, adds `uripath>=0.1.0,<0.2` and with it the
+and nothing else; its one extra, `uri`, adds `pathapi-uri>=0.1.0,<0.2` and with it the
 schemes. Under *Changed*, the migration from `pathlib-next` comes in this order: the
 table of names, the table of URIs, then every change of behaviour with what to do about
 it.
