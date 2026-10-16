@@ -683,7 +683,7 @@ mutant(
     "gitea-ref-slash-is-not-encoded",
     "_gitea.py",
     "git/trees/{self._api_quote(treeish)}",
-    'git/trees/{self._api_quote(treeish, "/")}',
+    "git/trees/{self._api_quote(treeish, '/')}",
     f"{_GITEA}::test_a_ref_with_a_slash_is_encoded_in_the_tree_url_and_not_in_raw",
     "a branch with a slash is a path under trees, which the server does not find",
 )
