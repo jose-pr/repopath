@@ -40,7 +40,7 @@ from repopath import RepoPath
 
 RepoPath("f", owner="o", repo="r", instance="github.com")                    # GitHubPath
 RepoPath("f", owner="o", repo="r", instance="git.example", type="gitlab")    # GitLabPath
-RepoPath.kinds()                                                             # ("github", "gitlab")
+RepoPath.kinds()                                                    # ("github", "gitlab", "sourceforge", "svn")
 ```
 
 A kind is a subclass of `RepoPath` whose class body sets `TYPE` (its name) and
@@ -93,3 +93,40 @@ Every failure is the `OSError` `pathlib` raises for the same condition. A reply 
 not the shape the API documents (a proxy's page, `null`, a truncated body) is
 `BadReplyError`, an `OSError(EIO)` naming the path, and `exists()` is then `False`. No
 message names a token, and no exception of the transport crosses the API.
+
+## Subversion and SourceForge
+
+`SVNPath` reads a Subversion repository served over HTTP by `mod_dav_svn`. `instance` is the
+URL of the tree the names are relative to (normally the root of the repository), `ref` a
+revision number (the head when omitted, which can move between two requests):
+
+<!-- example: skip: reads from a Subversion server -->
+```python
+from repopath import SVNPath
+
+root = SVNPath(instance="https://svn.example.org/repos/project")
+trunk = root / "trunk"
+for child in trunk.iterdir():
+    print(child.name, child.is_dir())
+old = SVNPath("trunk/README", instance=root.instance, ref=1234)
+print(old.read_text()[:200], old.checksum())
+```
+
+A `stat()` is one `PROPFIND` and a listing one `PROPFIND` of depth one, each child keeping
+the stat it was listed with; `checksum("md5")` and `checksum("sha1")` are the digests the
+server states, without reading the file. A Subversion link is a file whose text is `link
+TARGET`: `readlink()` reads it and a read follows it (the last name of a path only).
+`username=` and `password=` send `Authorization: Basic`, the scheme `mod_dav_svn` asks for.
+`svn:externals` are not part of the tree.
+
+`SourceForgePath` is the Subversion tool of a SourceForge project: it asks the site's REST API
+once for the tool's kind and URL, and is then an `SVNPath` on that URL (the `trunk` of the
+project). A Git or Mercurial tool is `NotImplementedError`.
+
+<!-- example: skip: reads from SourceForge -->
+```python
+from repopath import SourceForgePath
+
+readme = SourceForgePath("README.rst", project="docutils")
+print(readme.read_text()[:200])
+```

@@ -73,4 +73,15 @@ print(URIPath("github://github.com/psf/requests/README.md?ref=main").read_text()
 print(URIPath("repo://gitlab.com/gitlab-org/gitlab/README.md").stat().st_size)
 ```
 
+**Subversion and SourceForge**: `SVNPath` reads a Subversion repository served over HTTP and
+`SourceForgePath` the Subversion tool of a SourceForge project:
+
+<!-- example: skip: reads from a Subversion server -->
+```python
+from repopath import SourceForgePath, SVNPath
+
+print(SVNPath("trunk/README", instance="https://svn.example.org/repos/p", ref=1234).read_text())
+print(SourceForgePath("README.rst", project="docutils").checksum())
+```
+
 See [Repository paths](guides/paths.md) and [The schemes](guides/uri.md).

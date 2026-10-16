@@ -30,7 +30,7 @@ nav:
   - Home: index.md
   - Guides:
       - Repository paths: guides/paths.md
-      - The repo, github and gitlab schemes: guides/uri.md
+      - The repo, github, gitlab, svn+https, svn+http and sourceforge schemes: guides/uri.md
   - Benchmarks: benchmarks.md
   - Divergences from pathlib: divergences.md
   - API Reference:

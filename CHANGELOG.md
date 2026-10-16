@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `SVNPath`: a read-only path in a Subversion repository served over HTTP by
+  `mod_dav_svn`, built on `pathapi.http` alone. `SVNPath("trunk/README", instance=URL,
+  ref=None, username=None, password=None, token=None, backend=None)`: a `stat()` is one
+  `PROPFIND`, a listing one `PROPFIND` with `Depth: 1` whose children keep their stat,
+  `ref` is a revision number read through the revision stub the server announces, the md5
+  and sha1 digests come with the stat (`checksum()`, without reading the file), and a link
+  is read with `readlink()` and followed on its last name. Properties are asked for by
+  name: an `allprop` reply can be invalid XML. `RepoPath(type="svn", instance=URL)` returns
+  one; `RepoPath.kinds()` lists `"svn"`.
+- `SourceForgePath("README", project="docutils", mount="code", ref=None, instance=None,
+  backend=None)`: the Subversion tool of a SourceForge project, found through the site's
+  REST API once per backend. A Git or Mercurial tool is `NotImplementedError`, a missing
+  project `FileNotFoundError`. `RepoPath(type="sourceforge", project=...)` returns one.
+- The schemes `svn+https:`, `svn+http:` (`SVNURIPath`) and `sourceforge:`
+  (`SourceForgeURIPath`) in `repopath.uri`, registered through the `uripath.schemes` entry
+  points like the others. `svn:` (`svnserve`) is not one of them.
+- `RepoBackend(auth=(user, password))`, sent as `Authorization: Basic`, and
+  `allow_redirects=` on `RepoBackend.request()`.
+
 ## [0.1.0] - 2026-10-14
 
 The first release of `repopath`: the `github:`, `gitlab:` and `git:` schemes of

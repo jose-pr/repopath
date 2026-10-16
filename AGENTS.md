@@ -5,7 +5,7 @@ commands, CI and release. It is not the API reference and it does not ship.
 
 | Header | Covers |
 | --- | --- |
-| [`src/repopath/AGENTS.md`](src/repopath/AGENTS.md) | The public API: `RepoPath`, `GitHubPath`, `GitLabPath`, the backends, the `repo:`, `github:` and `gitlab:` schemes of `uripath` and the exceptions, with signatures and gotchas. It ships in the wheel, so it stays self-contained (no repo-relative links) and changes in the same commit as any public API change. |
+| [`src/repopath/AGENTS.md`](src/repopath/AGENTS.md) | The public API: `RepoPath`, `GitHubPath`, `GitLabPath`, `SVNPath`, `SourceForgePath`, the backends, the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes of `uripath` and the exceptions, with signatures and gotchas. It ships in the wheel, so it stays self-contained (no repo-relative links) and changes in the same commit as any public API change. |
 
 [`docs/divergences.md`](docs/divergences.md) records every deliberate difference
 from `pathlib.Path` that this package owns; the ones of the generic `Path`
@@ -17,12 +17,13 @@ contract; a behavioral divergence that is not recorded is a bug.
 | Path | Contents |
 | --- | --- |
 | `src/repopath/` | The package (`src/` layout). `py.typed` and the API header ship with it. |
-| `src/repopath/__init__.py`, `exceptions.py`, `uri.py` | The public modules: the root exports the paths, the backends and the exceptions, `exceptions.py` the errors, `uri.py` the `repo:`, `github:` and `gitlab:` schemes (imports `uripath`; without it the import raises an `ImportError` naming the `uri` extra). |
+| `src/repopath/__init__.py`, `exceptions.py`, `uri.py` | The public modules: the root exports the paths, the backends and the exceptions, `exceptions.py` the errors, `uri.py` the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes (imports `uripath`; without it the import raises an `ImportError` naming the `uri` extra). |
 | `src/repopath/_kinds.py` | `RepoPath` and the registry of kinds: calling `RepoPath` returns the class that `type=` or the instance names, and a subclass that sets `TYPE` registers itself. It holds the names, the stat hints of a listing, equality and pickling; a kind supplies the place and the reads. |
 | `src/repopath/_hosted.py` | `HostedRepoPath`, what `GitHubPath` and `GitLabPath` share: the place (instance, owner, repository, ref), the constructor, the URI text, and the helpers that read a JSON reply. |
 | `src/repopath/_github.py`, `_gitlab.py` | The two kinds: the endpoints, stat, listing and reading of each service. |
+| `src/repopath/_svn.py`, `_sourceforge.py` | `SVNPath`, a Subversion repository read over WebDAV (`PROPFIND`, `GET`, `OPTIONS`), and `SourceForgePath`, which finds its URL through the REST API of the site and is then an `SVNPath`. `_AnywherePath` is the private variant the URI schemes build: its tree is the whole server and the root of the repository is found when a revision needs it. |
 | `src/repopath/_backend.py` | `BaseRepoBackend`, `RepoBackend` (an `HTTPClient` of `pathapi.http` with a bearer token), the rate-limit and error mapping and the warning for a token over plain http. |
-| `tests/` | The pytest suite. `tests/api_fakes.py` holds the loopback fakes of the two APIs, `tests/repo_support.py` the helper that builds a path of either flavor (the path, or the URI path that delegates to it); `tests/mutation/` is the mutation list; `tests/probes/` are child processes that tests run. |
+| `tests/` | The pytest suite. `tests/api_fakes.py` holds the loopback fakes of the two APIs, `tests/svn_fakes.py` the fake Subversion server (it replays the replies recorded in `tests/data/svn/` and serves a tree in the same shapes) and the fake REST API of SourceForge, `tests/repo_support.py` the helper that builds a path of either flavor (the path, or the URI path that delegates to it); `tests/mutation/` is the mutation list; `tests/probes/` are child processes that tests run. |
 | `benchmarks/` | `bench.py` and committed JSON results; see [`benchmarks/README.md`](benchmarks/README.md). Not shipped. |
 | `examples/` | Runnable scripts. Networked ones skip (exit 0) unless their environment variables are set. |
 | `docs/`, `mkdocs.yml` | MkDocs site: hand-written pages plus a `mkdocstrings` API reference. |

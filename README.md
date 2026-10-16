@@ -6,13 +6,13 @@
 [![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://jose-pr.github.io/repopath/)
 [![CI](https://img.shields.io/github/actions/workflow/status/jose-pr/repopath/test.yml)](https://github.com/jose-pr/repopath/actions/workflows/test.yml)
 
-**`pathlib` for the repository trees of GitHub and GitLab, read-only.**
+**`pathlib` for the repository trees of GitHub, GitLab, Subversion and SourceForge, read-only.**
 `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")` has the method
 names, signatures and exception types of `pathlib.Path`, and `GitLabPath` does the same
 for GitLab; `RepoPath` is the class that returns either. None needs a URI, and all
 build on [`pathapi`](https://github.com/jose-pr/pathapi) alone; with
 [`uripath`](https://github.com/jose-pr/uripath) installed the same package also
-provides the `repo:`, `github:` and `gitlab:` schemes. It is documented at
+provides the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes. It is documented at
 <https://jose-pr.github.io/repopath/>.
 
 The classes are clients of the hosting services' REST APIs. They speak no git
@@ -44,7 +44,13 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
   library, with a replaceable transport. Errors are the `OSError` types `pathlib` raises,
   `RateLimitError` (a `BlockingIOError`) for a rate limit and `BadReplyError` for a reply
   that is not the shape the API documents.
-- **The `repo:`, `github:` and `gitlab:` schemes** for `uripath`:
+- **Subversion and SourceForge**: `SVNPath("trunk/README", instance="https://svn.example.org/repos/project")`
+  reads a Subversion repository served over HTTP with a request per `stat()` and per
+  listing, a revision with `ref=`, links and the md5 and sha1 digests the server states;
+  `SourceForgePath("README", project="docutils")` finds the Subversion tool of a
+  SourceForge project and reads it the same way.
+- **The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:`
+  schemes** for `uripath`:
   `URIPath("github://github.com/acme/widgets/src/mod.py?ref=v1.2")` is a
   `GitHubURIPath` that delegates to a `GitHubPath`.
 
@@ -59,7 +65,7 @@ Requires `pathapi`, which pip installs with it, and Python 3.9 or newer.
 | Install | Adds |
 | --- | --- |
 | `pip install repopath` | the paths and the backends; no other library |
-| `pip install "repopath[uri]"` | `uripath` and with it the `repo:`, `github:` and `gitlab:` schemes |
+| `pip install "repopath[uri]"` | `uripath` and with it the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes |
 | `pip install "repopath[all]"` | all of the above |
 
 ## Quick start
@@ -119,7 +125,7 @@ print(URIPath("repo://github.com/psf/requests/README.md?ref=main").read_text()[:
 | --- | --- |
 | `repopath` | `RepoPath`, `GitHubPath`, `GitLabPath`, `SVNPath`, `SourceForgePath`, the backends `RepoBackend` and `BaseRepoBackend`, the exceptions `RepoPathError`, `RateLimitError` and `BadReplyError`, the warning `InsecureTransportWarning` and `__version__` |
 | `repopath.exceptions` | The exceptions and the warning |
-| `repopath.uri` | `RepoURIPath`, `GitHubURIPath` and `GitLabURIPath`, the schemes of `uripath` (needs the `uri` extra) |
+| `repopath.uri` | `RepoURIPath`, `GitHubURIPath`, `GitLabURIPath`, `SVNURIPath` and `SourceForgeURIPath`, the schemes of `uripath` (needs the `uri` extra) |
 
 The full reference is on the [documentation site](https://jose-pr.github.io/repopath/);
 an agent-oriented API summary ships inside the package as `repopath/AGENTS.md`.

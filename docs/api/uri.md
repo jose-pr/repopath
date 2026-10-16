@@ -1,4 +1,4 @@
-# The `repo:`, `github:` and `gitlab:` schemes
+# The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes
 
 Needs `uripath`: `pip install "repopath[uri]"`.
 
@@ -13,3 +13,5 @@ Needs `uripath`: `pip install "repopath[uri]"`.
         - repo
         - repo_path
         - ref
+        - project
+        - mount
