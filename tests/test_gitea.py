@@ -480,6 +480,7 @@ def uri_path(served, text, **options):
 
 
 def test_a_gitea_uri_reads_the_tree_of_its_repository(gitea_recorded):
+    pytest.importorskip("uripath")
     from repopath import uri
 
     root = uri_path(gitea_recorded, "gitea://git.example:3000/lab/pub?ref=main")
@@ -520,6 +521,7 @@ def test_repo_on_codeberg_detects_the_kind(gitea_recorded):
 
 
 def test_the_token_of_a_gitea_uri_is_sent_and_never_shown(gitea_recorded):
+    pytest.importorskip("uripath")
     from repopath import uri
 
     text = "gitea://tok_SECRET@h/lab/priv/secret.txt?ref=main"
