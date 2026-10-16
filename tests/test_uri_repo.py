@@ -132,7 +132,7 @@ def test_the_git_schemes_are_not_dispatched_to_this_distribution(text):
         path.stat()
 
 
-def test_the_entry_points_name_the_three_schemes_and_nothing_else():
+def test_the_entry_points_name_the_six_schemes_and_nothing_else():
     run_result = run("""
         import importlib.metadata as metadata
 
@@ -155,6 +155,9 @@ def test_the_entry_points_name_the_three_schemes_and_nothing_else():
             ("github", "repopath.uri:GitHubURIPath"),
             ("gitlab", "repopath.uri:GitLabURIPath"),
             ("repo", "repopath.uri:RepoURIPath"),
+            ("sourceforge", "repopath.uri:SourceForgeURIPath"),
+            ("svn+http", "repopath.uri:SVNURIPath"),
+            ("svn+https", "repopath.uri:SVNURIPath"),
         ]
     )
 

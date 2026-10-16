@@ -278,6 +278,17 @@ def _handler(table, tree, mount, users_required, served):
             if tree is not None and (path == mount or path.startswith(mount + "/")):
                 return self._tree(method, path, depth, who, body, head_only)
             record = table.get(_key(method, target, depth, who))
+            if record is None and method == "OPTIONS":
+                # The server answers an OPTIONS request the same for every path
+                # of a repository: the nearest recorded one stands for the rest.
+                prefix = urllib.parse.unquote(urllib.parse.urlsplit(target).path)
+                held = [
+                    r for k, r in table.items()
+                    if k[0] == "OPTIONS" and k[3] == who
+                    and prefix.rstrip("/").startswith(k[1].rstrip("/"))
+                ]  # fmt: skip
+                if held:
+                    record = max(held, key=lambda r: len(r.path))
             if record is None and method == "HEAD":
                 record = table.get(_key("GET", target, depth, who))
                 head_only = record is not None

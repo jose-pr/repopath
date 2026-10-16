@@ -451,7 +451,7 @@ mutant(
 mutant(
     "svn-repository-root-may-not-hold-the-instance",
     "_svn.py",
-    '        if not (path == repository or path.startswith(repository + "/")):\n',
+    '        if not (path.rstrip("/") == repository or path.startswith(repository + "/")):\n',
     "        if False:\n",
     f"{_SVN}::test_a_repository_root_that_does_not_hold_the_instance_is_refused",
     "a server that names a repository elsewhere builds the revision URL",
@@ -580,4 +580,41 @@ mutant(
     "    if False:\n",
     f"{_SF}::test_the_place_is_checked",
     "a project or mount holding a slash or dots changes the REST address",
+)
+
+# --- the Subversion and SourceForge schemes ---------------------------------------------
+
+_URI_SVN = "tests/test_uri_svn.py"
+
+mutant(
+    "svn-uri-asks-the-repository-root-for-every-path",
+    "_svn.py",
+    "        if holding:\n            return max(",
+    "        if False:\n            return max(",
+    f"{_URI_SVN}::test_a_revision_is_carried_to_every_child",
+    "every path of a svn+https: URI with a revision sends an OPTIONS request",
+)
+mutant(
+    "svn-uri-has-no-host",
+    "uri.py",
+    '        if source.scheme and (\n            scheme not in ("svn+https", "svn+http") or not source.host\n        ):\n',
+    "        if False:\n",
+    f"{_URI_SVN}::test_a_uri_that_names_no_usable_place_is_refused_when_it_is_built",
+    "a svn+https: URI with no host is built and fails at its first request",
+)
+mutant(
+    "sourceforge-uri-may-hold-credentials",
+    "uri.py",
+    "        if source.scheme and (not source.host or source.userinfo or source.port):\n",
+    "        if source.scheme and not source.host:\n",
+    f"{_URI_SVN}::test_a_uri_that_names_no_usable_place_is_refused_when_it_is_built",
+    "a sourceforge: URI with a user or a port is built and the userinfo is dropped",
+)
+mutant(
+    "svn-uri-sends-no-credentials",
+    "uri.py",
+    "        return RepoBackend(auth=pair)\n",
+    "        return RepoBackend()\n",
+    f"{_URI_SVN}::test_a_user_and_password_in_the_uri_are_sent_as_basic",
+    "the user and password of a svn+https: URI are never sent",
 )

@@ -264,20 +264,19 @@ class SVNPath(RepoPath):
         head, else through the revision stub the server announces. A directory
         is asked for with its trailing `/`."""
         names = self._quoted_names()
-        root = self._root_url()
+        head = self._root_url() + (f"/{names}" if names else "")
         if self.ref is None:
-            url = root + (f"/{names}" if names else "")
+            url = head
         else:
             repository, stub = self._repository()
-            parts = _urlparse.urlsplit(root)
-            inside = _urlparse.unquote(parts.path)[len(repository) :].strip("/")
+            parts = _urlparse.urlsplit(head)
+            inside = _urlparse.unquote(parts.path, errors="surrogateescape")
             quoted = "/".join(
                 _urlparse.quote(part, safe="", errors="surrogateescape")
-                for part in inside.split("/")
+                for part in inside[len(repository) :].split("/")
                 if part
             )
-            url = f"{parts.scheme}://{parts.netloc}{stub}/{self.ref}/"
-            url += "/".join(part for part in (quoted, names) if part)
+            url = f"{parts.scheme}://{parts.netloc}{stub}/{self.ref}/{quoted}"
         if directory and not url.endswith("/"):
             url += "/"
         return url
@@ -287,25 +286,30 @@ class SVNPath(RepoPath):
         of its root and the path under which it serves a revision. Asked of
         the server once per backend."""
         root = self._root_url()
+        return self._discover(root + "/", root + "/", ("svn_repository", root))
+
+    def _discover(self, url: str, held: str, key: tuple) -> "tuple[str, str]":
+        """Asks `url` (any path of the repository) for the repository root and
+        the revision stub, and keeps the answer under `key` in the cache of the
+        backend. `held` is the URL the root must contain."""
         cache = self._backend_cache()
-        key = ("svn_repository", root)
         if cache is not None and key in cache:
             return cache[key]
-        resp = self._exchange(
-            "OPTIONS", root + "/", headers=_XML_HEADERS, data=_OPTIONS_BODY
-        )
+        resp = self._exchange("OPTIONS", url, headers=_XML_HEADERS, data=_OPTIONS_BODY)
         self._expect(resp, 200)
         repository = resp.headers.get("SVN-Repository-Root")
         stub = resp.headers.get("SVN-Rev-Root-Stub")
         if not (repository and stub):
             raise self._bad_reply("a server that names no repository root")
-        path = _urlparse.unquote(_urlparse.urlsplit(root).path)
+        path = _urlparse.unquote(
+            _urlparse.urlsplit(held).path, errors="surrogateescape"
+        )
         for value in (repository, stub):
             if not value.startswith("/") or "?" in value:
                 raise self._bad_reply("a repository root that is not a path")
-        repository = _urlparse.unquote(repository).rstrip("/")
-        if not (path == repository or path.startswith(repository + "/")):
-            raise self._bad_reply("a repository root that does not hold the instance")
+        repository = _urlparse.unquote(repository, errors="surrogateescape").rstrip("/")
+        if not (path.rstrip("/") == repository or path.startswith(repository + "/")):
+            raise self._bad_reply("a repository root that does not hold the path")
         found = (repository, stub.rstrip("/"))
         if cache is not None:
             cache[key] = found
@@ -525,3 +529,32 @@ class SVNPath(RepoPath):
         if len(digest) != _HEX[name] or not _re.fullmatch(r"[0-9a-fA-F]+", digest):
             raise self._bad_reply(f"a {name} digest that is not hexadecimal")
         return digest.lower()
+
+
+class _AnywherePath(SVNPath):
+    """An `SVNPath` whose tree is the whole server: the instance is the origin
+    and the names are the path of a URL anywhere in a repository. The root of
+    the repository is found from the server when a revision needs it, once per
+    repository and backend. It is not a kind: the URI schemes build it."""
+
+    __slots__ = ()
+
+    def _repository(self) -> "tuple[str, str]":
+        head = self._root_url() + (f"/{self._quoted_names()}" if self.repo_path else "")
+        parts = _urlparse.urlsplit(head)
+        path = _urlparse.unquote(parts.path, errors="surrogateescape")
+        key = ("svn_repositories", f"{parts.scheme}://{parts.netloc}")
+        cache = self._backend_cache()
+        known = cache.get(key, ()) if cache is not None else ()
+        # The longest repository root that holds this path.
+        holding = [
+            found
+            for found in known
+            if path.rstrip("/") == found[0] or path.startswith(found[0] + "/")
+        ]
+        if holding:
+            return max(holding, key=lambda found: len(found[0]))
+        found = self._discover(head, head, ("svn_repository_at", head))
+        if cache is not None:
+            cache[key] = (*known, found)
+        return found

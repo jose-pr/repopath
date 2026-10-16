@@ -43,7 +43,15 @@ DOCUMENTED = {
         "RepoPathError",
     },
 }
-URI_DOCUMENTED = {"repopath.uri": {"GitHubURIPath", "GitLabURIPath", "RepoURIPath"}}
+URI_DOCUMENTED = {
+    "repopath.uri": {
+        "GitHubURIPath",
+        "GitLabURIPath",
+        "RepoURIPath",
+        "SVNURIPath",
+        "SourceForgeURIPath",
+    }
+}
 
 
 def _documented():

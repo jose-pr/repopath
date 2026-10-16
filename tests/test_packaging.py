@@ -90,5 +90,8 @@ def test_the_schemes_are_declared_unconditionally_as_entry_points(project):
             "repo": "repopath.uri:RepoURIPath",
             "github": "repopath.uri:GitHubURIPath",
             "gitlab": "repopath.uri:GitLabURIPath",
+            "svn+https": "repopath.uri:SVNURIPath",
+            "svn+http": "repopath.uri:SVNURIPath",
+            "sourceforge": "repopath.uri:SourceForgeURIPath",
         }
     }

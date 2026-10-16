@@ -8,8 +8,8 @@ self-contained. Development documentation lives with the source at
 
 Names are imported from `repopath` (the paths, the backends, the exceptions, the
 warning and `__version__`), from `repopath.exceptions` (the exceptions and the
-warning) and from `repopath.uri` (the `repo:`, `github:` and `gitlab:` schemes
-of `uripath`). Every module whose name starts with `_` is private. `import
+warning) and from `repopath.uri` (the `repo:`, `github:`, `gitlab:`, `svn+https:`,
+`svn+http:` and `sourceforge:` schemes of `uripath`). Every module whose name starts with `_` is private. `import
 repopath` imports no third-party library and never `uripath`. The classes are
 read-only clients of the REST APIs of GitHub and GitLab, and of a Subversion
 server over HTTP (`SVNPath`); they speak no git protocol and no `svn://`: there
@@ -22,7 +22,7 @@ that names the extra:
 
 | Extra | Adds | For |
 | --- | --- | --- |
-| `uri` | `uripath` | `repopath.uri`: the `repo:`, `github:` and `gitlab:` schemes |
+| `uri` | `uripath` | `repopath.uri`: the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes |
 | `all` | all of the above | |
 
 `repopath.__version__` is the installed version, read from the distribution's
@@ -350,7 +350,7 @@ module documents applies:
   a transport the backend built, never one it was given. It may be shared between
   threads.
 
-## The `repo:`, `github:` and `gitlab:` schemes (`repopath.uri`)
+## The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes (`repopath.uri`)
 
 ```python
 class RepoURIPath(DelegatingURIPath):
@@ -365,6 +365,24 @@ class RepoURIPath(DelegatingURIPath):
 class GitHubURIPath(RepoURIPath): ...
 
 class GitLabURIPath(RepoURIPath): ...
+
+class SVNURIPath(DelegatingURIPath):
+    kind: str
+    ref: str | None
+    def is_local(self) -> bool: ...
+    def readlink(self) -> SVNURIPath: ...
+    def checksum(self, algorithm="md5") -> str: ...
+    def supported_checksums(self) -> frozenset[str]: ...
+
+class SourceForgeURIPath(DelegatingURIPath):
+    kind: str
+    project: str
+    mount: str
+    ref: str | None
+    def is_local(self) -> bool: ...
+    def readlink(self) -> SourceForgeURIPath: ...
+    def checksum(self, algorithm="md5") -> str: ...
+    def supported_checksums(self) -> frozenset[str]: ...
 ```
 
 Importing `repopath.uri` needs `uripath` (`pip install "repopath[uri]"`).
@@ -401,6 +419,34 @@ path too, and an error names the URI.
   the first of them builds, so the default branch of a GitLab project is looked up
   once; `backend=` supplies one (a `RepoBackend` or a `BaseRepoBackend`).
 - `is_local()` is `False`: the host is a hosting service and is never resolved.
+
+`SVNURIPath` and `SourceForgeURIPath` are the same layer over an `SVNPath` and a
+`SourceForgePath`:
+
+- `svn+https://[USER:PASSWORD@]host[:port]/path/to/root/names?ref=REV` and
+  `svn+http://...` are an `SVNURIPath`. The URL after `svn+` is the URL of the path
+  itself, anywhere in the repository (not the repository root): with `?ref=` the root is
+  found from the server's `OPTIONS` reply, once per repository and backend, and the
+  tree a link or `..` stays inside is the whole server. `ref` is carried to every
+  child. A URI with no host raises `URISyntaxError`; a revision that is no number, or a
+  dot segment in the path, raises it (a `ValueError`) when the path is first used. `svn:`
+  (`svnserve`) and `svn+ssh:` are not schemes of this package. A user and password in the
+  URI are sent as `Authorization: Basic` unless `backend=` is given; a user alone is a
+  user with an empty password. As for the other schemes, `str()`, `repr()`,
+  `as_uri(sanitize=True)` and every message hide the password, and `as_uri()` returns it.
+  `is_local()` is `False`, and `kind` is `"svn"`.
+- `sourceforge://PROJECT/names?mount=code&ref=REV&instance=HOST` is a
+  `SourceForgeURIPath`: the host slot is the project (read in lower case), `mount`
+  defaults to `code`, `instance` to `sourceforge.net`. It has no user, password or
+  port (`URISyntaxError`): the reads are anonymous. `kind` is `"sourceforge"`; `project`,
+  `mount` and `ref` are read from the URI.
+- Both hand `_scandir`, `_open` and the stat to the core path, so a listing hands each
+  child its stat, and `readlink()` returns a URI path of the link text (a path with no
+  host when the text is relative, rooted on the same host when it starts with `/`),
+  `checksum()` and `supported_checksums()` are the core path's.
+- `uripath` knows the names `repo`, `github` and `gitlab` as provided by this
+  distribution when it is not installed; the other three are found only through this
+  distribution's entry points, so without it a `svn+https:` URI is a plain `URIPath`.
 
 ## Exceptions (`repopath.exceptions`)
 

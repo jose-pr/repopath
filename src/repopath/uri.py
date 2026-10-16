@@ -1,6 +1,8 @@
-"""The `repo:`, `github:` and `gitlab:` schemes of `uripath`: `RepoURIPath`,
-`GitHubURIPath` and `GitLabURIPath`, URI paths that delegate to a `GitHubPath`
-or a `GitLabPath`.
+"""The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and
+`sourceforge:` schemes of `uripath`: `RepoURIPath`, `GitHubURIPath` and
+`GitLabURIPath`, URI paths that delegate to a `GitHubPath` or a `GitLabPath`;
+`SVNURIPath` and `SourceForgeURIPath`, which delegate to an `SVNPath` and a
+`SourceForgePath`.
 
 Importing this module needs `uripath`: `pip install "repopath[uri]"`. `uripath`
 loads it by itself, through the `uripath.schemes` entry points, the first time
@@ -20,6 +22,7 @@ except ImportError as _error:
 import contextlib as _contextlib
 import errno as _errno
 import typing as _ty
+import urllib.parse as _urlparse
 
 from uripath import Source
 from uripath.exceptions import URISyntaxError
@@ -31,8 +34,16 @@ from ._github import GitHubPath
 from ._gitlab import GitLabPath
 from ._hosted import HostedRepoPath
 from ._kinds import RepoPath
+from ._sourceforge import SourceForgePath
+from ._svn import SVNPath, _AnywherePath
 
-__all__ = ["GitHubURIPath", "GitLabURIPath", "RepoURIPath"]
+__all__ = [
+    "GitHubURIPath",
+    "GitLabURIPath",
+    "RepoURIPath",
+    "SVNURIPath",
+    "SourceForgeURIPath",
+]
 
 
 class RepoURIPath(DelegatingURIPath):
@@ -251,3 +262,162 @@ class GitLabURIPath(RepoURIPath):
                 self.source, "/".join(segments), self.query, self.fragment
             )
         return super(GitLabURIPath, parent)._make_child_relpath(name, **kwargs)
+
+
+_NO_SOURCE = Source(None, None, None, None)
+
+
+class _SubversionURIPath(DelegatingURIPath):
+    """What `svn+https:` and `sourceforge:` share: a read-only URI path whose
+    I/O is done by an `SVNPath` (or its SourceForge kind) on the backend of the
+    URI path, and whose links and digests are the core path's."""
+
+    __slots__ = ()
+    _DELEGATED = ("_scandir", "_listdir", "_open")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Settles the parts, so a URI that names no usable place is refused
+        # when the path is built and not at its first request.
+        self.source
+
+    def is_local(self) -> bool:
+        """Whether the tree is on this machine: never. The host of the URI is
+        a server and is not resolved."""
+        return False
+
+    @property
+    def ref(self) -> "str | None":
+        """The revision of the `?ref=` query, as text, or None for the head."""
+        return self.query.to_dict(single=True).get("ref") or None
+
+    def readlink(self):
+        # The text of the link, unresolved: a result, not a destination.
+        with self._delegated():
+            target = self._core_path._link_text()
+        source = self.source if target.startswith("/") else _NO_SOURCE
+        return self._from_parsed_parts(source, target, None, None)
+
+    def supported_checksums(self) -> "_ty.FrozenSet[str]":
+        with self._delegated():
+            return self._core_path.supported_checksums()
+
+    def checksum(self, algorithm: str = "md5") -> str:
+        with self._delegated():
+            return self._core_path.checksum(algorithm)
+
+
+class SVNURIPath(_SubversionURIPath):
+    """`svn+https:` and `svn+http:` schemes
+    (`svn+https://[USER:PASSWORD@]host[:port]/path/to/root/names?ref=REV`):
+    read-only access to a Subversion repository served over HTTP by
+    `mod_dav_svn`, done by an `SVNPath`. The URL after `svn+` is the URL of
+    the path, anywhere in the repository: with `?ref=` the repository root is
+    found from the server's `OPTIONS` reply. A user and password in the URI are
+    sent as `Authorization: Basic`, unless `backend=` is given. The tree is
+    read-only. (`svn:` is the scheme of `svnserve` and is not this one.)"""
+
+    __SCHEMES = ("svn+https", "svn+http")
+    __slots__ = ()
+
+    def _init(self, source: Source, path, query, fragment, /, **kwargs):
+        scheme = str(source.scheme or "").lower()
+        # A path with no source is the text of a link, a result and not a place.
+        if source.scheme and (
+            scheme not in ("svn+https", "svn+http") or not source.host
+        ):
+            raise URISyntaxError(
+                f"a {scheme}: URI names the host of the server: "
+                "svn+https://host/path/to/repository"
+            )
+        super()._init(source, path, query, fragment, **kwargs)
+
+    @property
+    def kind(self) -> str:
+        """The name of the kind of repository this path reads: `"svn"`."""
+        return SVNPath.TYPE
+
+    def _initbackend(self):
+        user, password = self.source.parsed_userinfo()
+        if user in (None, ""):
+            return RepoBackend()
+        try:
+            pair = tuple(
+                part.decode("utf-8") if isinstance(part, bytes) else part
+                for part in (user, password or "")
+            )
+        except UnicodeDecodeError:
+            raise URISyntaxError(
+                "the user and password of the URI are not UTF-8"
+            ) from None
+        return RepoBackend(auth=pair)
+
+    def _origin(self) -> str:
+        source = self.source
+        scheme = str(source.scheme).lower().partition("+")[2]
+        host = compose_host(fold_host(source.host))
+        return f"{scheme}://{host}" + (f":{source.port}" if source.port else "")
+
+    def _make_core(self) -> SVNPath:
+        names = [name for name in self.segments if name]
+        if any("/" in name for name in names):
+            raise URISyntaxError("a name of a svn+https: URI holds a '/'")
+        try:
+            return _AnywherePath(
+                *names, instance=self._origin(), ref=self.ref, backend=self.backend
+            )
+        except ValueError as error:
+            raise URISyntaxError(str(error)) from None
+
+
+class SourceForgeURIPath(_SubversionURIPath):
+    """`sourceforge:` scheme (`sourceforge://PROJECT/names?mount=code&ref=REV`):
+    read-only access to the Subversion tool of a SourceForge project, done by a
+    `SourceForgePath`. The host slot is the project; `?mount=` is the tool's
+    mount point (`code` by default), `?ref=` a revision and `?instance=` the
+    host of another site. The URI holds no user, password or port: the reads
+    are anonymous."""
+
+    __SCHEMES = ("sourceforge",)
+    __slots__ = ()
+
+    def _init(self, source: Source, path, query, fragment, /, **kwargs):
+        if source.scheme and (not source.host or source.userinfo or source.port):
+            raise URISyntaxError(
+                "a sourceforge: URI is sourceforge://PROJECT/names, with no "
+                "user, password or port"
+            )
+        super()._init(source, path, query, fragment, **kwargs)
+
+    @property
+    def kind(self) -> str:
+        """The name of the kind of repository this path reads: `"sourceforge"`."""
+        return SourceForgePath.TYPE
+
+    def _initbackend(self):
+        return RepoBackend()
+
+    @property
+    def project(self) -> str:
+        """The project, the host slot of the URI."""
+        return str(self.source.host).lower()
+
+    @property
+    def mount(self) -> str:
+        """The mount point of the tool (`code` unless `?mount=` says another)."""
+        return self.query.to_dict(single=True).get("mount") or "code"
+
+    def _make_core(self) -> SourceForgePath:
+        names = [name for name in self.segments if name]
+        options = self.query.to_dict(single=True)
+        try:
+            return SourceForgePath(
+                *names,
+                project=self.project,
+                mount=self.mount,
+                ref=self.ref,
+                instance=options.get("instance") or None,
+                backend=self.backend,
+            )
+        except ValueError as error:
+            raise URISyntaxError(str(error)) from None
