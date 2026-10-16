@@ -6,7 +6,7 @@
 [![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://jose-pr.github.io/repopath/)
 [![CI](https://img.shields.io/github/actions/workflow/status/jose-pr/repopath/test.yml)](https://github.com/jose-pr/repopath/actions/workflows/test.yml)
 
-**`pathlib` for the repository trees of GitHub, GitLab, Subversion and SourceForge, read-only.**
+**`pathlib` for the repository trees of GitHub, GitLab, Gitea, Subversion and SourceForge, read-only.**
 `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")` has the method
 names, signatures and exception types of `pathlib.Path`, and `GitLabPath` does the same
 for GitLab; `RepoPath` is the class that returns either. None needs a URI, and all
@@ -24,6 +24,7 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
 | --- | --- | --- | --- | --- |
 | GitHub and GitHub Enterprise | `GitHubPath` | `"github"` | `github.com` | contents API at `api.github.com`, or `https://<instance>/api/v3` |
 | GitLab and self-hosted GitLab | `GitLabPath` | `"gitlab"` | `gitlab.com` | REST API v4 at `https://<instance>/api/v4` |
+| Gitea, Forgejo and Codeberg | `GiteaPath` | `"gitea"` (alias `"forgejo"`) | `codeberg.org` | REST API at `https://<instance>/api/v1` |
 | Subversion over HTTP | `SVNPath` | `"svn"` | (`type=` and the URL of the repository) | WebDAV of `mod_dav_svn` at that URL |
 | SourceForge (Subversion tools) | `SourceForgePath` | `"sourceforge"` | `sourceforge.net` | REST API of the site, then the tool's Subversion URL |
 
@@ -123,7 +124,7 @@ print(URIPath("repo://github.com/psf/requests/README.md?ref=main").read_text()[:
 
 | Module | Purpose |
 | --- | --- |
-| `repopath` | `RepoPath`, `GitHubPath`, `GitLabPath`, `SVNPath`, `SourceForgePath`, the backends `RepoBackend` and `BaseRepoBackend`, the exceptions `RepoPathError`, `RateLimitError` and `BadReplyError`, the warning `InsecureTransportWarning` and `__version__` |
+| `repopath` | `RepoPath`, `GitHubPath`, `GitLabPath`, `GiteaPath`, `SVNPath`, `SourceForgePath`, the backends `RepoBackend` and `BaseRepoBackend`, the exceptions `RepoPathError`, `RateLimitError` and `BadReplyError`, the warning `InsecureTransportWarning` and `__version__` |
 | `repopath.exceptions` | The exceptions and the warning |
 | `repopath.uri` | `RepoURIPath`, `GitHubURIPath`, `GitLabURIPath`, `SVNURIPath` and `SourceForgeURIPath`, the schemes of `uripath` (needs the `uri` extra) |
 

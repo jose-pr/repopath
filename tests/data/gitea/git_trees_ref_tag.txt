@@ -1,0 +1,17 @@
+GET /api/v1/repos/lab/pub/git/trees/v1
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: X-Total-Count
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Total-Count: 13
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+Transfer-Encoding: chunked
+
+[body: 2871 bytes]
+{"sha":"081ba1354d6501edf709bcf9dd55853e5f1661cd","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/081ba1354d6501edf709bcf9dd55853e5f1661cd","tree":[{"path":".gitattributes","mode":"100644","type":"blob","size":42,"sha":"542914e10a4c0fd9fdfdf23391e0758ff1cbed2f","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/542914e10a4c0fd9fdfdf23391e0758ff1cbed2f"},{"path":".gitmodules","mode":"100644","type":"blob","size":64,"sha":"ec12fd46bb5b1d78f094bc4fc43a5b22880cce0e","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/ec12fd46bb5b1d78f094bc4fc43a5b22880cce0e"},{"path":"README.md","mode":"100644","type":"blob","size":6,"sha":"ce013625030ba8dba906f756967f9e9ca394464a","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/ce013625030ba8dba906f756967f9e9ca394464a"},{"path":"blob.bin","mode":"100644","type":"blob","size":6,"sha":"e158ec5208bacda2ca76214f4a18bd2ce2ffee46","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/e158ec5208bacda2ca76214f4a18bd2ce2ffee46"},{"path":"data.lfs","mode":"100644","type":"blob","size":127,"sha":"bc370745d0441bbf907427cb5afdb7c1f2bbf42e","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/bc370745d0441bbf907427cb5afdb7c1f2bbf42e"},{"path":"docs","mode":"040000","type":"tree","size":0,"sha":"3413b46ff27699d57433bd2c6045db7d6ae678c0","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/3413b46ff27699d57433bd2c6045db7d6ae678c0"},{"path":"empty-file","mode":"100644","type":"blob","size":0,"sha":"e69de29bb2d1d6434b8b29ae775ad8c2e48c5391","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"},{"path":"my dir","mode":"040000","type":"tree","size":0,"sha":"0b753e18687e1a39e45f46c79fc65d08cd5f47bc","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/0b753e18687e1a39e45f46c79fc65d08cd5f47bc"},{"path":"one-mib.txt","mode":"100644","type":"blob","size":1048576,"sha":"fc26db1cf2fd25ac90dbf93eef0ebb92b51e8850","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/fc26db1cf2fd25ac90dbf93eef0ebb92b51e8850"},{"path":"run.sh","mode":"100755","type":"blob","size":18,"sha":"4163036efa65bd4a469e752267498f01ea36a55c","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/4163036efa65bd4a469e752267498f01ea36a55c"},{"path":"src","mode":"040000","type":"tree","size":0,"sha":"04f393d75e242bcd72872dd980905e16ecec6816","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/04f393d75e242bcd72872dd980905e16ecec6816"},{"path":"sub","mode":"160000","type":"commit","size":0,"sha":"1111111111111111111111111111111111111111","url":""},{"path":"ünï-çødé","mode":"040000","type":"tree","size":0,"sha":"03cd79efb05aed7bf9a25f0a44faf1efe0f1644b","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/03cd79efb05aed7bf9a25f0a44faf1efe0f1644b"}],"truncated":false,"page":1,"total_count":13}
+

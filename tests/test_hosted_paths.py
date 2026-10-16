@@ -11,10 +11,10 @@ import pickle
 import pytest
 
 from pathapi import Path
-from repopath import BaseRepoBackend, GitHubPath, GitLabPath, RepoBackend
+from repopath import BaseRepoBackend, GiteaPath, GitHubPath, GitLabPath, RepoBackend
 from repopath import _kinds
 
-KINDS = [GitHubPath, GitLabPath]
+KINDS = [GitHubPath, GitLabPath, GiteaPath]
 
 
 class _Refuses(BaseRepoBackend):
@@ -351,4 +351,10 @@ def test_a_pickle_of_a_path_keeps_its_names_when_they_are_rooted():
 
 
 def test_the_registered_kinds_are_untouched_by_building_paths():
-    assert _kinds.RepoPath.kinds() == ("github", "gitlab", "sourceforge", "svn")
+    assert _kinds.RepoPath.kinds() == (
+        "gitea",
+        "github",
+        "gitlab",
+        "sourceforge",
+        "svn",
+    )

@@ -6,17 +6,23 @@ from __future__ import annotations
 
 import urllib.parse
 
-from repopath import GitHubPath, GitLabPath, RepoBackend
+from repopath import GiteaPath, GitHubPath, GitLabPath, RepoBackend
 
-_KINDS = {"github": GitHubPath, "gitlab": GitLabPath}
-_DEFAULT_INSTANCE = {"github": "github.com", "gitlab": "gitlab.com"}
+_KINDS = {"github": GitHubPath, "gitlab": GitLabPath, "gitea": GiteaPath}
+_DEFAULT_INSTANCE = {
+    "github": "github.com",
+    "gitlab": "gitlab.com",
+    "gitea": "codeberg.org",
+}
 
 
 def fake_backend(kind: str, server, **options) -> RepoBackend:
     """A `RepoBackend` that talks to the loopback fake `server` (the
     `(base_url, owner, repo)` a fixture yields) instead of the real API."""
     base_url = server[0] if isinstance(server, tuple) else server
-    api = base_url if kind == "github" else f"{base_url}/api/v4"
+    api = {"github": base_url, "gitlab": f"{base_url}/api/v4"}.get(
+        kind, f"{base_url}/api/v1"
+    )
     return RepoBackend(api_base=api, **options)
 
 
@@ -66,4 +72,13 @@ def gitlab(flavor, server, name="", *, backend=None, **keywords):
     backend = backend or fake_backend("gitlab", server)
     return make_path(
         flavor, "gitlab", name, owner=owner, repo=repo, backend=backend, **keywords
+    )
+
+
+def gitea(flavor, server, name="", *, backend=None, **keywords):
+    """`name` in the repository the fake Forgejo `server` serves."""
+    owner, repo = server[1], server[2]
+    backend = backend or fake_backend("gitea", server)
+    return make_path(
+        flavor, "gitea", name, owner=owner, repo=repo, backend=backend, **keywords
     )

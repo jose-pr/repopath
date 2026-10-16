@@ -1,0 +1,17 @@
+GET /api/v1/repos/lab/pub/git/trees/0b753e18687e1a39e45f46c79fc65d08cd5f47bc
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: X-Total-Count
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Total-Count: 7
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+Content-Length: 1705
+
+[body: 1705 bytes]
+{"sha":"0b753e18687e1a39e45f46c79fc65d08cd5f47bc","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/0b753e18687e1a39e45f46c79fc65d08cd5f47bc","tree":[{"path":"100%.txt","mode":"100644","type":"blob","size":8,"sha":"3aaf448b40f878cf3067e2323616143bdde600de","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/3aaf448b40f878cf3067e2323616143bdde600de"},{"path":"a\u0026b.txt","mode":"100644","type":"blob","size":4,"sha":"fe39468b963e1bbc1433fae38bcb651213e195d1","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/fe39468b963e1bbc1433fae38bcb651213e195d1"},{"path":"a+b.txt","mode":"100644","type":"blob","size":5,"sha":"2d07079b480b13444602b4534b5a26e0932787b5","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/2d07079b480b13444602b4534b5a26e0932787b5"},{"path":"file with space.txt","mode":"100644","type":"blob","size":6,"sha":"9495c3c5a31810439c36d49aad161b7f3db75d09","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/9495c3c5a31810439c36d49aad161b7f3db75d09"},{"path":"hash#.txt","mode":"100644","type":"blob","size":5,"sha":"b79c9762f6808e00d39429f0d940bf571f06f64d","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/b79c9762f6808e00d39429f0d940bf571f06f64d"},{"path":"it's \"q\".txt","mode":"100644","type":"blob","size":6,"sha":"b39eb908c63928c4ad77052f619e944212ca4b50","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/b39eb908c63928c4ad77052f619e944212ca4b50"},{"path":"what?.txt","mode":"100644","type":"blob","size":9,"sha":"b4794356533c3cd850604aa4de424ffca69adf01","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/b4794356533c3cd850604aa4de424ffca69adf01"}],"truncated":false,"page":1,"total_count":7}
+

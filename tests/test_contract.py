@@ -5,7 +5,7 @@ loopback fakes of `api_fakes`; nothing reaches a real host."""
 import pytest
 
 from pathapi.testing import ReadPathContract
-from repo_support import github, gitlab, make_path
+from repo_support import gitea, github, gitlab, make_path
 
 
 class TestGitHubPathContract(ReadPathContract):
@@ -23,6 +23,14 @@ class TestGitLabPathContract(ReadPathContract):
     @pytest.fixture
     def root(self, gitlab_api_server, http_transport_kind):
         return gitlab("path", gitlab_api_server)
+
+
+class TestGiteaPathContract(ReadPathContract):
+    supports_empty_directories = False
+
+    @pytest.fixture
+    def root(self, gitea_api_server, http_transport_kind):
+        return gitea("path", gitea_api_server)
 
 
 class TestGitHubURIPathContract(ReadPathContract):

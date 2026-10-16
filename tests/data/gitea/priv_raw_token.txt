@@ -1,0 +1,22 @@
+GET /api/v1/repos/lab/priv/raw/secret.txt?ref=main
+> Authorization: token <redacted>
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: Content-Disposition
+Cache-Control: private, max-age=300
+Content-Disposition: inline; filename="secret.txt"; filename*=UTF-8''secret.txt
+Content-Length: 7
+Content-Type: text/plain; charset=utf-8
+Etag: "d97c5eada5d8c52079031eef0107a4430a9617c5"
+Last-Modified: Fri, 16 Oct 2026 17:14:29 GMT
+X-Content-Type-Options: nosniff
+X-Forgejo-Object-Type: file
+X-Frame-Options: SAMEORIGIN
+X-Gitea-Object-Type: file
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+
+[body: 7 bytes]
+secret
+

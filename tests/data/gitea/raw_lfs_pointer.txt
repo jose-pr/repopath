@@ -1,0 +1,23 @@
+GET /api/v1/repos/lab/pub/raw/data.lfs?ref=main
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: Content-Disposition
+Cache-Control: private, max-age=300
+Content-Disposition: inline; filename="data.lfs"; filename*=UTF-8''data.lfs
+Content-Length: 127
+Content-Type: text/plain; charset=utf-8
+Etag: "bc370745d0441bbf907427cb5afdb7c1f2bbf42e"
+Last-Modified: Fri, 16 Oct 2026 17:14:27 GMT
+X-Content-Type-Options: nosniff
+X-Forgejo-Object-Type: file
+X-Frame-Options: SAMEORIGIN
+X-Gitea-Object-Type: file
+Date: Fri, 16 Oct 2026 17:29:27 GMT
+
+[body: 127 bytes]
+version https://git-lfs.github.com/spec/v1
+oid sha256:ef757728a031941353225fa74c9b04dc8c628d14db4a48502bea194b6efea342
+size 29
+

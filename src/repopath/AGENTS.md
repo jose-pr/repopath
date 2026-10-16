@@ -11,7 +11,7 @@ warning and `__version__`), from `repopath.exceptions` (the exceptions and the
 warning) and from `repopath.uri` (the `repo:`, `github:`, `gitlab:`, `svn+https:`,
 `svn+http:` and `sourceforge:` schemes of `uripath`). Every module whose name starts with `_` is private. `import
 repopath` imports no third-party library and never `uripath`. The classes are
-read-only clients of the REST APIs of GitHub and GitLab, and of a Subversion
+read-only clients of the REST APIs of GitHub, GitLab and Gitea or Forgejo (Codeberg), and of a Subversion
 server over HTTP (`SVNPath`); they speak no git protocol and no `svn://`: there
 is no clone, no `git:` URL and no commit.
 
@@ -64,6 +64,18 @@ class GitLabPath(RepoPath):
     repo_path: str
     def as_uri(self) -> str: ...
 
+class GiteaPath(RepoPath):
+    def __init__(
+        self, *segments, owner=None, repo=None, ref=None, instance=None,
+        token=None, backend=None,
+    ): ...
+    instance: str
+    repo_owner: str
+    repo: str
+    ref: str | None
+    repo_path: str
+    def as_uri(self) -> str: ...
+
 class SVNPath(RepoPath):
     def __init__(
         self, *segments, instance=None, ref=None, username=None, password=None,
@@ -89,7 +101,7 @@ class SourceForgePath(SVNPath):
 ```
 
 `RepoPath` is the family of a repository tree on a hosting service, and
-`GitHubPath`, `GitLabPath`, `SVNPath` and `SourceForgePath` are its kinds. Each is a
+`GitHubPath`, `GitLabPath`, `GiteaPath`, `SVNPath` and `SourceForgePath` are its kinds. Each is a
 `pathapi.Path` (so `pathlib.Path`'s read methods, `copy()` out of the tree,
 `walk()`, `glob()` and `PathSyncer` as a source work on it) and needs no URI.
 `segments` are the path inside the repository, joined and normalized like a
@@ -98,16 +110,17 @@ as a name.
 
 - **Calling `RepoPath`.** `RepoPath(*segments, instance=..., type=None,
   **options)` returns a path of one kind, with `options` the keywords of that
-  kind. `type` names the kind (`"github"`, `"gitlab"`, `"sourceforge"`, `"svn"`); without it the kind is
-  detected from `instance` (`github.com` and `gitlab.com`, with or without
-  `www.`, in any case). An instance that no kind is detected for is a
+  kind. `type` names the kind (`"github"`, `"gitlab"`, `"gitea"` or its alias `"forgejo"`, `"sourceforge"`,
+  `"svn"`); without it the kind is detected from `instance` (`github.com`,
+  `gitlab.com` and `codeberg.org`, with or without `www.` for the first two, in
+  any case). An instance that no kind is detected for is a
   `ValueError` that asks for `type=` and lists the kinds; an unregistered `type`
   is a `ValueError` that lists the registered ones; neither is a `TypeError`;
   `type=` or `instance=` that is not a `str` is a `TypeError`. A segment that is
   already a repository path gives its kind. `type=` without `instance=` gets the
   default instance of the kind. Every kind is a subclass, so `isinstance(path,
   RepoPath)` holds. `RepoPath.kinds()` lists the registered kind names, sorted
-  (`("github", "gitlab", "sourceforge", "svn")`); `path.kind` is the name of the kind of a path.
+  (`("gitea", "github", "gitlab", "sourceforge", "svn")`; an alias is not listed); `path.kind` is the name of the kind of a path.
 - **Place.** `owner=` and `repo=` are required, unless a segment is a path of
   the same kind and supplies them (`path / "x"`, `path.parent` and
   `GitHubPath(path, "x")` keep the place); a keyword then moves the path. A
@@ -116,13 +129,14 @@ as a name.
   the one exception: a `/` separated group path, `"acme/team"`, names the
   project of a subgroup). `instance=` is the host of the service, with a port
   when it is not the default one: `github.com` (the default of `GitHubPath`),
-  `gitlab.com` (the default of `GitLabPath`), `ghe.example:8443`,
-  `[fd00::5]`. Another instance than the public one is GitHub Enterprise or a
-  self-hosted GitLab, with the API at `https://<instance>/api/v3` or
-  `https://<instance>/api/v4`; anything that is not a host and an optional port
+  `gitlab.com` (the default of `GitLabPath`), `codeberg.org` (the default of
+  `GiteaPath`), `ghe.example:8443`, `[fd00::5]`. Another instance than the public
+  one is GitHub Enterprise, a self-hosted GitLab, or a Gitea or Forgejo server
+  (which needs `type="gitea"`), with the API at `https://<instance>/api/v3`,
+  `https://<instance>/api/v4` or `https://<instance>/api/v1`; anything that is not a host and an optional port
   (a `/`, `@`, `?`, `#`, space, a bad port) is a `ValueError`. `ref=` is a
   branch, a tag or a commit; without one the default branch of the repository is
-  read (`GitLabPath` looks it up once per backend); `ref=""` on a joined path
+  read (`GitLabPath` and `GiteaPath` look it up once per backend); `ref=""` on a joined path
   goes back to the default branch.
 - **Backend.** `token=` builds the path's own `RepoBackend` that sends it as a
   bearer token; every path derived from it keeps that backend. `backend=` shares
@@ -157,7 +171,7 @@ as a name.
   `walk()` or `glob()` costs one request per directory.
 - **Limits of git.** Git has no empty directories, so one exists only with a
   file below it. A symlink or a submodule is an ordinary file of the size the
-  API reports. A name an API lists that is not one path component (`..`, `a/b`,
+  API reports (`GiteaPath` differs: see below). A name an API lists that is not one path component (`..`, `a/b`,
   an empty name, one with NUL) is left out of the listing.
 
 `GitHubPath` reads the contents API (`GET /repos/{owner}/{repo}/contents/{path}`):
@@ -190,6 +204,33 @@ as a name.
 - The files endpoints need a ref, so the default branch is looked up
   (`GET /projects/:id`) and kept in `backend.cache` for every path that shares
   the backend.
+
+`GiteaPath` reads Gitea and Forgejo (Codeberg runs Forgejo) through the REST API
+under `/api/v1`:
+
+- API root `https://<instance>/api/v1`; the default instance is `codeberg.org`,
+  which is also the only one `RepoPath` detects (any other host needs
+  `type="gitea"`, or `"forgejo"`, its alias). The API of the two servers is the
+  same; only Forgejo was measured.
+- Directories are read through the Git Trees API, `per_page=1000` and the pages
+  to `total_count`, not through the contents API, which answers a directory
+  whole, without paging, and takes seconds for a few thousand entries. The tree
+  is walked from the root, named by the ref (a `/` in a branch name is
+  percent-encoded) or by the default branch (`GET /repos/{owner}/{repo}`, kept in
+  `backend.cache`), and each directory is found by the id its parent lists: a
+  nested path costs one request per name, plus the listing. The entries carry
+  type and size, so `stat()` is free after `iterdir()`, and `walk()` and `glob()`
+  cost one request per directory (more for one of over 1,000 entries).
+- A file is read with one `GET` of the `raw` route (no `HEAD` is used: the server
+  answers `405` to it). A symbolic link is a file whose bytes are its target
+  text, with that length as its size; a submodule is a directory with no entries
+  that cannot be opened; a file kept in Git LFS reads as the pointer Git holds,
+  and `stat()` states the size of the pointer. No mtime.
+- A repository that is private, one that does not exist and a ref that does not
+  exist are all `FileNotFoundError` (the server answers `404`, or `400` for a tree
+  of a missing ref or of an empty repository); a token the server does not know
+  is `PermissionError` (`401`), even on a public repository. The token travels as
+  `Authorization: Bearer`.
 
 `SVNPath` reads a Subversion repository served by `mod_dav_svn` (WebDAV over
 `http` or `https`), with no library beyond `pathapi`:
@@ -472,9 +513,10 @@ plain `http://` to a host that is not this machine.
 - A recursive `copy()` or `PathSyncer` run out of a tree makes one request per
   directory and one per file; a file is read whole into memory.
 - A new kind of repository is a `RepoPath` subclass whose class body sets `TYPE`
-  and `INSTANCES`; defining it registers the name and the instances, and a name or
-  an instance another class holds is a `ValueError` unless the class statement
-  passes `replace=True`. A kind supplies its constructor (calling
+  and `INSTANCES` (and, for other names `type=` takes, `ALIASES`); defining it
+  registers the name, the aliases and the instances, and a name or an instance
+  another class holds is a `ValueError` unless the class statement passes
+  `replace=True`. A kind supplies its constructor (calling
   `self._initialize(text, place, backend)`), `_keywords()` (the constructor
   keywords that name the place), `as_uri()` and the read hooks (`stat()`,
   `_scandir()`, `_open()`); `RepoPath(type="name", **keywords)` then returns it.

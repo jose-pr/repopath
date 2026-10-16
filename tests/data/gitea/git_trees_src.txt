@@ -1,0 +1,17 @@
+GET /api/v1/repos/lab/pub/git/trees/f308334ade1d7be487dbbd5d45200cd227a017b6
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: X-Total-Count
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Total-Count: 5
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+Content-Length: 1266
+
+[body: 1266 bytes]
+{"sha":"f308334ade1d7be487dbbd5d45200cd227a017b6","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/f308334ade1d7be487dbbd5d45200cd227a017b6","tree":[{"path":"a.txt","mode":"100644","type":"blob","size":8,"sha":"814f4a422927b82f5f8a43f8fab6d3839e3983f2","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/814f4a422927b82f5f8a43f8fab6d3839e3983f2"},{"path":"b.txt","mode":"100644","type":"blob","size":4,"sha":"af9c6fd168ea28cf99aa2c2dd9057a8b720e2262","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/af9c6fd168ea28cf99aa2c2dd9057a8b720e2262"},{"path":"link-absolute","mode":"120000","type":"blob","size":11,"sha":"3594e94c04db171e2767224db355f514b13715c5","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/3594e94c04db171e2767224db355f514b13715c5"},{"path":"link-to-a","mode":"120000","type":"blob","size":5,"sha":"8d14cbf983b3fad683171c9418998d9f68340823","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/8d14cbf983b3fad683171c9418998d9f68340823"},{"path":"link-to-docs","mode":"120000","type":"blob","size":7,"sha":"a9594bfe4ab69aca32d7c51b17985ad9ee89e563","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/a9594bfe4ab69aca32d7c51b17985ad9ee89e563"}],"truncated":false,"page":1,"total_count":5}
+

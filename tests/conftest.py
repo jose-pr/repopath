@@ -3,6 +3,7 @@ import tempfile
 import pytest
 
 import api_fakes
+import gitea_fakes
 import svn_fakes
 import hermetic
 from hermetic import NetworkAccessBlocked  # noqa: F401  (re-exported for tests)
@@ -51,6 +52,24 @@ def gitlab_api_server(fixture_tree):
     `(base_url, owner, repo)` (see `api_fakes.gitlab_api`)."""
     with api_fakes.gitlab_api(fixture_tree) as served:
         yield served
+
+
+@pytest.fixture
+def gitea_api_server(fixture_tree):
+    """A fake of the Forgejo REST API serving `fixture_tree`; yields
+    `(base_url, owner, repo)` (see `gitea_fakes.gitea_api`)."""
+    with gitea_fakes.gitea_api(fixture_tree) as served:
+        yield served
+
+
+@pytest.fixture
+def gitea_recorded():
+    """A fake Forgejo that replays the recordings of `tests/data/gitea` (see
+    `gitea_fakes`); yields its `Served` log. A request with no recording is
+    answered 404 and fails the test at teardown."""
+    with gitea_fakes.recorded() as served:
+        yield served
+    assert not served.unrecorded, f"requests with no recording: {served.unrecorded}"
 
 
 @pytest.fixture

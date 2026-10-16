@@ -1,0 +1,15 @@
+GET /api/v1/repos/lab/pub/raw/nope.txt?ref=main
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 404 Not Found
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Date: Fri, 16 Oct 2026 17:29:27 GMT
+Content-Length: 99
+
+[body: 99 bytes]
+{"message":"The target couldn't be found.","url":"http://127.0.0.1:13000/api/swagger","errors":[]}
+

@@ -1,0 +1,17 @@
+GET /api/v1/repos/lab/pub/git/trees/03cd79efb05aed7bf9a25f0a44faf1efe0f1644b
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: X-Total-Count
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Total-Count: 1
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+Content-Length: 422
+
+[body: 422 bytes]
+{"sha":"03cd79efb05aed7bf9a25f0a44faf1efe0f1644b","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/03cd79efb05aed7bf9a25f0a44faf1efe0f1644b","tree":[{"path":"日本語.txt","mode":"100644","type":"blob","size":8,"sha":"4de4f936336736200e7a59438ef4d31ed10f684d","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/4de4f936336736200e7a59438ef4d31ed10f684d"}],"truncated":false,"page":1,"total_count":1}
+

@@ -618,3 +618,96 @@ mutant(
     f"{_URI_SVN}::test_a_user_and_password_in_the_uri_are_sent_as_basic",
     "the user and password of a svn+https: URI are never sent",
 )
+
+# --- GiteaPath ---------------------------------------------------------------------
+
+_GITEA = "tests/test_gitea.py"
+
+mutant(
+    "gitea-listing-keeps-unsafe-names",
+    "_gitea.py",
+    '            if not _providers.is_safe_child_name(entry["path"]):\n',
+    "            if False:\n",
+    f"{_GITEA}::test_names_that_are_not_one_component_are_left_out",
+    "GiteaPath listing filter no-op",
+)
+mutant(
+    "gitea-missing-ref-is-a-bad-request",
+    "_gitea.py",
+    "                if resp.status == 400:\n",
+    "                if False:\n",
+    f"{_GITEA}::test_a_ref_that_is_not_there_is_not_found",
+    "a tree of a ref that is not there is EIO, not FileNotFoundError",
+)
+mutant(
+    "gitea-pages-run-past-the-total",
+    "_gitea.py",
+    "            if not tree or (total is not None and seen >= total):\n",
+    "            if not tree:\n",
+    f"{_GITEA}::test_the_truncated_flag_of_a_last_page_does_not_ask_for_another",
+    "the last page of a directory is followed by a request for one more",
+)
+mutant(
+    "gitea-walk-goes-through-a-file",
+    "_gitea.py",
+    '            if entry["type"] != "tree":\n                # Below a file',
+    "            if False:\n                # Below a file",
+    f"{_GITEA}::test_a_missing_path_is_file_not_found",
+    "a path below a file asks for the tree of a blob",
+)
+mutant(
+    "gitea-submodule-is-listed",
+    "_gitea.py",
+    '            if entry["type"] != "tree":\n                # A submodule',
+    "            if False:\n                # A submodule",
+    f"{_GITEA}::test_a_submodule_is_an_empty_directory_that_cannot_be_opened",
+    "the listing of a submodule asks for a tree that is not in the repository",
+)
+mutant(
+    "gitea-listing-of-a-file",
+    "_gitea.py",
+    '            if entry["type"] == "blob":\n                raise NotADirectoryError',
+    "            if False:\n                raise NotADirectoryError",
+    f"{_GITEA}::test_a_directory_is_not_a_file_and_a_file_is_not_a_directory",
+    "iterdir() of a file is an empty listing",
+)
+mutant(
+    "gitea-open-of-a-directory",
+    "_gitea.py",
+    "            if is_dir:\n",
+    "            if False:\n",
+    f"{_GITEA}::test_a_directory_is_not_a_file_and_a_file_is_not_a_directory",
+    "open() of a directory is FileNotFoundError",
+)
+mutant(
+    "gitea-ref-slash-is-not-encoded",
+    "_gitea.py",
+    "git/trees/{self._api_quote(treeish)}",
+    'git/trees/{self._api_quote(treeish, "/")}',
+    f"{_GITEA}::test_a_ref_with_a_slash_is_encoded_in_the_tree_url_and_not_in_raw",
+    "a branch with a slash is a path under trees, which the server does not find",
+)
+mutant(
+    "gitea-default-branch-is-not-cached",
+    "_gitea.py",
+    "        if cache is not None and key in cache:\n            return cache[key]\n        data = self._decode(self._request(self._repo_url), dict)",
+    "        if False:\n            return cache[key]\n        data = self._decode(self._request(self._repo_url), dict)",
+    f"{_GITEA}::test_the_default_branch_is_asked_once_for_the_backend",
+    "every path asks for the default branch of the repository",
+)
+mutant(
+    "kinds-alias-is-not-resolved",
+    "_kinds.py",
+    "                return kinds.get(name) or aliases[name]\n",
+    "                return kinds[name]\n",
+    f"{_GITEA}::test_the_kind_is_registered_as_gitea_with_forgejo_as_another_name",
+    'type="forgejo" is an unknown kind',
+)
+mutant(
+    "kinds-alias-may-take-a-kind-name",
+    "_kinds.py",
+    "            other = _KINDS.get(alias) or _ALIASES.get(alias)\n",
+    "            other = _ALIASES.get(alias)\n",
+    "tests/test_kinds.py::test_an_alias_another_kind_holds_is_refused",
+    "an alias can shadow the name of another kind",
+)

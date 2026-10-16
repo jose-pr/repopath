@@ -1,0 +1,17 @@
+GET /api/v1/repos/lab/pub/git/trees/3413b46ff27699d57433bd2c6045db7d6ae678c0
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: X-Total-Count
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Total-Count: 1
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+Content-Length: 418
+
+[body: 418 bytes]
+{"sha":"3413b46ff27699d57433bd2c6045db7d6ae678c0","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/trees/3413b46ff27699d57433bd2c6045db7d6ae678c0","tree":[{"path":"guide.rst","mode":"100644","type":"blob","size":4,"sha":"8e695ec83aa8b1d596183b26206a514576570fff","url":"http://127.0.0.1:13000/api/v1/repos/lab/pub/git/blobs/8e695ec83aa8b1d596183b26206a514576570fff"}],"truncated":false,"page":1,"total_count":1}
+

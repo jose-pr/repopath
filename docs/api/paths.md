@@ -2,7 +2,7 @@
 
 The paths need no URI and no library beyond `pathapi`.
 
-`GitHubPath` and `GitLabPath` share a base class: the properties it defines
+`GitHubPath`, `GitLabPath` and `GiteaPath` share a base class: the properties it defines
 (`owner`, `repo`, `ref`, `instance`, `repo_path`) are listed under each of them.
 
 ::: repopath
@@ -20,6 +20,7 @@ The paths need no URI and no library beyond `pathapi`.
         - RepoPath
         - GitHubPath
         - GitLabPath
+        - GiteaPath
         - SVNPath
         - SourceForgePath
         - RepoBackend

@@ -26,6 +26,7 @@ DOCUMENTED = {
         "BadReplyError",
         "BaseRepoBackend",
         "GitHubPath",
+        "GiteaPath",
         "GitLabPath",
         "InsecureTransportWarning",
         "RateLimitError",

@@ -1,0 +1,22 @@
+GET /api/v1/repos/lab/pub/raw/src/a.txt?ref=v2
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: Content-Disposition
+Cache-Control: private, max-age=300
+Content-Disposition: inline; filename="a.txt"; filename*=UTF-8''a.txt
+Content-Length: 8
+Content-Type: text/plain; charset=utf-8
+Etag: "814f4a422927b82f5f8a43f8fab6d3839e3983f2"
+Last-Modified: Fri, 16 Oct 2026 17:14:27 GMT
+X-Content-Type-Options: nosniff
+X-Forgejo-Object-Type: file
+X-Frame-Options: SAMEORIGIN
+X-Gitea-Object-Type: file
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+
+[body: 8 bytes]
+one
+two
+

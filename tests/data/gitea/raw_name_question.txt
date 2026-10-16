@@ -1,0 +1,21 @@
+GET /api/v1/repos/lab/pub/raw/my%20dir/what%3F.txt?ref=main
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: Content-Disposition
+Cache-Control: private, max-age=300
+Content-Disposition: inline; filename="what?.txt"; filename*=UTF-8''what%3F.txt
+Content-Length: 9
+Content-Type: text/plain; charset=utf-8
+Etag: "b4794356533c3cd850604aa4de424ffca69adf01"
+Last-Modified: Fri, 16 Oct 2026 17:14:27 GMT
+X-Content-Type-Options: nosniff
+X-Forgejo-Object-Type: file
+X-Frame-Options: SAMEORIGIN
+X-Gitea-Object-Type: file
+Date: Fri, 16 Oct 2026 17:29:26 GMT
+
+[body: 9 bytes]
+question
+

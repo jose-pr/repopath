@@ -15,6 +15,7 @@ def _registry(monkeypatch):
     """Every test starts with the registry it found and leaves it so."""
     monkeypatch.setattr(_kinds, "_KINDS", dict(_kinds._KINDS))
     monkeypatch.setattr(_kinds, "_DETECTED", dict(_kinds._DETECTED))
+    monkeypatch.setattr(_kinds, "_ALIASES", dict(_kinds._ALIASES))
 
 
 def _repo(*segments, **keywords):
@@ -27,7 +28,7 @@ def _repo(*segments, **keywords):
 
 
 def test_the_kinds_that_ship_are_github_gitlab_sourceforge_and_svn():
-    assert RepoPath.kinds() == ("github", "gitlab", "sourceforge", "svn")
+    assert RepoPath.kinds() == ("gitea", "github", "gitlab", "sourceforge", "svn")
     assert GitHubPath.kinds() == RepoPath.kinds()
 
 
@@ -116,12 +117,13 @@ class _Backend:
         raise AssertionError("nothing is requested")
 
 
-def _throwaway(name, instances=(), **statement):
+def _throwaway(name, instances=(), aliases=(), **statement):
     """A kind with an endpoint of its own: a `url` and no owner or repository."""
 
     class ThrowawayKindPath(RepoPath, **statement):
         TYPE = name
         INSTANCES = instances
+        ALIASES = aliases
         __slots__ = ()
 
         def __init__(self, *segments, url=None, instance=None, backend=None):
@@ -248,7 +250,7 @@ def test_a_class_without_a_type_is_not_a_kind():
     class Helper(RepoPath):
         __slots__ = ()
 
-    assert RepoPath.kinds() == ("github", "gitlab", "sourceforge", "svn")
+    assert RepoPath.kinds() == ("gitea", "github", "gitlab", "sourceforge", "svn")
 
 
 def test_a_subclass_of_a_kind_is_of_its_family():
@@ -259,4 +261,39 @@ def test_a_subclass_of_a_kind_is_of_its_family():
     assert Mine._family() is GitHubPath
     assert GitHubPath(mine, "b").repo_owner == "o"
     assert type(RepoPath(mine, "b")) is GitHubPath
-    assert RepoPath.kinds() == ("github", "gitlab", "sourceforge", "svn")
+    assert RepoPath.kinds() == ("gitea", "github", "gitlab", "sourceforge", "svn")
+
+
+def test_an_alias_names_the_kind_and_is_not_listed():
+    kind = _throwaway("throwaway", aliases=("thrown", "tossed"))
+    assert RepoPath._kind_for((), "thrown", None) is kind
+    assert RepoPath._kind_for((), "tossed", None) is kind
+    assert "thrown" not in RepoPath.kinds()
+
+
+def test_an_alias_another_kind_holds_is_refused():
+    with pytest.raises(ValueError, match="forgejo"):
+        _throwaway("throwaway", aliases=("forgejo",))
+    with pytest.raises(ValueError, match="github"):
+        _throwaway("throwaway", aliases=("github",))
+    assert "throwaway" not in RepoPath.kinds()
+
+
+def test_a_kind_cannot_take_the_name_of_an_alias():
+    with pytest.raises(ValueError, match="alias"):
+        _throwaway("forgejo")
+
+
+@pytest.mark.parametrize("aliases", ["forge", ("Forge",), ("throwaway",), (3,)])
+def test_the_aliases_of_a_kind_are_lower_case_names_other_than_its_own(aliases):
+    with pytest.raises(ValueError, match="ALIASES"):
+        _throwaway("throwaway", aliases=aliases)
+
+
+def test_replace_takes_an_alias_over_and_drops_the_old_aliases_of_the_kind():
+    first = _throwaway("throwaway", aliases=("thrown",))
+    first.__qualname__ = "First"
+    newer = _throwaway("throwaway", aliases=("tossed",), replace=True)
+    assert RepoPath._kind_for((), "tossed", None) is newer
+    with pytest.raises(ValueError, match="thrown"):
+        RepoPath._kind_for((), "thrown", None)

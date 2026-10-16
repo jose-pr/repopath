@@ -22,6 +22,9 @@ if _ty.TYPE_CHECKING:
 _KINDS: "dict[str, type[RepoPath]]" = {}
 """Kind name -> the class that registered it."""
 
+_ALIASES: "dict[str, type[RepoPath]]" = {}
+"""Alias -> the kind a `type=` of that name gets (it is not listed by `kinds()`)."""
+
 _DETECTED: "dict[str, type[RepoPath]]" = {}
 """Instance (folded to lower case) -> the kind a call that names no `type`
 gets for it."""
@@ -67,7 +70,9 @@ def _same_definition(a: type, b: type) -> bool:
     return a.__module__ == b.__module__ and a.__qualname__ == b.__qualname__
 
 
-def _register(cls: type, name: object, instances: object, replace: bool) -> None:
+def _register(
+    cls: type, name: object, instances: object, replace: bool, aliases: object = ()
+) -> None:
     if not isinstance(name, str) or not _NAME.fullmatch(name):
         raise ValueError(
             f"TYPE of {cls.__qualname__} must be a lower-case name "
@@ -75,6 +80,13 @@ def _register(cls: type, name: object, instances: object, replace: bool) -> None
         )
     if isinstance(instances, str) or not all(isinstance(i, str) for i in instances):
         raise TypeError(f"INSTANCES of {cls.__qualname__} must be a tuple of str")
+    if isinstance(aliases, str) or not all(
+        isinstance(a, str) and _NAME.fullmatch(a) and a != name for a in aliases
+    ):
+        raise ValueError(
+            f"ALIASES of {cls.__qualname__} must be a tuple of lower-case names "
+            f"other than {name!r}"
+        )
     folded = tuple(dict.fromkeys(i.lower() for i in instances))
     with _LOCK:
         held = _KINDS.get(name)
@@ -83,6 +95,28 @@ def _register(cls: type, name: object, instances: object, replace: bool) -> None
                 f"repository kind {name!r} is already registered by "
                 f"{held.__module__}.{held.__qualname__}; pass replace=True in "
                 f"the class statement of {cls.__qualname__} to replace it"
+            )
+        for alias in aliases:
+            other = _KINDS.get(alias) or _ALIASES.get(alias)
+            if (
+                other is not None
+                and other is not held
+                and not (replace or _same_definition(other, cls))
+            ):
+                raise ValueError(
+                    f"{alias!r} is already a name of the {other.TYPE!r} kind; "
+                    f"pass replace=True in the class statement of "
+                    f"{cls.__qualname__} to replace it"
+                )
+        if (
+            name in _ALIASES
+            and _ALIASES[name] is not held
+            and not (replace or _same_definition(_ALIASES[name], cls))
+        ):
+            raise ValueError(
+                f"{name!r} is already an alias of the {_ALIASES[name].TYPE!r} "
+                f"kind; pass replace=True in the class statement of "
+                f"{cls.__qualname__} to replace it"
             )
         for instance in folded:
             owner = _DETECTED.get(instance)
@@ -99,7 +133,12 @@ def _register(cls: type, name: object, instances: object, replace: bool) -> None
         if held is not None:
             for instance in [k for k, v in _DETECTED.items() if v is held]:
                 del _DETECTED[instance]
+            for alias in [k for k, v in _ALIASES.items() if v is held]:
+                del _ALIASES[alias]
+        _ALIASES.pop(name, None)
         _KINDS[name] = cls
+        for alias in aliases:
+            _ALIASES[alias] = cls
         for instance in folded:
             _DETECTED[instance] = cls
 
@@ -133,6 +172,8 @@ class RepoPath(TreePath, metaclass=_Kinds):
     TYPE: "str | None" = None
     #: The instances (hosts) a call that names no `type` gets this kind for.
     INSTANCES: "tuple[str, ...]" = ()
+    #: Other names `type=` takes for this kind; `kinds()` lists only `TYPE`.
+    ALIASES: "tuple[str, ...]" = ()
 
     if _ty.TYPE_CHECKING:
         _segments: "tuple[str, ...]"
@@ -149,7 +190,13 @@ class RepoPath(TreePath, metaclass=_Kinds):
         super().__init_subclass__(**kwargs)
         name = cls.__dict__.get("TYPE")
         if name is not None:
-            _register(cls, name, cls.__dict__.get("INSTANCES", ()), replace)
+            _register(
+                cls,
+                name,
+                cls.__dict__.get("INSTANCES", ()),
+                replace,
+                cls.__dict__.get("ALIASES", ()),
+            )
 
     @staticmethod
     def kinds() -> "tuple[str, ...]":
@@ -164,13 +211,14 @@ class RepoPath(TreePath, metaclass=_Kinds):
         segment that is a repository path."""
         with _LOCK:
             kinds = dict(_KINDS)
+            aliases = dict(_ALIASES)
             detected = dict(_DETECTED)
         known = ", ".join(sorted(kinds)) or "none"
         if name is not None:
             if not isinstance(name, str):
                 raise TypeError(f"type= must be a str, not {type(name).__name__!r}")
             try:
-                return kinds[name]
+                return kinds.get(name) or aliases[name]
             except KeyError:
                 raise ValueError(
                     f"no repository kind {name!r}; the registered kinds are: {known}"

@@ -10,6 +10,7 @@ speak no git protocol. They need no URI and no third-party library, so
 from __future__ import annotations
 
 from ._backend import BaseRepoBackend, RepoBackend
+from ._gitea import GiteaPath
 from ._github import GitHubPath
 from ._gitlab import GitLabPath
 from ._kinds import RepoPath
@@ -26,6 +27,7 @@ from .exceptions import (
 __all__ = [
     "BadReplyError",
     "BaseRepoBackend",
+    "GiteaPath",
     "GitHubPath",
     "GitLabPath",
     "InsecureTransportWarning",

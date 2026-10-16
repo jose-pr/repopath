@@ -1,0 +1,18 @@
+GET /api/v1/repos/lab/priv/git/trees/main
+> Authorization: token <redacted>
+> User-Agent: protocol-measure/1
+> Accept-Encoding: identity
+
+HTTP 200 OK
+Access-Control-Expose-Headers: X-Total-Count
+Cache-Control: max-age=0, private, must-revalidate, no-transform
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Total-Count: 2
+Date: Fri, 16 Oct 2026 17:30:07 GMT
+Content-Length: 628
+
+[body: 628 bytes]
+{"sha":"2ff58c820685f163f3403416fe70565beb873b8f","url":"http://127.0.0.1:13000/api/v1/repos/lab/priv/git/trees/2ff58c820685f163f3403416fe70565beb873b8f","tree":[{"path":"dir","mode":"040000","type":"tree","size":0,"sha":"108aabee1ecf7ab27858b9b94edb90863ce0f006","url":"http://127.0.0.1:13000/api/v1/repos/lab/priv/git/trees/108aabee1ecf7ab27858b9b94edb90863ce0f006"},{"path":"secret.txt","mode":"100644","type":"blob","size":7,"sha":"d97c5eada5d8c52079031eef0107a4430a9617c5","url":"http://127.0.0.1:13000/api/v1/repos/lab/priv/git/blobs/d97c5eada5d8c52079031eef0107a4430a9617c5"}],"truncated":false,"page":1,"total_count":2}
+
