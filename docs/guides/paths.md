@@ -1,18 +1,19 @@
 # Repository paths
 
-`GitHubPath` and `GitLabPath` are `pathapi.Path` classes over the REST API of a
-hosting service. `RepoPath` is the family they belong to: calling it returns one of them.
+`GitHubPath`, `GitLabPath` and `GiteaPath` are `pathapi.Path` classes over the REST API
+of a hosting service. `RepoPath` is the family they belong to: calling it returns one of them.
 Everything `pathlib` does to read a tree works; every write raises `NotImplementedError`.
 
 ## The place
 
 ```python
-from repopath import GitHubPath, GitLabPath
+from repopath import GiteaPath, GitHubPath, GitLabPath
 
 GitHubPath("src/mod.py", owner="acme", repo="widgets")
 GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")        # a tag
 GitHubPath("src/mod.py", owner="acme", repo="widgets", instance="ghe.example:8443")
 GitLabPath("src/mod.py", owner="acme/team", repo="widgets")               # a subgroup
+GiteaPath("src/mod.py", owner="acme", repo="widgets", instance="git.example")
 ```
 
 - The segments are the path inside the repository, joined like a POSIX path; `x` and
@@ -20,11 +21,12 @@ GitLabPath("src/mod.py", owner="acme/team", repo="widgets")               # a su
   path they are joined from supplies them: `path / "x"`, `path.parent` and
   `GitHubPath(path, "x")` keep the place, and a keyword moves it.
 - `instance` is the host of the service, with a port when it is not the default.
-  `github.com` and `gitlab.com` are the defaults of the two classes; any other instance
-  is GitHub Enterprise (API at `https://<instance>/api/v3`) or a self-hosted GitLab
-  (`https://<instance>/api/v4`).
+  `github.com`, `gitlab.com` and `codeberg.org` are the defaults of the three classes; any
+  other instance is GitHub Enterprise (API at `https://<instance>/api/v3`), a self-hosted
+  GitLab (`https://<instance>/api/v4`) or a Gitea or Forgejo server
+  (`https://<instance>/api/v1`).
 - `ref` is a branch, a tag or a commit. Without one the default branch is read; on
-  GitLab it is looked up once per backend. `ref=""` on a joined path goes back to it.
+  GitLab and Gitea it is looked up once per backend. `ref=""` on a joined path goes back to it.
 - A GitLab owner may be a group path (`"acme/team"`), which is how a project in a
   subgroup is named.
 
@@ -32,7 +34,7 @@ GitLabPath("src/mod.py", owner="acme/team", repo="widgets")               # a su
 
 `RepoPath(*segments, instance=..., type=None, **options)` returns a path of one kind.
 `type` names the kind; without it the kind is detected from the instance, which works for
-`github.com` and `gitlab.com` only. Any other instance is a `ValueError` that asks for
+`github.com`, `gitlab.com` and `codeberg.org` only. Any other instance is a `ValueError` that asks for
 `type=`:
 
 ```python
@@ -40,7 +42,8 @@ from repopath import RepoPath
 
 RepoPath("f", owner="o", repo="r", instance="github.com")                    # GitHubPath
 RepoPath("f", owner="o", repo="r", instance="git.example", type="gitlab")    # GitLabPath
-RepoPath.kinds()                                                    # ("github", "gitlab", "sourceforge", "svn")
+RepoPath("f", owner="o", repo="r", instance="git.example", type="gitea")     # GiteaPath ("forgejo" is another name)
+RepoPath.kinds()                                                    # ("gitea", "github", "gitlab", "sourceforge", "svn")
 ```
 
 A kind is a subclass of `RepoPath` whose class body sets `TYPE` (its name) and
@@ -78,10 +81,13 @@ warns (`InsecureTransportWarning`).
 - A directory is one request, and every child carries the stat the listing gave, so
   `walk()` and `glob()` cost one request per directory. On GitHub the listing has
   type and size; on GitLab it has the type only, so `is_dir()` and `is_file()` of a
-  listed child are free and `stat()` of a file is one `HEAD`.
+  listed child are free and `stat()` of a file is one `HEAD`. On Gitea the directories
+  are read through the Git Trees API, which has type and size, in pages of 1,000: a
+  nested path costs one request per name, there is no `HEAD`, and a file is one `GET`
+  of the `raw` route.
 - `stat()` of a GitHub file is a `HEAD` of the contents URL asked for the raw media type;
   a directory is then listed. A directory of more than 1,000 entries is read through the
-  Git Trees API, and GitLab's pages are read to the last one.
+  Git Trees API, GitLab's pages are read to the last one, and so are Gitea's.
 - A file is read whole into memory. A JSON reply over `pathapi.http.MAX_REPLY_BYTES`
   (8 MiB) is `OSError(EFBIG)`.
 - Anonymous requests are rate limited by the service; the limit is `RateLimitError`, a

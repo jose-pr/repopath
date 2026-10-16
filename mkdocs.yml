@@ -1,5 +1,5 @@
 site_name: repopath
-site_description: pathlib-style, read-only paths for the repository trees of GitHub and GitLab
+site_description: pathlib-style, read-only paths for the repository trees of GitHub, GitLab and Gitea
 site_url: https://jose-pr.github.io/repopath/
 repo_url: https://github.com/jose-pr/repopath
 repo_name: jose-pr/repopath
@@ -30,7 +30,7 @@ nav:
   - Home: index.md
   - Guides:
       - Repository paths: guides/paths.md
-      - The repo, github, gitlab, svn+https, svn+http and sourceforge schemes: guides/uri.md
+      - The repo, github, gitlab, gitea, svn+https, svn+http and sourceforge schemes: guides/uri.md
   - Benchmarks: benchmarks.md
   - Divergences from pathlib: divergences.md
   - API Reference:

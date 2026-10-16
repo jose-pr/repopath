@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 name = "repopath"
 version = "0.1.0"
 authors = [{ name = "Jose A" }]
-description = "pathlib-style, read-only paths for the repository trees of GitHub and GitLab, and the repo:, github: and gitlab: schemes for uripath"
+description = "pathlib-style, read-only paths for the repository trees of GitHub, GitLab and Gitea, and the repo:, github:, gitlab: and gitea: schemes for uripath"
 readme = "README.md"
 requires-python = ">=3.9"
 # PEP 639: SPDX license expression plus the file it refers to. This replaces

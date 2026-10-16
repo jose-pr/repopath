@@ -1,13 +1,14 @@
 # repopath
 
-**`pathlib` for the repository trees of GitHub and GitLab, read-only.**
+**`pathlib` for the repository trees of GitHub, GitLab and Gitea, read-only.**
 `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")` has the method names,
-signatures and exception types of `pathlib.Path`; `GitLabPath` does the same for GitLab,
-and `RepoPath` is the class that returns either. None needs a URI, and all build on
+signatures and exception types of `pathlib.Path`; `GitLabPath` and `GiteaPath` do the same
+for GitLab and for Gitea and Forgejo (Codeberg), and `RepoPath` is the class that returns
+any of them. None needs a URI, and all build on
 [`pathapi`](https://jose-pr.github.io/pathapi/) alone, which holds the `Path`
 base class, `glob`, `walk` and `PathSyncer`. With
 [`uripath`](https://jose-pr.github.io/uripath/) installed the same package also provides
-the `repo:`, `github:` and `gitlab:` schemes:
+the `repo:`, `github:`, `gitlab:` and `gitea:` schemes:
 `URIPath("repo://github.com/acme/widgets/src/mod.py")`.
 
 The classes read the REST APIs of the services and speak no git protocol: there is no
@@ -47,7 +48,7 @@ for child in readme.parent.iterdir():
     print(child.name, child.is_dir())
 ```
 
-**Which kind**: `RepoPath` returns a `GitHubPath` or a `GitLabPath`, by `type=` or by the
+**Which kind**: `RepoPath` returns a `GitHubPath`, a `GitLabPath` or a `GiteaPath`, by `type=` or by the
 instance it is given:
 
 <!-- example: skip: reads from GitLab -->

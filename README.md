@@ -8,11 +8,12 @@
 
 **`pathlib` for the repository trees of GitHub, GitLab, Gitea, Subversion and SourceForge, read-only.**
 `GitHubPath("src/mod.py", owner="acme", repo="widgets", ref="v1.2")` has the method
-names, signatures and exception types of `pathlib.Path`, and `GitLabPath` does the same
-for GitLab; `RepoPath` is the class that returns either. None needs a URI, and all
+names, signatures and exception types of `pathlib.Path`, and `GitLabPath` and `GiteaPath`
+do the same for GitLab and for Gitea and Forgejo (Codeberg); `RepoPath` is the class that
+returns any of them. None needs a URI, and all
 build on [`pathapi`](https://github.com/jose-pr/pathapi) alone; with
 [`uripath`](https://github.com/jose-pr/uripath) installed the same package also
-provides the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes. It is documented at
+provides the `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes. It is documented at
 <https://jose-pr.github.io/repopath/>.
 
 The classes are clients of the hosting services' REST APIs. They speak no git
@@ -36,8 +37,8 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
   `RepoPath.kinds()` lists the kinds. A kind is a subclass that registers itself.
 - **Cheap listings**: a directory is one request and each child carries the size and
   type the listing gave, so `walk()` and `glob()` cost one request per directory;
-  `stat()` of a file is a `HEAD`. Listings past GitHub's 1,000-entry cap and GitLab's
-  pages are read to the end.
+  `stat()` of a file is a `HEAD`. Listings past GitHub's 1,000-entry cap, GitLab's
+  pages and Gitea's pages of 1,000 are read to the end.
 - **Authentication that stays out of sight**: `token=` is sent as a bearer token to the
   API's own origin only, and shown by no `str()`, `repr()`, pickle or error message. A
   token over plain `http://` to another host warns.
@@ -50,7 +51,7 @@ protocol: there is no clone, no commit and no `git:` URL, and the tree is read-o
   listing, a revision with `ref=`, links and the md5 and sha1 digests the server states;
   `SourceForgePath("README", project="docutils")` finds the Subversion tool of a
   SourceForge project and reads it the same way.
-- **The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:`
+- **The `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:`
   schemes** for `uripath`:
   `URIPath("github://github.com/acme/widgets/src/mod.py?ref=v1.2")` is a
   `GitHubURIPath` that delegates to a `GitHubPath`.
@@ -66,7 +67,7 @@ Requires `pathapi`, which pip installs with it, and Python 3.9 or newer.
 | Install | Adds |
 | --- | --- |
 | `pip install repopath` | the paths and the backends; no other library |
-| `pip install "repopath[uri]"` | `uripath` and with it the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes |
+| `pip install "repopath[uri]"` | `uripath` and with it the `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes |
 | `pip install "repopath[all]"` | all of the above |
 
 ## Quick start
@@ -97,6 +98,20 @@ private = RepoPath(
     type="gitlab", token="glpat-...",
 )
 assert isinstance(doc, GitLabPath)
+```
+
+A Gitea or Forgejo server is a kind of its own; Codeberg is detected, any other host
+needs `type="gitea"` (or its alias `"forgejo"`):
+
+<!-- example: skip: reads from Codeberg -->
+```python
+from repopath import RepoPath
+
+readme = RepoPath("README.md", owner="forgejo", repo="forgejo", instance="codeberg.org")
+mine = RepoPath(
+    "src", owner="me", repo="app", instance="git.example.org", type="gitea",
+    token="...",
+)
 ```
 
 **Copy a tree** out of a repository with `pathapi`:

@@ -1,10 +1,10 @@
-"""pathlib-style, read-only paths for the repository trees of GitHub and GitLab.
+"""pathlib-style, read-only paths for the repository trees of GitHub, GitLab and Gitea.
 
-`RepoPath` is a path in the repository of a hosting service and `GitHubPath`
-and `GitLabPath` are its two kinds; they read the REST API of the service and
-speak no git protocol. They need no URI and no third-party library, so
+`RepoPath` is a path in the repository of a hosting service and `GitHubPath`,
+`GitLabPath` and `GiteaPath` are three of its kinds; they read the REST API of
+the service and speak no git protocol. They need no URI and no third-party library, so
 `import repopath` needs no extra and never imports `uripath`. The `repo:`,
-`github:` and `gitlab:` schemes of `uripath` are `repopath.uri`.
+`github:`, `gitlab:` and `gitea:` schemes of `uripath` are `repopath.uri`.
 """
 
 from __future__ import annotations

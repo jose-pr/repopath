@@ -27,6 +27,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   points like the others. `svn:` (`svnserve`) is not one of them.
 - `RepoBackend(auth=(user, password))`, sent as `Authorization: Basic`, and
   `allow_redirects=` on `RepoBackend.request()`.
+- `GiteaPath("src/mod.py", owner="acme", repo="widgets", ref=None, instance=None,
+  token=None, backend=None)`: a read-only path in a repository on Gitea or Forgejo, through
+  the REST API at `https://<instance>/api/v1`. The default instance and the only one detected
+  is `codeberg.org`; any other needs `RepoPath(type="gitea", instance=HOST)`, and `"forgejo"`
+  is another name of the kind. Directories are read through the Git Trees API in pages of
+  1,000 (the contents API answers a directory whole, 15 s for 2,000 entries), file bodies
+  with one `GET` of the `raw` route; the server answers `405` to `HEAD`, so none is sent. A
+  symlink is a file that reads as its target, a submodule an empty directory, and a file in
+  Git LFS reads as the pointer Git holds, with the pointer's size. A private repository and
+  a missing one are both `FileNotFoundError`; an unknown token is `PermissionError`.
+- The scheme `gitea:` (`GiteaURIPath`, `gitea://[TOKEN@]host/owner/repo/path?ref=REF`) in
+  `repopath.uri`, declared in the `uripath.schemes` entry points like the others (run `pip
+  install -e .` again after updating an editable checkout), and `repo://codeberg.org/...`,
+  which detects the kind. The token in the user slot is hidden from `str()`, `repr()` and
+  every message, as for `github:` and `gitlab:`.
+- `ALIASES`, a class attribute of a kind: other names `type=` takes for it. `RepoPath.kinds()`
+  lists `TYPE` only.
 
 ## [0.1.0] - 2026-10-14
 

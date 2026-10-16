@@ -1,4 +1,4 @@
-# The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes
+# The `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes
 
 With [`uripath`](https://jose-pr.github.io/uripath/) installed (`pip install
 "repopath[uri]"`), the URL of a file in a repository is a path:
@@ -10,6 +10,7 @@ from uripath import URIPath
 URIPath("repo://github.com/acme/widgets/src/mod.py?ref=v1.2")      # a RepoURIPath
 URIPath("github://ghe.example:8443/acme/widgets/src/mod.py")       # a GitHubURIPath
 URIPath("gitlab://git.example/acme/team/widgets/-/src/mod.py")     # a GitLabURIPath
+URIPath("gitea://git.example/acme/widgets/src/mod.py")             # a GiteaURIPath
 URIPath("svn+https://svn.example.org/repos/project/trunk/README")  # a SVNURIPath
 URIPath("sourceforge://docutils/README.rst?ref=9000")              # a SourceForgeURIPath
 ```
@@ -22,14 +23,15 @@ alike, and an error names the URI.
 
 | Scheme | Class | Kind |
 | --- | --- | --- |
-| `repo:` | `RepoURIPath` | detected from the host: `github.com` or `gitlab.com`, with or without `www.` |
+| `repo:` | `RepoURIPath` | detected from the host: `github.com` or `gitlab.com`, with or without `www.`, or `codeberg.org` |
 | `github:` | `GitHubURIPath` | GitHub, on any host |
 | `gitlab:` | `GitLabURIPath` | GitLab, on any host |
+| `gitea:` | `GiteaURIPath` | Gitea or Forgejo, on any host (`codeberg.org` by default) |
 | `svn+https:`, `svn+http:` | `SVNURIPath` | Subversion over HTTP, on any host |
 | `sourceforge:` | `SourceForgeURIPath` | the Subversion tool of a SourceForge project |
 
 `repo://host/...` with a host that is neither is a `URISyntaxError` (a `ValueError`) that
-names `github://host/...` and `gitlab://host/...`, which pin the kind.
+names `github://host/...`, `gitlab://host/...` and `gitea://host/...`, which pin the kind.
 
 ## The parts of the URI
 
@@ -70,4 +72,4 @@ SourceForge project (`mount` defaults to `code`, `instance` to `sourceforge.net`
 user, password or port.
 
 `uripath` knows the names `repo`, `github` and `gitlab` as provided by this distribution; the
-other three are found through its entry points, so they need it installed.
+other four are found through its entry points, so they need it installed.

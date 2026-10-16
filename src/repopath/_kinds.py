@@ -148,10 +148,10 @@ class RepoPath(TreePath, metaclass=_Kinds):
     service's REST API.
 
     `RepoPath(*segments, instance=..., type=None, **options)` returns a path
-    of one *kind*: a `GitHubPath` or a `GitLabPath`. `type` names the kind
-    (`"github"`, `"gitlab"`); without it the kind is detected from `instance`
-    (`github.com` and `gitlab.com`), and any other instance is a `ValueError`
-    that asks for `type=`. The segments are the path inside the repository;
+    of one *kind*: a `GitHubPath`, a `GitLabPath` or a `GiteaPath`. `type` names
+    the kind (`"github"`, `"gitlab"`, `"gitea"`); without it the kind is detected
+    from `instance` (`github.com`, `gitlab.com`, `codeberg.org`), and any other
+    instance is a `ValueError` that asks for `type=`. The segments are the path inside the repository;
     the options are those of the kind (`owner=`, `repo=`, `ref=`, `token=`,
     `backend=`). Every kind is a subclass, so `isinstance(path, RepoPath)`
     holds for all of them; `RepoPath.kinds()` lists the registered names.
