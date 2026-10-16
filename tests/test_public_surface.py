@@ -33,6 +33,7 @@ DOCUMENTED = {
         "RepoPath",
         "RepoPathError",
         "SVNPath",
+        "SourceForgePath",
         "__version__",
     },
     "repopath.exceptions": {

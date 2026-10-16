@@ -1,0 +1,47 @@
+OPTIONS /svn/open/trunk/
+> Content-Type: text/xml; charset=utf-8
+> Body: <?xml version="1.0" encoding="utf-8"?><D:options xmlns:D="DAV:"><D:activity-collection-set/></D:options>
+
+HTTP 200 OK
+Date: Fri, 16 Oct 2026 16:29:33 GMT
+Server: Apache/2.4.69 (Fedora Linux) SVN/1.14.5
+DAV: 1,2
+DAV: version-control,checkout,working-resource
+DAV: merge,baseline,activity,version-controlled-collection
+DAV: http://subversion.tigris.org/xmlns/dav/svn/depth
+DAV: http://subversion.tigris.org/xmlns/dav/svn/log-revprops
+DAV: http://subversion.tigris.org/xmlns/dav/svn/atomic-revprops
+DAV: http://subversion.tigris.org/xmlns/dav/svn/partial-replay
+DAV: http://subversion.tigris.org/xmlns/dav/svn/inherited-props
+DAV: http://subversion.tigris.org/xmlns/dav/svn/inline-props
+DAV: http://subversion.tigris.org/xmlns/dav/svn/reverse-file-revs
+DAV: http://subversion.tigris.org/xmlns/dav/svn/list
+DAV: http://subversion.tigris.org/xmlns/dav/svn/mergeinfo
+MS-Author-Via: DAV
+Allow: OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK,CHECKOUT
+SVN-Youngest-Rev: 5
+SVN-Repository-UUID: 0579de83-b00a-4a9e-b2af-7306f3617cd8
+SVN-Repository-MergeInfo: yes
+DAV: http://subversion.tigris.org/xmlns/dav/svn/replay-rev-resource
+SVN-Repository-Root: /svn/open
+SVN-Me-Resource: /svn/open/!svn/me
+SVN-Rev-Root-Stub: /svn/open/!svn/rvr
+SVN-Rev-Stub: /svn/open/!svn/rev
+SVN-Txn-Root-Stub: /svn/open/!svn/txr
+SVN-Txn-Stub: /svn/open/!svn/txn
+SVN-VTxn-Root-Stub: /svn/open/!svn/vtxr
+SVN-VTxn-Stub: /svn/open/!svn/vtxn
+SVN-Allow-Bulk-Updates: On
+SVN-Supported-Posts: create-txn
+SVN-Supported-Posts: create-txn-with-props
+DAV: http://subversion.tigris.org/xmlns/dav/svn/ephemeral-txnprops
+DAV: http://subversion.tigris.org/xmlns/dav/svn/svndiff1
+DAV: http://subversion.tigris.org/xmlns/dav/svn/svndiff2
+DAV: http://subversion.tigris.org/xmlns/dav/svn/put-result-checksum
+Content-Length: 188
+Content-Type: text/xml; charset="utf-8"
+
+[body: 188 bytes]
+<?xml version="1.0" encoding="utf-8"?>
+<D:options-response xmlns:D="DAV:">
+<D:activity-collection-set><D:href>/svn/open/!svn/act/</D:href></D:activity-collection-set></D:options-response>

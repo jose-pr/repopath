@@ -544,3 +544,40 @@ mutant(
     f"{_SVN}::test_credentials_are_exclusive_and_paired",
     "credentials are silently dropped when a backend is given",
 )
+
+# --- the SourceForge kind ---------------------------------------------------------------
+
+_SF = "tests/test_sourceforge.py"
+
+mutant(
+    "sourceforge-any-tool-is-subversion",
+    "_sourceforge.py",
+    '        if kind != "svn":\n',
+    "        if False:\n",
+    f"{_SF}::test_a_tool_that_is_not_subversion_is_not_implemented",
+    "a git or Mercurial tool is read as a Subversion repository",
+)
+mutant(
+    "sourceforge-clone-url-is-trusted",
+    "_sourceforge.py",
+    "            found = checked_url(clone)\n",
+    "            found = clone\n",
+    f"{_SF}::test_a_reply_that_is_not_a_subversion_tool_is_a_bad_reply",
+    "a clone URL with credentials or of another scheme becomes the root of the tree",
+)
+mutant(
+    "sourceforge-tool-is-asked-every-time",
+    "_sourceforge.py",
+    "        if cache is not None and key in cache:\n            return cache[key]\n        resp = self._exchange(",
+    "        if False:\n            return cache[key]\n        resp = self._exchange(",
+    f"{_SF}::test_the_tool_is_asked_once_per_backend",
+    "every request of a path asks the REST API first",
+)
+mutant(
+    "sourceforge-names-may-climb-out-of-the-rest-address",
+    "_sourceforge.py",
+    '    if not _NAME.fullmatch(value) or value in (".", ".."):\n',
+    "    if False:\n",
+    f"{_SF}::test_the_place_is_checked",
+    "a project or mount holding a slash or dots changes the REST address",
+)

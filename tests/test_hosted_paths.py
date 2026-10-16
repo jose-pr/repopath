@@ -351,4 +351,4 @@ def test_a_pickle_of_a_path_keeps_its_names_when_they_are_rooted():
 
 
 def test_the_registered_kinds_are_untouched_by_building_paths():
-    assert _kinds.RepoPath.kinds() == ("github", "gitlab", "svn")
+    assert _kinds.RepoPath.kinds() == ("github", "gitlab", "sourceforge", "svn")

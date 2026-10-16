@@ -76,10 +76,20 @@ class SVNPath(RepoPath):
     def readlink(self) -> SVNPath: ...
     def checksum(self, algorithm="md5") -> str: ...
     def supported_checksums(self) -> frozenset[str]: ...
+
+class SourceForgePath(SVNPath):
+    def __init__(
+        self, *segments, project=None, mount=None, ref=None, instance=None,
+        backend=None,
+    ): ...
+    instance: str
+    project: str
+    mount: str
+    def as_uri(self) -> str: ...
 ```
 
 `RepoPath` is the family of a repository tree on a hosting service, and
-`GitHubPath`, `GitLabPath` and `SVNPath` are its kinds. Each is a
+`GitHubPath`, `GitLabPath`, `SVNPath` and `SourceForgePath` are its kinds. Each is a
 `pathapi.Path` (so `pathlib.Path`'s read methods, `copy()` out of the tree,
 `walk()`, `glob()` and `PathSyncer` as a source work on it) and needs no URI.
 `segments` are the path inside the repository, joined and normalized like a
@@ -88,7 +98,7 @@ as a name.
 
 - **Calling `RepoPath`.** `RepoPath(*segments, instance=..., type=None,
   **options)` returns a path of one kind, with `options` the keywords of that
-  kind. `type` names the kind (`"github"`, `"gitlab"`, `"svn"`); without it the kind is
+  kind. `type` names the kind (`"github"`, `"gitlab"`, `"sourceforge"`, `"svn"`); without it the kind is
   detected from `instance` (`github.com` and `gitlab.com`, with or without
   `www.`, in any case). An instance that no kind is detected for is a
   `ValueError` that asks for `type=` and lists the kinds; an unregistered `type`
@@ -97,7 +107,7 @@ as a name.
   already a repository path gives its kind. `type=` without `instance=` gets the
   default instance of the kind. Every kind is a subclass, so `isinstance(path,
   RepoPath)` holds. `RepoPath.kinds()` lists the registered kind names, sorted
-  (`("github", "gitlab", "svn")`); `path.kind` is the name of the kind of a path.
+  (`("github", "gitlab", "sourceforge", "svn")`); `path.kind` is the name of the kind of a path.
 - **Place.** `owner=` and `repo=` are required, unless a segment is a path of
   the same kind and supplies them (`path / "x"`, `path.parent` and
   `GitHubPath(path, "x")` keep the place); a keyword then moves the path. A
@@ -238,6 +248,29 @@ as a name.
   reply over `pathapi.http.MAX_REPLY_BYTES` is `OSError(EFBIG)`: a directory of
   about 20,000 entries is the largest one listing reads. `PROPFIND` is always
   sent with a `Depth`; servers refuse `infinity`.
+
+`SourceForgePath` is the Subversion tool of a SourceForge project, found through the
+site's REST API; it is an `SVNPath`, so everything above holds for it:
+
+- **Place.** `project=` (required unless a segment supplies it) and `mount=` (the
+  tool's mount point, `"code"` by default) are SourceForge names: letters, digits,
+  `.`, `_` and `-`, not starting with a symbol (`TypeError` for a non-string,
+  `ValueError` otherwise). `instance=` is the host of the site, `sourceforge.net`
+  by default and detected for `sourceforge.net` and `www.sourceforge.net`; its REST
+  root is `https://<instance>`, or the `api_base` of the backend. `ref=` is a
+  revision as for `SVNPath`. There are no credentials: the reads are anonymous, and
+  `backend=` shares a backend. `str(path)` and `as_uri()` are
+  `sourceforge://PROJECT/names`, with `?mount=`, `?ref=` and `?instance=` for what
+  is not the default.
+- **The tree.** The first request asks `GET <root>/rest/p/PROJECT/MOUNT/` once per
+  backend (kept in `backend.cache`), and reads the kind of the tool (`name`) and the
+  URL it is served at (`clone_url_https_anon`). The names of the path are relative to
+  that URL, which for SourceForge is the `trunk` of the project: reach `branches` or
+  `tags` with an `SVNPath` on the repository's URL. A tool that is not Subversion
+  (`git`, `hg`) is `NotImplementedError` naming its kind; a project or tool that
+  does not exist is `FileNotFoundError`; a reply that is not a JSON object with a
+  `name`, or a Subversion tool with no usable `http`/`https` clone URL without
+  credentials, is `BadReplyError`. The REST request is never redirected.
 
 ### Failures
 

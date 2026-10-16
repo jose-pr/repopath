@@ -21,5 +21,6 @@ The paths need no URI and no library beyond `pathapi`.
         - GitHubPath
         - GitLabPath
         - SVNPath
+        - SourceForgePath
         - RepoBackend
         - BaseRepoBackend
