@@ -4,7 +4,6 @@ API of the service."""
 
 from __future__ import annotations
 
-import errno as _errno
 import typing as _ty
 import urllib.parse as _urlparse
 
@@ -13,7 +12,6 @@ from pathapi.http import json_body, peer_text
 
 from ._backend import BaseRepoBackend, RepoBackend
 from ._kinds import RepoPath
-from .exceptions import BadReplyError
 
 if _ty.TYPE_CHECKING:
     from pathapi import FileStat
@@ -242,9 +240,6 @@ class HostedRepoPath(RepoPath):
             *other._place[1:],
         )
 
-    def _bad_reply(self, what: str) -> BadReplyError:
-        return BadReplyError(_errno.EIO, f"Unexpected API reply: {what}", str(self))
-
     def _decode(self, resp, *expected: type):
         """The JSON body of `resp`, which must be one of `expected` (`dict`,
         `list`): anything else -- a captive portal's page, a gateway's JSON,
@@ -276,9 +271,3 @@ class HostedRepoPath(RepoPath):
         if any(part in (".", "..") for part in text.split("/")):
             raise ValueError(f"A dot segment cannot be part of an API URL: {self}")
         return _urlparse.quote(text, safe=safe, errors="surrogateescape")
-
-    def _backend_cache(self) -> "dict | None":
-        """The backend's memoization dict, or None for a custom
-        `BaseRepoBackend` that has none (memoization is then skipped)."""
-        cache = getattr(self._backend, "cache", None)
-        return cache if isinstance(cache, dict) else None

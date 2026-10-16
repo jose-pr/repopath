@@ -1,0 +1,536 @@
+PROPFIND https://svn.code.sf.net/p/docutils/code/trunk/docutils/
+> Depth: 1
+> Content-Type: text/xml
+
+HTTP 207 Multi-Status
+Server: nginx
+Content-Type: text/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>build
+.ropeproject
+.tox
+*.egg-info
+</S:ignore>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"10407//trunk/docutils"</lp1:getetag>
+<lp1:creationdate>2026-10-02T16:05:17.651240Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 02 Oct 2026 16:05:17 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10407/trunk/docutils</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10407</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils</lp3:baseline-relative-path>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/.ruff.toml</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>4406</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10046//trunk/docutils/.ruff.toml"</lp1:getetag>
+<lp1:creationdate>2025-03-09T01:45:28.721413Z</lp1:creationdate>
+<lp1:getlastmodified>Sun, 09 Mar 2025 01:45:28 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10046/trunk/docutils/.ruff.toml</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10046</lp1:version-name>
+<lp1:creator-displayname>aa-turner</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/.ruff.toml</lp3:baseline-relative-path>
+<lp3:md5-checksum>3412e4010b737366bccccc79b6dcd4e5</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>46563b29fa5a74b28bdbe72e077bce2f23e8c6bc</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/HISTORY.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<C:cvs2svn:cvs-rev>1.303</C:cvs2svn:cvs-rev>
+<S:keywords>Author Date Id Revision</S:keywords>
+<lp1:resourcetype/>
+<lp1:getcontentlength>180986</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10407//trunk/docutils/HISTORY.rst"</lp1:getetag>
+<lp1:creationdate>2026-10-02T16:05:17.651240Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 02 Oct 2026 16:05:17 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10407/trunk/docutils/HISTORY.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10407</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/HISTORY.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>869de4be4db16e930df5617890c83a32</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>6fc1d13e81abe212dc4e572c6d905d2b437577bf</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/FAQ.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>Author Date Id Revision</S:keywords>
+<S:eol-style>native</S:eol-style>
+<C:cvs2svn:cvs-rev>1.64</C:cvs2svn:cvs-rev>
+<lp1:resourcetype/>
+<lp1:getcontentlength>45546</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10365//trunk/docutils/FAQ.rst"</lp1:getetag>
+<lp1:creationdate>2026-06-18T13:27:53.334967Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 18 Jun 2026 13:27:53 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10365/trunk/docutils/FAQ.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10365</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/FAQ.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>2c83f32eeb8c279d29ba94f52e24a738</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>962a5f66fd53f434de5cca83800433e5534741a7</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/docutils.conf</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>825</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10309//trunk/docutils/docutils.conf"</lp1:getetag>
+<lp1:creationdate>2026-04-09T14:35:52.381225Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 09 Apr 2026 14:35:52 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10309/trunk/docutils/docutils.conf</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10309</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/docutils.conf</lp3:baseline-relative-path>
+<lp3:md5-checksum>2a401079eca50e0622cd0378b55b0faa</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>ce46b2877ceb371ce261a81263ee6d935b506b2b</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/plain</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/BUGS.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<C:cvs2svn:cvs-rev>1.33</C:cvs2svn:cvs-rev>
+<S:keywords>Author Date Id Revision</S:keywords>
+<lp1:resourcetype/>
+<lp1:getcontentlength>9814</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"9906//trunk/docutils/BUGS.rst"</lp1:getetag>
+<lp1:creationdate>2024-08-15T08:43:38.320817Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 15 Aug 2024 08:43:38 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/9906/trunk/docutils/BUGS.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>9906</lp1:version-name>
+<lp1:creator-displayname>grubert</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/BUGS.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>cb8e3a74b42d16042f68cc6264723166</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>6852c58a10be412e987cc935c226602c770c45e8</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/.flake8</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>3012</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"9957//trunk/docutils/.flake8"</lp1:getetag>
+<lp1:creationdate>2024-10-21T07:20:00.314975Z</lp1:creationdate>
+<lp1:getlastmodified>Mon, 21 Oct 2024 07:20:00 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/9957/trunk/docutils/.flake8</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>9957</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/.flake8</lp3:baseline-relative-path>
+<lp3:md5-checksum>2e113651baabf27a672d052cc8935a1d</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>49302461787acf6b25d88df94a58f1a8d18e28dc</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/test/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>*.pyc
+alltests.out
+record.txt
+</S:ignore>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"10407//trunk/docutils/test"</lp1:getetag>
+<lp1:creationdate>2026-10-02T16:05:17.651240Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 02 Oct 2026 16:05:17 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10407/trunk/docutils/test</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10407</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/test</lp3:baseline-relative-path>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/pyproject.toml</D:href>
+<D:propstat>
+<D:prop>
+<S:executable>*</S:executable>
+<lp1:resourcetype/>
+<lp1:getcontentlength>5056</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10034//trunk/docutils/pyproject.toml"</lp1:getetag>
+<lp1:creationdate>2025-03-08T02:56:03.991502Z</lp1:creationdate>
+<lp1:getlastmodified>Sat, 08 Mar 2025 02:56:03 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10034/trunk/docutils/pyproject.toml</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10034</lp1:version-name>
+<lp1:creator-displayname>aa-turner</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/pyproject.toml</lp3:baseline-relative-path>
+<lp3:md5-checksum>a52dbe9ae0eb540a82821c5e209845fc</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>4339e3815c4ace6a308aeae05eeba51b412de11e</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/COPYING.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>Author Date Id Revision</S:keywords>
+<S:eol-style>native</S:eol-style>
+<C:cvs2svn:cvs-rev>1.7</C:cvs2svn:cvs-rev>
+<lp1:resourcetype/>
+<lp1:getcontentlength>6882</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10406//trunk/docutils/COPYING.rst"</lp1:getetag>
+<lp1:creationdate>2026-09-26T17:50:52.605962Z</lp1:creationdate>
+<lp1:getlastmodified>Sat, 26 Sep 2026 17:50:52 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10406/trunk/docutils/COPYING.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10406</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/COPYING.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>0fb1cafafe778142b160247bf1962e95</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>67a1fd0ea2589324e9937739986ce371643030f2</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/tox.ini</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>253</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10340//trunk/docutils/tox.ini"</lp1:getetag>
+<lp1:creationdate>2026-05-27T18:19:19.983134Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 27 May 2026 18:19:19 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10340/trunk/docutils/tox.ini</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10340</lp1:version-name>
+<lp1:creator-displayname>grubert</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/tox.ini</lp3:baseline-relative-path>
+<lp3:md5-checksum>b8390814deb715b264866154f67c7bc7</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>338c334b244f992721bc8921cb4fc30eafac6225</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/RELEASE-NOTES.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>Author Date Id Revision</S:keywords>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>53831</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10407//trunk/docutils/RELEASE-NOTES.rst"</lp1:getetag>
+<lp1:creationdate>2026-10-02T16:05:17.651240Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 02 Oct 2026 16:05:17 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10407/trunk/docutils/RELEASE-NOTES.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10407</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/RELEASE-NOTES.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>995363af030cbbb0dd07cc07c7f3e8ff</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>0b460a4a25c27dbf05558a612a48d6f74c36f8f7</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/docs/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"10407//trunk/docutils/docs"</lp1:getetag>
+<lp1:creationdate>2026-10-02T16:05:17.651240Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 02 Oct 2026 16:05:17 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10407/trunk/docutils/docs</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10407</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/docs</lp3:baseline-relative-path>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/licenses/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"9978//trunk/docutils/licenses"</lp1:getetag>
+<lp1:creationdate>2024-11-09T23:59:18.967480Z</lp1:creationdate>
+<lp1:getlastmodified>Sat, 09 Nov 2024 23:59:18 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/9978/trunk/docutils/licenses</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>9978</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/licenses</lp3:baseline-relative-path>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/THANKS.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<C:cvs2svn:cvs-rev>1.7</C:cvs2svn:cvs-rev>
+<S:keywords>Author Date Id Revision</S:keywords>
+<lp1:resourcetype/>
+<lp1:getcontentlength>3163</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"9906//trunk/docutils/THANKS.rst"</lp1:getetag>
+<lp1:creationdate>2024-08-15T08:43:38.320817Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 15 Aug 2024 08:43:38 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/9906/trunk/docutils/THANKS.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>9906</lp1:version-name>
+<lp1:creator-displayname>grubert</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/THANKS.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>7867c823c256182d65c666fbf6103e80</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>072fd73b8e66db5c6212f443a21f791ae525c36b</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/README.rst</D:href>
+<D:propstat>
+<D:prop>
+<C:cvs2svn:cvs-rev>1.39</C:cvs2svn:cvs-rev>
+<S:keywords>Author Date Id Revision</S:keywords>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>12142</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10354//trunk/docutils/README.rst"</lp1:getetag>
+<lp1:creationdate>2026-06-11T21:52:26.961872Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 11 Jun 2026 21:52:26 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10354/trunk/docutils/README.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10354</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/README.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>03ba1b28fda723d7c159771b42094eca</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>57ffe5731f5916afaa4e30c3f2e31b7eba7f04a7</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/tools/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"10045//trunk/docutils/tools"</lp1:getetag>
+<lp1:creationdate>2025-03-09T01:02:23.703608Z</lp1:creationdate>
+<lp1:getlastmodified>Sun, 09 Mar 2025 01:02:23 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10045/trunk/docutils/tools</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10045</lp1:version-name>
+<lp1:creator-displayname>aa-turner</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/tools</lp3:baseline-relative-path>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/trunk/docutils/docutils/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>*.pyc</S:ignore>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"10407//trunk/docutils/docutils"</lp1:getetag>
+<lp1:creationdate>2026-10-02T16:05:17.651240Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 02 Oct 2026 16:05:17 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10407/trunk/docutils/docutils</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10407</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/docutils</lp3:baseline-relative-path>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+</D:multistatus>

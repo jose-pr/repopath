@@ -1,0 +1,20 @@
+PROPFIND /svn/locked/trunk/no-such
+> Depth: 0
+> Content-Type: text/xml; charset=utf-8
+> Body: <?xml version="1.0" encoding="utf-8"?><propfind xmlns="DAV:" xmlns:s="http://subversion.tigris.org/xmlns/dav/" xmlns:v="http://subversion.tigris.org/xmlns/svn/"><prop><resourcetype/><getcontentlength/><getlastmodified/><v:special/><s:md5-checksum/><s:sha1-checksum/></prop></propfind>
+> Authorization: Basic <alice>
+
+HTTP 404 Not Found
+Date: Fri, 16 Oct 2026 16:12:11 GMT
+Server: Apache/2.4.69 (Fedora Linux) SVN/1.14.5
+Content-Length: 236
+Content-Type: text/html; charset=iso-8859-1
+
+[body: 236 bytes]
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL was not found on this server.</p>
+</body></html>

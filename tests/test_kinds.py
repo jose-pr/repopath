@@ -26,8 +26,8 @@ def _repo(*segments, **keywords):
 # --- the two kinds that ship --------------------------------------------------
 
 
-def test_the_kinds_that_ship_are_github_and_gitlab():
-    assert RepoPath.kinds() == ("github", "gitlab")
+def test_the_kinds_that_ship_are_github_gitlab_and_svn():
+    assert RepoPath.kinds() == ("github", "gitlab", "svn")
     assert GitHubPath.kinds() == RepoPath.kinds()
 
 
@@ -75,9 +75,9 @@ def test_an_instance_no_kind_is_detected_for_is_a_value_error_naming_the_choices
 
 def test_an_unregistered_type_is_a_value_error_listing_the_registered_ones():
     with pytest.raises(ValueError) as excinfo:
-        _repo("f", instance="git.example", type="svn")
+        _repo("f", instance="git.example", type="bzr")
     message = str(excinfo.value)
-    assert "'svn'" in message and "github, gitlab" in message
+    assert "'bzr'" in message and "github, gitlab, svn" in message
 
 
 def test_neither_type_nor_instance_is_a_type_error():
@@ -248,7 +248,7 @@ def test_a_class_without_a_type_is_not_a_kind():
     class Helper(RepoPath):
         __slots__ = ()
 
-    assert RepoPath.kinds() == ("github", "gitlab")
+    assert RepoPath.kinds() == ("github", "gitlab", "svn")
 
 
 def test_a_subclass_of_a_kind_is_of_its_family():
@@ -259,4 +259,4 @@ def test_a_subclass_of_a_kind_is_of_its_family():
     assert Mine._family() is GitHubPath
     assert GitHubPath(mine, "b").repo_owner == "o"
     assert type(RepoPath(mine, "b")) is GitHubPath
-    assert RepoPath.kinds() == ("github", "gitlab")
+    assert RepoPath.kinds() == ("github", "gitlab", "svn")

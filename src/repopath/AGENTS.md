@@ -11,8 +11,9 @@ warning and `__version__`), from `repopath.exceptions` (the exceptions and the
 warning) and from `repopath.uri` (the `repo:`, `github:` and `gitlab:` schemes
 of `uripath`). Every module whose name starts with `_` is private. `import
 repopath` imports no third-party library and never `uripath`. The classes are
-read-only clients of the REST APIs of GitHub and GitLab and speak no git
-protocol: there is no clone, no `git:` URL and no commit.
+read-only clients of the REST APIs of GitHub and GitLab, and of a Subversion
+server over HTTP (`SVNPath`); they speak no git protocol and no `svn://`: there
+is no clone, no `git:` URL and no commit.
 
 Install with `pip install repopath`, which needs only `pathapi`; the
 requests go through `pathapi.http`, so no HTTP library is installed. One
@@ -62,10 +63,23 @@ class GitLabPath(RepoPath):
     ref: str | None
     repo_path: str
     def as_uri(self) -> str: ...
+
+class SVNPath(RepoPath):
+    def __init__(
+        self, *segments, instance=None, ref=None, username=None, password=None,
+        token=None, backend=None,
+    ): ...
+    instance: str
+    ref: str | None
+    repo_path: str
+    def as_uri(self) -> str: ...
+    def readlink(self) -> SVNPath: ...
+    def checksum(self, algorithm="md5") -> str: ...
+    def supported_checksums(self) -> frozenset[str]: ...
 ```
 
 `RepoPath` is the family of a repository tree on a hosting service, and
-`GitHubPath` and `GitLabPath` are its two kinds. Each is a
+`GitHubPath`, `GitLabPath` and `SVNPath` are its kinds. Each is a
 `pathapi.Path` (so `pathlib.Path`'s read methods, `copy()` out of the tree,
 `walk()`, `glob()` and `PathSyncer` as a source work on it) and needs no URI.
 `segments` are the path inside the repository, joined and normalized like a
@@ -74,7 +88,7 @@ as a name.
 
 - **Calling `RepoPath`.** `RepoPath(*segments, instance=..., type=None,
   **options)` returns a path of one kind, with `options` the keywords of that
-  kind. `type` names the kind (`"github"`, `"gitlab"`); without it the kind is
+  kind. `type` names the kind (`"github"`, `"gitlab"`, `"svn"`); without it the kind is
   detected from `instance` (`github.com` and `gitlab.com`, with or without
   `www.`, in any case). An instance that no kind is detected for is a
   `ValueError` that asks for `type=` and lists the kinds; an unregistered `type`
@@ -83,7 +97,7 @@ as a name.
   already a repository path gives its kind. `type=` without `instance=` gets the
   default instance of the kind. Every kind is a subclass, so `isinstance(path,
   RepoPath)` holds. `RepoPath.kinds()` lists the registered kind names, sorted
-  (`("github", "gitlab")`); `path.kind` is the name of the kind of a path.
+  (`("github", "gitlab", "svn")`); `path.kind` is the name of the kind of a path.
 - **Place.** `owner=` and `repo=` are required, unless a segment is a path of
   the same kind and supplies them (`path / "x"`, `path.parent` and
   `GitHubPath(path, "x")` keep the place); a keyword then moves the path. A
@@ -167,6 +181,64 @@ as a name.
   (`GET /projects/:id`) and kept in `backend.cache` for every path that shares
   the backend.
 
+`SVNPath` reads a Subversion repository served by `mod_dav_svn` (WebDAV over
+`http` or `https`), with no library beyond `pathapi`:
+
+- **Place.** `instance=` is the `http` or `https` URL of the tree the names are
+  relative to, normally the root of the repository
+  (`https://svn.example.org/repos/project`, or a path inside it such as its
+  `trunk`); it has no credentials, query or fragment (`ValueError`; a non-string
+  is a `TypeError`), and a trailing `/` is dropped. It is required unless a
+  segment is an `SVNPath`. `ref=` is a revision number, as an `int` or digits
+  (`3`, `"3"`); `None`, `""` and `"HEAD"` read the head, which can move between
+  two requests. A revision that does not exist yet is `FileNotFoundError`. Two
+  paths are equal when the URL (host in any case) and the revision are.
+  `RepoPath(type="svn", instance=URL)` returns one; no instance is detected as
+  Subversion. `str(path)` and `as_uri()` are
+  `svn+https://host/path/to/root/names?ref=REV` (the scheme of the instance
+  prefixed by `svn+`), with no credential.
+- **Credentials.** `username=` and `password=` (both or neither) send
+  `Authorization: Basic`, the scheme `mod_dav_svn` asks for; `token=` sends a
+  bearer token, which a plain `mod_dav_svn` does not accept (`PermissionError`)
+  but a gateway in front of it may; `backend=` shares a backend. Giving
+  `backend=` with a credential, or `token=` with `username=`, is a `TypeError`.
+  Nothing shows a credential.
+- **Reading.** A `stat()` is one `PROPFIND` of `Depth: 0`, and a listing one
+  `PROPFIND` of `Depth: 1` whose children carry the stat they were listed with
+  (once, as in the other kinds), so `walk()` and `glob()` cost one request per
+  directory. `st_mtime` is the time of the revision that last changed the entry.
+  The properties are asked for by name, never `allprop`. A file is read whole
+  into memory with one `GET`; `Range` is not used. A name in a reply that is not
+  one path component is left out of a listing. `..` and `.` names raise
+  `ValueError` before any request. Every write method raises
+  `NotImplementedError`.
+- **Digests.** `checksum("md5")` and `checksum("sha1")` are the digests the
+  server states with the stat, without reading the file (`NativeChecksum`);
+  another algorithm, a link and a file the server states no digest for raise
+  `NotImplementedError`, a directory `IsADirectoryError`.
+- **Links.** A Subversion link is a file marked `svn:special` whose text is
+  `link TARGET`. A listing and `lstat()` report it as a link (`is_symlink()`),
+  `readlink()` returns the target as a path of this class (`OSError(EINVAL)` for
+  anything else), and `stat()`, `open()`, `is_dir()` and the rest follow it: only
+  the **last name** of a path is followed (a link in the middle of a path does
+  not resolve), at most 40 links, and a target that leaves the tree (an absolute
+  one, or `..` above the root) does not exist (`FileNotFoundError`).
+  `svn:externals` are not part of the tree: they are not listed and their paths
+  do not exist. `svn:executable` is not reported.
+- **Revisions.** With `ref=`, the path goes through the revision stub the server
+  announces (`SVN-Rev-Root-Stub` of an `OPTIONS` request, asked once per backend
+  and kept in `backend.cache`), so every request of the path reads one revision.
+  A stub or repository root that is not a server path, or that does not hold the
+  instance, is `BadReplyError`.
+- **Replies.** Status errors map as in the table below. A redirect is never
+  followed: a `PROPFIND` redirected to another origin is `OSError(EIO)` and any
+  redirect of a read is `BadReplyError`. A reply that is not a well formed
+  multistatus, that declares a document type, whose entry has no `href` or no
+  usable size, or a status other than the one expected, is `BadReplyError`. A
+  reply over `pathapi.http.MAX_REPLY_BYTES` is `OSError(EFBIG)`: a directory of
+  about 20,000 entries is the largest one listing reads. `PROPFIND` is always
+  sent with a `Depth`; servers refuse `infinity`.
+
 ### Failures
 
 Every failure is the `OSError` `pathlib` raises for the same condition:
@@ -174,7 +246,7 @@ Every failure is the `OSError` `pathlib` raises for the same condition:
 | Reply | Raised |
 | --- | --- |
 | 404 | `FileNotFoundError` |
-| 401, 403 | `PermissionError` |
+| 401, 403 | `PermissionError` (a Subversion server answers 401 to a read it wants credentials for, and 403 to a user it denies the path) |
 | 403 or 429 with `RateLimit-Remaining: 0` or `Retry-After`, any 429 | `RateLimitError`, a `BlockingIOError` with errno `EAGAIN`; the message says when to retry |
 | another status | `OSError(EIO)` naming the status |
 | a reply that is not the documented shape (a page of a proxy, `null`, an array where an object belongs, a truncated body, a size that is not a number) | `BadReplyError`, an `OSError(EIO)` naming the path; `exists()` is `False` |
@@ -199,14 +271,15 @@ class BaseRepoBackend:
 class RepoBackend(HTTPClient, BaseRepoBackend):
     token: str | None
     api_base: str | None
+    auth: tuple[str, str] | None
     cache: dict
     def __init__(
         self, token=None, session=None, api_base=None, *, transport=None,
-        headers=None, timeout=(10, 60), **requests_args,
+        headers=None, timeout=(10, 60), auth=None, **requests_args,
     ): ...
     def request(
         self, method, url, headers=None, params=None, *, data=None, timeout=...,
-        stream=False,
+        stream=False, allow_redirects=None,
     ): ...
     def close(self) -> None: ...
 ```
@@ -218,6 +291,9 @@ dict that memoizes the default branch); a path uses either only when the backend
 has one. `RepoBackend` sends through `pathapi.http`, so everything that
 module documents applies:
 
+- `auth=(user, password)` is sent as `Authorization: Basic` (the scheme of a
+  Subversion server), and `allow_redirects=False` returns a redirect as it is;
+  `token=` with `auth=` is a `TypeError`.
 - `token` is sent as `Authorization: Bearer <token>`. It is never shown by
   `repr()` and not sent to another origin: a redirect to another scheme, host or
   port drops it. A request that carries `Authorization` (the token, or one in

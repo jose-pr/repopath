@@ -1,0 +1,7 @@
+GET https://sourceforge.net/rest/p/docutils/code/
+
+HTTP 200 OK
+Content-Type: application/json; charset=utf-8
+Server: cloudflare
+
+{"name": "svn", "mount_point": "code", "url": "https://sourceforge.net/p/docutils/code/", "mount_label": "Code", "api_url": "https://sourceforge.net/rest/p/docutils/code/", "clone_url_https_anon": "https://svn.code.sf.net/p/docutils/code/trunk", "clone_url_ro": "svn://svn.code.sf.net/p/docutils/code/trunk", "commit_count": 10407}

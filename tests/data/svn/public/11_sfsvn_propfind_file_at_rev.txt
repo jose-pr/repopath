@@ -1,0 +1,45 @@
+PROPFIND https://svn.code.sf.net/p/docutils/code/!svn/rvr/10354/trunk/docutils/README.rst
+> Depth: 0
+> Content-Type: text/xml
+
+HTTP 207 Multi-Status
+Server: nginx
+Content-Type: text/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/p/docutils/code/!svn/rvr/10354/trunk/docutils/README.rst</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<C:cvs2svn:cvs-rev>1.39</C:cvs2svn:cvs-rev>
+<S:keywords>Author Date Id Revision</S:keywords>
+<lp1:resourcetype/>
+<lp1:getcontentlength>12142</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"10354//trunk/docutils/README.rst"</lp1:getetag>
+<lp1:creationdate>2026-06-11T21:52:26.961872Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 11 Jun 2026 21:52:26 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/p/docutils/code/!svn/ver/10354/trunk/docutils/README.rst</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/p/docutils/code/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>10354</lp1:version-name>
+<lp1:creator-displayname>milde</lp1:creator-displayname>
+<lp3:baseline-relative-path>trunk/docutils/README.rst</lp3:baseline-relative-path>
+<lp3:md5-checksum>03ba1b28fda723d7c159771b42094eca</lp3:md5-checksum>
+<lp3:repository-uuid>929543f6-e4f2-0310-98a6-ba3bd3dd1d04</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>57ffe5731f5916afaa4e30c3f2e31b7eba7f04a7</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/prs.fallenstein.rst</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+</D:multistatus>

@@ -1,0 +1,1015 @@
+PROPFIND https://svn.apache.org/repos/asf/subversion/trunk/
+> Depth: 1
+> Content-Type: text/xml
+
+HTTP 207 Multi-Status
+Server: Apache
+Content-Type: text/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>ChangeLog*
+Makefile
+config.cache
+config.log
+config.nice
+config.status
+configure
+libtool
+.gdb_history
+.swig_checked
+*.orig
+*.rej
+TAGS
+tags
+neon
+build-outputs.mk
+aclocal.m4
+autogen-standalone.mk
+autom4te.cache
+gen-make.opts
+tests.log*
+fails.log*
+db4-win32
+db
+*.o
+*~
+.*~
+apr
+apr-util
+apr-iconv
+Release
+release_win32
+release_win32_static
+release_x64
+release_ARM64
+Debug
+debug_win32
+debug_win32_static
+debug_x64
+debug_ARM64
+ipch
+subversion_msvc.dsw
+subversion_msvc.ncb
+subversion_msvc.opt
+subversion_msvc.plg
+subversion_vcnet.*
+mkmf.log
+.project
+.classpath
+.cdtproject
+.settings
+.cproject
+py3c
+zlib
+sqlite-amalgamation
+serf
+googlemock
+.git
+.gitignore
+.idea
+.clangd
+compile_commands.json
+.kdev4
+*.kdev4
+.vs
+.swig_pl_checked
+.swig_py_checked
+.swig_rb_checked
+out
+CMakeSettings.json
+</S:ignore>
+<S:global-ignores>__pycache__
+</S:global-ignores>
+<S:auto-props>*.c = svn:eol-style=native
+*.cpp = svn:eol-style=native
+*.h = svn:eol-style=native
+*.hpp = svn:eol-style=native
+*.java = svn:eol-style=native
+*.m4 = svn:eol-style=native
+*.py = svn:eol-style=native
+*.pl = svn:eol-style=native
+*.rb = svn:eol-style=native
+*.sql = svn:eol-style=native
+*.txt = svn:eol-style=native
+*.yml = svn:eol-style=native
+README = svn:eol-style=native
+BRANCH-README = svn:eol-style=native
+STATUS = svn:eol-style=native
+</S:auto-props>
+<S:mergeinfo>/subversion/branches/1.10-cache-improvements:1669168-1694487
+/subversion/branches/1.11.x:1841316,1841548
+/subversion/branches/1.5.x-r30215:870312
+/subversion/branches/1.7.x-fs-verify:1146708,1161180
+/subversion/branches/1.9-cache-improvements:1678948-1679863
+/subversion/branches/1.9.x:1735680
+/subversion/branches/10Gb:1388102,1388163-1388190,1388195,1388202,1388205,1388211,1388276,1388362,1388375,1388394,1388636,1388639-1388640,1388643-1388644,1388654,1388720,1388789,1388795,1388801,1388805,1388807,1388810,1388816,1389044,1389276,1389289,1389662,1389867,1390017,1390209,1390216,1390407,1390409,1390414,1390419,1390955
+/subversion/branches/atomic-revprop:965046-1000689
+/subversion/branches/authzperf:1613053-1776831
+/subversion/branches/auto-props-sdc:1384106-1401643
+/subversion/branches/bdb-reverse-deltas:872050-872529
+/subversion/branches/better-pristines:1807118-1843075,1931314
+/subversion/branches/cache-server:1458643-1476567
+/subversion/branches/cmake:1918598-1920716
+/subversion/branches/decouple-shelving-cli:1874630-1875035
+/subversion/branches/diff-callbacks3:870059-870761
+/subversion/branches/diff-optimizations:1031270-1037352
+/subversion/branches/diff-optimizations-bytes:1037353-1067789
+/subversion/branches/dont-save-plaintext-passwords-by-default:870728-871118
+/subversion/branches/double-delete:870511-872970
+/subversion/branches/dump-load-cross-check:1654853-1657295
+/subversion/branches/ev2-export:1325914,1332738,1413107
+/subversion/branches/explore-wc:875486,875493,875497,875507,875511,875514,875559,875580-875581,875584,875587,875611,875627,875647,875667-875668,875711-875712,875733-875734,875736,875744-875748,875751,875758,875782,875795-875796,875830,875836,875838,875842,875852,875855,875864,875870,875873,875880,875885-875888,875890,875897-875898,875905,875907-875909,875935,875943-875944,875946,875979,875982-875983,875985-875986,875990,875997
+/subversion/branches/file-externals:871779-873302
+/subversion/branches/fs-rep-sharing:869036-873803
+/subversion/branches/fsfs-format7:1426304,1430673,1433848,1438408,1438982,1441129,1442051,1442068,1442504,1442910,1443171,1443803,1444690,1444693,1444695,1445040,1445080,1446103,1451129,1453590,1454307,1460579,1461851,1461865,1462837,1462904,1463120,1467362,1467382,1469487,1471208,1477166,1478055,1481447,1489817,1489949,1490673-1490674,1491784,1493042,1498029,1498103,1498155,1500054,1507729-1507731,1507735-1507736
+/subversion/branches/fsfs-improvements:1499981-1547039
+/subversion/branches/fsfs-lock-many:1571740-1577217
+/subversion/branches/fsfs-pack:873717-874575
+/subversion/branches/fsx:1507845-1509914
+/subversion/branches/fsx-1.10:1658219-1694500
+/subversion/branches/fsx-id:1645603-1649011
+/subversion/branches/gnome-keyring:870558-871410
+/subversion/branches/gpg-agent-password-store:1005036-1150766
+/subversion/branches/gtest_addition:1452117-1502138
+/subversion/branches/http-protocol-v2:874395-876041
+/subversion/branches/in-memory-cache:869829-871452
+/subversion/branches/in-repo-authz:1414342-1424779
+/subversion/branches/inheritable-props:1297080-1395089
+/subversion/branches/integrate-cache-item-serialization:1068724-1068739
+/subversion/branches/integrate-cache-membuffer:998649-998852
+/subversion/branches/integrate-compression-level:1068651-1072287
+/subversion/branches/integrate-io-improvements:1068684-1072297
+/subversion/branches/integrate-is-cachable:1072568-1074082
+/subversion/branches/integrate-partial-getter:1072558-1076552
+/subversion/branches/integrate-readline-speedup:1072553-1072555
+/subversion/branches/integrate-stream-api-extensions:1068695-1072516
+/subversion/branches/integrate-string-improvements:1068251-1190617
+/subversion/branches/integrate-txdelta-caching:1072541-1078213
+/subversion/branches/issue-2779-dev:965496-984198
+/subversion/branches/issue-2843-dev:871432-874179
+/subversion/branches/issue-3000:871713,871716-871719,871721-871726,871728,871734
+/subversion/branches/issue-3067-deleted-subtrees:873375-874084
+/subversion/branches/issue-3148-dev:875193-875204
+/subversion/branches/issue-3220-dev:872210-872226
+/subversion/branches/issue-3242-dev:879653-896436
+/subversion/branches/issue-3334-dirs:875156-875867
+/subversion/branches/issue-3975:1152931-1160746
+/subversion/branches/issue-4116-dev:1424719-1425040
+/subversion/branches/issue-4194-dev:1410507-1414880
+/subversion/branches/issue-4869:1885862-1885981
+/subversion/branches/issue-4908:1903812-1904192
+/subversion/branches/java10-compat:1840620-1841179
+/subversion/branches/javahl-1.14-fixes:1882126-1886028
+/subversion/branches/javahl-1.15:1933993-1934312
+/subversion/branches/javahl-ra:991978-1494640
+/subversion/branches/kwallet:870785-871314
+/subversion/branches/log-addressing:1509279-1546844
+/subversion/branches/log-g-performance:870941-871032
+/subversion/branches/merge-skips-obstructions:874525-874615
+/subversion/branches/move-tracking-2:1606692-1714632
+/subversion/branches/multi-layer-moves:1239019-1300930
+/subversion/branches/multi-wc-format:1843076-1898186
+/subversion/branches/nfc-nfd-aware-client:870276,870376
+/subversion/branches/node_pool:1304828-1305388
+/subversion/branches/patch-exec:1692717-1705390
+/subversion/branches/performance:979193,980118,981087,981090,981189,981194,981287,981684,981827,982043,982355,983398,983406,983430,983474,983488,983490,983760,983764,983766,983770,984927,984973,984984,985014,985037,985046,985472,985477,985482,985487-985488,985493,985497,985500,985514,985601,985603,985606,985669,985673,985695,985697,986453,986465,986485,986491-986492,986517,986521,986605,986608,986817,986832,987865,987868-987869,987872,987886-987888,987893,988319,988898,990330,990533,990535-990537,990541,990568,990572,990574-990575,990600,990759,992899,992904,992911,993127,993141,994956,995478,995507,995603,998012,998858,999098,1001413,1001417,1004291,1022668,1022670,1022676,1022715,1022719,1025660,1025672,1027193,1027203,1027206,1027214,1027227,1028077,1028092,1028094,1028104,1028107,1028111,1028354,1029038,1029042-1029043,1029054-1029055,1029062-1029063,1029078,1029080,1029090,1029092-1029093,1029111,1029151,1029158,1029229-1029230,1029232,1029335-1029336,1029339-1029340,1029342,1029344,1030763,1030827,1031203,1031235,1032285,1032333,1033040,1033057,1033294,1035869,1035882,1039511,1043705,1053735,1056015,1066452,1067683,1067697-1078365
+/subversion/branches/pin-externals:1643757-1659392
+/subversion/branches/pristines-on-demand:1892643-1897945
+/subversion/branches/pristines-on-demand-on-mwf:1897945-1905954
+/subversion/branches/py-tests-as-modules:956579-1033052
+/subversion/branches/ra-svn-tuning:1658201-1694489
+/subversion/branches/ra_serf-digest-authn:875693-876404
+/subversion/branches/reintegrate-improvements:873853-874164
+/subversion/branches/remote-only-status:1581845-1586090
+/subversion/branches/resolve-incoming-add:1762797-1764284
+/subversion/branches/revprop-cache:1298521-1326293
+/subversion/branches/revprop-caching-ng:1620597,1620599
+/subversion/branches/revprop-packing:1143907,1143971,1143997,1144017,1144499,1144568,1146145
+/subversion/branches/shelve:1802592-1815226
+/subversion/branches/shelve-checkpoint:1801593-1801923,1801970,1817320,1828508,1828521
+/subversion/branches/shelving-v3:1853394-1853901
+/subversion/branches/subtree-mergeinfo:876734-878766
+/subversion/branches/svn-auth-x509:1603509-1655900
+/subversion/branches/svn-info-detail:1660035-1662618
+/subversion/branches/svn-mergeinfo-enhancements:870119-870195,870197-870288
+/subversion/branches/svn-mergeinfo-normalizer:1642232-1695991
+/subversion/branches/svn-patch-improvements:918519-934609
+/subversion/branches/svn_mutex:1141683-1182099
+/subversion/branches/svnpatch-diff:865738-876477
+/subversion/branches/svnraisetc:874709-875149
+/subversion/branches/svnserve-logging:869828-870893
+/subversion/branches/swig-py3:1813660-1869353
+/subversion/branches/tc-issue-3334:874697-874773
+/subversion/branches/tc-merge-notify:874017-874062
+/subversion/branches/tc-resolve:874191-874239
+/subversion/branches/tc_url_rev:874351-874483
+/subversion/branches/tree-conflicts:868291-873154
+/subversion/branches/tree-conflicts-notify:873926-874008
+/subversion/branches/tristate-chunked-request:1502394-1502681
+/subversion/branches/tweak-build-take-two:1424288-1425049,1425051-1425613
+/subversion/branches/uris-as-urls:1060426-1064427
+/subversion/branches/utf8-cmdline:1932344-1935601
+/subversion/branches/utf8-cmdline-prototype:1925721-1932343
+/subversion/branches/verify-at-commit:1462039-1462408
+/subversion/branches/verify-keep-going:1439280-1546110
+/subversion/branches/wc-collate-path:1402685-1480384
+/subversion/branches/windows-shared-ra-modules:1920808-1921005
+/subversion/branches/xml-schema-validation-improvements:1935580-1935771</S:mergeinfo>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1939086//subversion/trunk"</lp1:getetag>
+<lp1:creationdate>2026-10-13T09:35:07.729908Z</lp1:creationdate>
+<lp1:getlastmodified>Tue, 13 Oct 2026 09:35:07 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1939086/subversion/trunk</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1939086</lp1:version-name>
+<lp1:creator-displayname>kotkov</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/NOTICE</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>1399</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1931020//subversion/trunk/NOTICE"</lp1:getetag>
+<lp1:creationdate>2026-01-01T00:00:05.118969Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 01 Jan 2026 00:00:05 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1931020/subversion/trunk/NOTICE</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1931020</lp1:version-name>
+<lp1:creator-displayname>rinrab</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/NOTICE</lp3:baseline-relative-path>
+<lp3:md5-checksum>e47ccb06836df9e6685e105d528b9dad</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>6f47e39eb7cb3d53a295978cd672513702e675ff</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/COMMITTERS</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<S:mime-type>text/plain; charset=UTF-8</S:mime-type>
+<lp1:resourcetype/>
+<lp1:getcontentlength>15104</lp1:getcontentlength>
+<lp1:getcontenttype>text/plain; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>"1936923//subversion/trunk/COMMITTERS"</lp1:getetag>
+<lp1:creationdate>2026-08-06T13:54:11.126383Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 06 Aug 2026 13:54:11 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936923/subversion/trunk/COMMITTERS</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936923</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/COMMITTERS</lp3:baseline-relative-path>
+<lp3:md5-checksum>e9656ac16c0305a3d778d146132deebb</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>93a36a53ddf3c40434acfa6d48d9c155c2c7de24</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/.github/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1936674//subversion/trunk/.github"</lp1:getetag>
+<lp1:creationdate>2026-07-28T15:24:50.751449Z</lp1:creationdate>
+<lp1:getlastmodified>Tue, 28 Jul 2026 15:24:50 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936674/subversion/trunk/.github</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936674</lp1:version-name>
+<lp1:creator-displayname>ivan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/.github</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/.clang-format</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>1834</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1922089//subversion/trunk/.clang-format"</lp1:getetag>
+<lp1:creationdate>2024-11-25T15:58:56.326258Z</lp1:creationdate>
+<lp1:getlastmodified>Mon, 25 Nov 2024 15:58:56 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1922089/subversion/trunk/.clang-format</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1922089</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/.clang-format</lp3:baseline-relative-path>
+<lp3:md5-checksum>5e7ed3c68f6b5f622e12e0b13e95f8c7</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>56405512fd54b6d3019070138205303e29624d61</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/aclocal.m4.in</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>2277</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1936306//subversion/trunk/aclocal.m4.in"</lp1:getetag>
+<lp1:creationdate>2026-07-19T08:21:40.876633Z</lp1:creationdate>
+<lp1:getlastmodified>Sun, 19 Jul 2026 08:21:40 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936306/subversion/trunk/aclocal.m4.in</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936306</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/aclocal.m4.in</lp3:baseline-relative-path>
+<lp3:md5-checksum>a50ae365a1d30bcd3cf8e99f09a11276</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>7bc32c57416dd85f9d1458d971383cc535fd1e0d</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/CHANGES</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>383587</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1937766//subversion/trunk/CHANGES"</lp1:getetag>
+<lp1:creationdate>2026-09-02T11:47:01.921489Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 02 Sep 2026 11:47:01 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1937766/subversion/trunk/CHANGES</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1937766</lp1:version-name>
+<lp1:creator-displayname>kotkov</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/CHANGES</lp3:baseline-relative-path>
+<lp3:md5-checksum>330ebf065c2a348da8b4872de1f192b4</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>d757dbf87437b9251edc4e923d90523d0fce2cc5</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/Makefile.in</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>43769</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1936306//subversion/trunk/Makefile.in"</lp1:getetag>
+<lp1:creationdate>2026-07-19T08:21:40.876633Z</lp1:creationdate>
+<lp1:getlastmodified>Sun, 19 Jul 2026 08:21:40 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936306/subversion/trunk/Makefile.in</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936306</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/Makefile.in</lp3:baseline-relative-path>
+<lp3:md5-checksum>dd3d50e7ef66a0e8e82f4b69d9f300ce</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>be28a6ef354b6573f6837a2778f341fa3e02c48e</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/CMakeLists.txt</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>48534</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1937124//subversion/trunk/CMakeLists.txt"</lp1:getetag>
+<lp1:creationdate>2026-08-14T14:31:40.925338Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 14 Aug 2026 14:31:40 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1937124/subversion/trunk/CMakeLists.txt</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1937124</lp1:version-name>
+<lp1:creator-displayname>ivan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/CMakeLists.txt</lp3:baseline-relative-path>
+<lp3:md5-checksum>8f0f50aa1736089c723c812011ac708f</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>d551e010bd056db7de37da17b4ccb5fae49d06b4</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/plain</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/README</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>LastChangedDate</S:keywords>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>2222</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1932863//subversion/trunk/README"</lp1:getetag>
+<lp1:creationdate>2026-04-06T09:05:44.623642Z</lp1:creationdate>
+<lp1:getlastmodified>Mon, 06 Apr 2026 09:05:44 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1932863/subversion/trunk/README</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1932863</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/README</lp3:baseline-relative-path>
+<lp3:md5-checksum>e831366f8998bb3e9695d952fd2cc022</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>56d347e9953e71b32bd39d3193911cc0c12f5ac6</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/BUGS</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>95</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1903577//subversion/trunk/BUGS"</lp1:getetag>
+<lp1:creationdate>2022-08-19T16:31:35.591491Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 19 Aug 2022 16:31:35 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1903577/subversion/trunk/BUGS</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1903577</lp1:version-name>
+<lp1:creator-displayname>hartmannathan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/BUGS</lp3:baseline-relative-path>
+<lp3:md5-checksum>d08c054335d6a5520f6c7f2f127bbd67</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>55a6cf866a037d12977b37ac660b2092dc635190</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/.ycm_extra_conf.py</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>3091</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1659509//subversion/trunk/.ycm_extra_conf.py"</lp1:getetag>
+<lp1:creationdate>2015-02-13T11:17:40.484038Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 13 Feb 2015 11:17:40 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1659509/subversion/trunk/.ycm_extra_conf.py</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1659509</lp1:version-name>
+<lp1:creator-displayname>rhuijben</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/.ycm_extra_conf.py</lp3:baseline-relative-path>
+<lp3:md5-checksum>cf90a07d788fbbfd45b9e561026c2498</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>5dc4bfc18bac5ecb96c4aa43d98139d868961cfb</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/x-python</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/win-tests.py</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>HeadURL Id LastChangedBy LastChangedDate LastChangedRevision</S:keywords>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>50126</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1935776//subversion/trunk/win-tests.py"</lp1:getetag>
+<lp1:creationdate>2026-07-01T15:51:12.930932Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 01 Jul 2026 15:51:12 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1935776/subversion/trunk/win-tests.py</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1935776</lp1:version-name>
+<lp1:creator-displayname>ivan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/win-tests.py</lp3:baseline-relative-path>
+<lp3:md5-checksum>9f94cb0a89301c157a6107b0321f102e</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>6ae544e8d39771af6ec62de003600393f88e329d</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/x-python</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/INSTALL</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>LastChangedDate</S:keywords>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>33418</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1938493//subversion/trunk/INSTALL"</lp1:getetag>
+<lp1:creationdate>2026-09-24T14:53:41.280941Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 24 Sep 2026 14:53:41 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1938493/subversion/trunk/INSTALL</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1938493</lp1:version-name>
+<lp1:creator-displayname>lyalyakin</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/INSTALL</lp3:baseline-relative-path>
+<lp3:md5-checksum>db72b0f607a61dd8edda56e0cfa06105</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>137a9e6c6f4460cbe83f1271f08c84a0deed8b41</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/.asf.yaml</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype/>
+<lp1:getcontentlength>1417</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1922149//subversion/trunk/.asf.yaml"</lp1:getetag>
+<lp1:creationdate>2024-11-27T07:09:21.495732Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 27 Nov 2024 07:09:21 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1922149/subversion/trunk/.asf.yaml</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1922149</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/.asf.yaml</lp3:baseline-relative-path>
+<lp3:md5-checksum>054f7c107f80abb6cbcd54a39b2e46cd</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<lp3:sha1-checksum>dad518228cd7dadbd6b157487b83d26311179010</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>application/yaml</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/configure.ac</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>66446</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1936939//subversion/trunk/configure.ac"</lp1:getetag>
+<lp1:creationdate>2026-08-06T16:40:58.467422Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 06 Aug 2026 16:40:58 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936939/subversion/trunk/configure.ac</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936939</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/configure.ac</lp3:baseline-relative-path>
+<lp3:md5-checksum>1aa8a543406eb1f31cc468e1b18bbf70</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>9e3114f882aec072362df0a68425e2e6e1b951f2</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>application/pkix-attr-cert</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/LICENSE</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>22094</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1915903//subversion/trunk/LICENSE"</lp1:getetag>
+<lp1:creationdate>2024-02-20T20:19:03.805537Z</lp1:creationdate>
+<lp1:getlastmodified>Tue, 20 Feb 2024 20:19:03 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1915903/subversion/trunk/LICENSE</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1915903</lp1:version-name>
+<lp1:creator-displayname>julianfoad</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/LICENSE</lp3:baseline-relative-path>
+<lp3:md5-checksum>d9c5b0e279cdb238d735af75554a3902</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>e7065af7d48b5c25960d61cc85e3d7acd5a316b6</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/autogen.sh</D:href>
+<D:propstat>
+<D:prop>
+<S:executable>*</S:executable>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>8001</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1903245//subversion/trunk/autogen.sh"</lp1:getetag>
+<lp1:creationdate>2022-08-06T03:44:46.306412Z</lp1:creationdate>
+<lp1:getlastmodified>Sat, 06 Aug 2022 03:44:46 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1903245/subversion/trunk/autogen.sh</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1903245</lp1:version-name>
+<lp1:creator-displayname>futatuki</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/autogen.sh</lp3:baseline-relative-path>
+<lp3:md5-checksum>b7cb47b763952eabfc9e749669c5cf28</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>89de32f69317df111fa7b4419766eecdfa693a45</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/x-sh</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/.editorconfig</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>1002</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1921436//subversion/trunk/.editorconfig"</lp1:getetag>
+<lp1:creationdate>2024-10-20T10:59:45.107955Z</lp1:creationdate>
+<lp1:getlastmodified>Sun, 20 Oct 2024 10:59:45 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1921436/subversion/trunk/.editorconfig</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1921436</lp1:version-name>
+<lp1:creator-displayname>rinrab</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/.editorconfig</lp3:baseline-relative-path>
+<lp3:md5-checksum>2d2dbb4c9481a3208c113e684f85e4f8</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>c1e404ce86bc1a26627279215cb9924ed70a24b0</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/doc/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>doxygen
+javadoc
+*.ps
+*.pdf
+svn-design.txt
+*.dvi
+*.html
+*.info*
+*.o
+*~
+.*~
+
+</S:ignore>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1903577//subversion/trunk/doc"</lp1:getetag>
+<lp1:creationdate>2022-08-19T16:31:35.591491Z</lp1:creationdate>
+<lp1:getlastmodified>Fri, 19 Aug 2022 16:31:35 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1903577/subversion/trunk/doc</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1903577</lp1:version-name>
+<lp1:creator-displayname>hartmannathan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/doc</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/contrib/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1919308//subversion/trunk/contrib"</lp1:getetag>
+<lp1:creationdate>2024-07-17T09:42:51.634128Z</lp1:creationdate>
+<lp1:getlastmodified>Wed, 17 Jul 2024 09:42:51 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1919308/subversion/trunk/contrib</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1919308</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/contrib</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/gen-make.py</D:href>
+<D:propstat>
+<D:prop>
+<S:executable>*</S:executable>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>11116</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1920717//subversion/trunk/gen-make.py"</lp1:getetag>
+<lp1:creationdate>2024-09-16T12:41:13.562378Z</lp1:creationdate>
+<lp1:getlastmodified>Mon, 16 Sep 2024 12:41:13 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1920717/subversion/trunk/gen-make.py</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1920717</lp1:version-name>
+<lp1:creator-displayname>rinrab</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/gen-make.py</lp3:baseline-relative-path>
+<lp3:md5-checksum>5191c7d7c869ae563df29e876ea05c06</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>8cf349ff4deec9201928def8bdc953f114868cdd</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+<D:getcontenttype>text/x-python</D:getcontenttype>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/build/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>*.pyc
+libtool.m4
+ltoptions.m4
+ltsugar.m4
+ltversion.m4
+lt~obsolete.m4
+ltmain.sh
+pkg.m4
+config.guess
+config.sub
+transform_libtool_scripts.sh
+</S:ignore>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1936936//subversion/trunk/build"</lp1:getetag>
+<lp1:creationdate>2026-08-06T16:07:42.432881Z</lp1:creationdate>
+<lp1:getlastmodified>Thu, 06 Aug 2026 16:07:42 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936936/subversion/trunk/build</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936936</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/build</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/notes/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1936306//subversion/trunk/notes"</lp1:getetag>
+<lp1:creationdate>2026-07-19T08:21:40.876633Z</lp1:creationdate>
+<lp1:getlastmodified>Sun, 19 Jul 2026 08:21:40 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936306/subversion/trunk/notes</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936306</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/notes</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/tools/</D:href>
+<D:propstat>
+<D:prop>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1939086//subversion/trunk/tools"</lp1:getetag>
+<lp1:creationdate>2026-10-13T09:35:07.729908Z</lp1:creationdate>
+<lp1:getlastmodified>Tue, 13 Oct 2026 09:35:07 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1939086/subversion/trunk/tools</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1939086</lp1:version-name>
+<lp1:creator-displayname>kotkov</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/tools</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>0</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/build.conf</D:href>
+<D:propstat>
+<D:prop>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>55108</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1936631//subversion/trunk/build.conf"</lp1:getetag>
+<lp1:creationdate>2026-07-27T10:48:05.107025Z</lp1:creationdate>
+<lp1:getlastmodified>Mon, 27 Jul 2026 10:48:05 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1936631/subversion/trunk/build.conf</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1936631</lp1:version-name>
+<lp1:creator-displayname>ivan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/build.conf</lp3:baseline-relative-path>
+<lp3:md5-checksum>2b35d30c5e434bf7d886206f184f1529</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>e309da89a1dbe311c8295c45d5455c8b88b30037</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+<D:response xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/subversion/</D:href>
+<D:propstat>
+<D:prop>
+<S:ignore>TAGS
+svn_private_config.h
+svn_private_config.h.in
+</S:ignore>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1938822//subversion/trunk/subversion"</lp1:getetag>
+<lp1:creationdate>2026-10-06T15:00:48.978571Z</lp1:creationdate>
+<lp1:getlastmodified>Tue, 06 Oct 2026 15:00:48 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1938822/subversion/trunk/subversion</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1938822</lp1:version-name>
+<lp1:creator-displayname>ivan</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/subversion</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+</D:multistatus>

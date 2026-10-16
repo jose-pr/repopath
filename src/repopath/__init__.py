@@ -13,6 +13,7 @@ from ._backend import BaseRepoBackend, RepoBackend
 from ._github import GitHubPath
 from ._gitlab import GitLabPath
 from ._kinds import RepoPath
+from ._svn import SVNPath
 from ._version import __version__
 from .exceptions import (
     BadReplyError,
@@ -31,5 +32,6 @@ __all__ = [
     "RepoBackend",
     "RepoPath",
     "RepoPathError",
+    "SVNPath",
     "__version__",
 ]

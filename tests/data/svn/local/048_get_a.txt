@@ -1,0 +1,15 @@
+GET /svn/open/trunk/src/a.txt
+
+HTTP 200 OK
+Date: Fri, 16 Oct 2026 16:12:10 GMT
+Server: Apache/2.4.69 (Fedora Linux) SVN/1.14.5
+Cache-Control: max-age=0
+Last-Modified: Fri, 16 Oct 2026 15:52:18 GMT
+ETag: "2//trunk/src/a.txt"
+Accept-Ranges: bytes
+Content-Length: 8
+Content-Type: text/plain
+
+[body: 8 bytes]
+one
+two

@@ -5,7 +5,7 @@ exception types wherever a `pathlib.Path` equivalent exists. Extensions (extra o
 kwargs, new methods like `rm()` and `copy()`) are allowed. Any *behavioral* divergence from
 `pathlib` on a method that exists in both must be listed here -- no silent divergence.
 
-The divergences below apply to `GitHubPath`, `GitLabPath` and the URI paths that delegate
+The divergences below apply to `GitHubPath`, `GitLabPath`, `SVNPath` and the URI paths that delegate
 to them. The ones of the generic `Path` operations that every path inherits (`touch()` on a
 non-local backend, `rm()` and its policies, `chown()`, `Path.replace()`, a `with` block that
 raised while writing) are on the documentation site of `pathapi`,
@@ -26,3 +26,7 @@ raised while writing) are on the documentation site of `pathapi`,
 | A `Path` of another kind joined to a path | joining paths of one flavour is allowed | `NotImplementedError` from the constructor, `TypeError` from `/` | The owner and repository of a GitHub path mean nothing to a GitLab one. |
 | The `repo:`, `github:` and `gitlab:` paths: `str()`, `repr()`, `as_posix()`, `as_uri(sanitize=True)` | other schemes redact the password only | the **whole** userinfo is redacted; `as_posix()` is `host:path`; `as_uri()` (unsanitized) still returns it | The token is commonly the bare userinfo (`TOKEN@host`), the one part other schemes keep, so it reached logs and tracebacks. |
 | `gitlab://host/group/sub/project/-/path` | N/A | a `-` segment after the owner and the repository ends the project path, so a project in a subgroup is addressable; a directory called `-` is written with the separator in front | GitLab's own URL convention; without it only `owner/repo` projects were addressable. |
+| `SVNPath`: `str(path)` | the file path | `svn+https://host/path/to/root/names?ref=REV`, which names no credential | The text has to say which repository and revision the path is in. |
+| `SVNPath`: a path in the middle of a link | the operating system resolves every component | only the last name is followed (at most 40 links); a link in the middle of a path does not resolve, and a target that leaves the tree does not exist | Subversion stores a link as a file whose text is `link TARGET`; following one is a request, so the walk stays bounded and inside the tree. |
+| `SVNPath`: `stat().st_mtime`, mode | the file system's | the time of the revision that last changed the entry; no permission bits (`svn:executable` is not reported) | It is what the server states with the stat in the one request. |
+| `SVNPath`: `svn:externals` | N/A | not part of the tree: not listed, and their paths do not exist | An external names another location, possibly of another server, and nothing is followed to it. |

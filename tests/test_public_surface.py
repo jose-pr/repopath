@@ -32,6 +32,7 @@ DOCUMENTED = {
         "RepoBackend",
         "RepoPath",
         "RepoPathError",
+        "SVNPath",
         "__version__",
     },
     "repopath.exceptions": {

@@ -1,0 +1,35 @@
+OPTIONS https://svn.apache.org/repos/asf/subversion/trunk/
+> Content-Type: text/xml
+> DAV: http://subversion.tigris.org/xmlns/dav/svn/depth
+
+HTTP 200 OK
+Server: Apache
+DAV: 1,2
+DAV: version-control,checkout,working-resource
+DAV: merge,baseline,activity,version-controlled-collection
+DAV: http://subversion.tigris.org/xmlns/dav/svn/depth
+DAV: http://subversion.tigris.org/xmlns/dav/svn/log-revprops
+DAV: http://subversion.tigris.org/xmlns/dav/svn/atomic-revprops
+DAV: http://subversion.tigris.org/xmlns/dav/svn/partial-replay
+DAV: http://subversion.tigris.org/xmlns/dav/svn/inherited-props
+DAV: http://subversion.tigris.org/xmlns/dav/svn/inline-props
+DAV: http://subversion.tigris.org/xmlns/dav/svn/reverse-file-revs
+DAV: http://subversion.tigris.org/xmlns/dav/svn/list
+DAV: http://subversion.tigris.org/xmlns/dav/svn/mergeinfo
+DAV: <http://apache.org/dav/propset/fs/1>
+SVN-Youngest-Rev: 1939092
+SVN-Repository-UUID: 13f79535-47bb-0310-9956-ffa450edef68
+DAV: http://subversion.tigris.org/xmlns/dav/svn/replay-rev-resource
+SVN-Repository-Root: /repos/asf
+SVN-Me-Resource: /repos/asf/!svn/me
+SVN-Rev-Root-Stub: /repos/asf/!svn/rvr
+SVN-Rev-Stub: /repos/asf/!svn/rev
+DAV: http://subversion.tigris.org/xmlns/dav/svn/ephemeral-txnprops
+DAV: http://subversion.tigris.org/xmlns/dav/svn/svndiff1
+DAV: http://subversion.tigris.org/xmlns/dav/svn/svndiff2
+DAV: http://subversion.tigris.org/xmlns/dav/svn/put-result-checksum
+Content-Type: text/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:options-response xmlns:D="DAV:">
+<D:activity-collection-set><D:href>/repos/asf/!svn/act/</D:href></D:activity-collection-set></D:options-response>

@@ -1,0 +1,15 @@
+PROPFIND https://svn.apache.org/repos/asf/!svn/rvr/1/subversion/trunk/README
+> Depth: 0
+> Content-Type: text/xml
+
+HTTP 404 Not Found
+Server: Apache
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL was not found on this server.</p>
+</body></html>

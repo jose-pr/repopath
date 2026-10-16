@@ -153,7 +153,7 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
     the call says otherwise; `None` waits without limit. A `GET` follows
     redirects, dropping the token when the host changes."""
 
-    __slots__ = ("token", "api_base", "cache")
+    __slots__ = ("token", "auth", "api_base", "cache")
 
     def __init__(
         self,
@@ -164,8 +164,17 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
         transport=None,
         headers=None,
         timeout=DEFAULT_TIMEOUT,
+        auth: "tuple[str, str] | None" = None,
         **requests_args,
     ):
+        if token and auth is not None:
+            raise TypeError("pass either token= or auth=, not both")
+        if auth is not None and not (
+            isinstance(auth, tuple)
+            and len(auth) == 2
+            and all(isinstance(part, str) for part in auth)
+        ):
+            raise TypeError("auth= is a (user, password) pair of str")
         if session is not None or requests_args:
             if transport is not None:
                 raise TypeError("give a transport, or a session and its arguments")
@@ -177,6 +186,8 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
             user_agent=f"repopath/{__version__}",
         )
         self.token = token or None
+        # Sent as `Authorization: Basic`, the scheme of a Subversion server.
+        self.auth = auth
         self.api_base = api_base.rstrip("/") if api_base else None
         # Memoization shared by every path that shares this backend (the
         # resolved default branch of a repository, see `_hosted.py`).
@@ -196,10 +207,13 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
         data=None,
         timeout=_UNSET,
         stream=False,
+        allow_redirects=None,
     ) -> HTTPResponse:
         sent = dict(headers or {})
-        authorized = bool(self.token) or any(
-            name.lower() == "authorization" for name in (*self.headers, *sent)
+        authorized = (
+            bool(self.token)
+            or self.auth is not None
+            or any(name.lower() == "authorization" for name in (*self.headers, *sent))
         )
         if params:
             query = _urlparse.urlencode(
@@ -214,6 +228,7 @@ class RepoBackend(HTTPClient, BaseRepoBackend):
             data=data,
             headers=sent,
             stream=stream,
+            allow_redirects=allow_redirects,
             timeout=self.timeout if timeout is _UNSET else timeout,
-            auth=f"Bearer {self.token}" if self.token else None,
+            auth=f"Bearer {self.token}" if self.token else self.auth,
         )

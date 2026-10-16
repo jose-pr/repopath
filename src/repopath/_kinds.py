@@ -3,6 +3,7 @@ registry of the kinds that make it up."""
 
 from __future__ import annotations
 
+import errno as _errno
 import inspect as _inspect
 import io as _io
 import re as _re
@@ -12,6 +13,8 @@ import typing as _ty
 
 from pathapi import FileStat
 from pathapi.providers import TreePath
+
+from .exceptions import BadReplyError
 
 if _ty.TYPE_CHECKING:
     from ._backend import BaseRepoBackend
@@ -245,6 +248,15 @@ class RepoPath(TreePath, metaclass=_Kinds):
         if getattr(self._backend, "picklable", False) is True:
             keywords["backend"] = self._backend
         return _rebuild_path, (type(self), self._segments, keywords)
+
+    def _bad_reply(self, what: str) -> BadReplyError:
+        return BadReplyError(_errno.EIO, f"Unexpected API reply: {what}", str(self))
+
+    def _backend_cache(self) -> "dict | None":
+        """The backend's memoization dict, or None for a custom
+        `BaseRepoBackend` that has none (memoization is then skipped)."""
+        cache = getattr(self._backend, "cache", None)
+        return cache if isinstance(cache, dict) else None
 
     @property
     def kind(self) -> str:

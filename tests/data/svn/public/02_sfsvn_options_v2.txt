@@ -1,0 +1,31 @@
+OPTIONS https://svn.code.sf.net/p/docutils/code/trunk/docutils/
+> Content-Type: text/xml
+> DAV: http://subversion.tigris.org/xmlns/dav/svn/depth
+
+HTTP 200 OK
+Server: nginx
+Content-Type: text/xml; charset="utf-8"
+dav: 1,2
+dav: version-control,checkout,working-resource
+dav: merge,baseline,activity,version-controlled-collection
+dav: http://subversion.tigris.org/xmlns/dav/svn/depth
+dav: http://subversion.tigris.org/xmlns/dav/svn/log-revprops
+dav: http://subversion.tigris.org/xmlns/dav/svn/atomic-revprops
+dav: http://subversion.tigris.org/xmlns/dav/svn/partial-replay
+dav: http://subversion.tigris.org/xmlns/dav/svn/inherited-props
+dav: http://subversion.tigris.org/xmlns/dav/svn/inline-props
+dav: http://subversion.tigris.org/xmlns/dav/svn/reverse-file-revs
+dav: http://subversion.tigris.org/xmlns/dav/svn/mergeinfo
+dav: <http://apache.org/dav/propset/fs/1>
+dav: http://subversion.tigris.org/xmlns/dav/svn/ephemeral-txnprops
+svn-youngest-rev: 10407
+svn-repository-uuid: 929543f6-e4f2-0310-98a6-ba3bd3dd1d04
+dav: http://subversion.tigris.org/xmlns/dav/svn/replay-rev-resource
+svn-repository-root: /p/docutils/code
+svn-me-resource: /p/docutils/code/!svn/me
+svn-rev-root-stub: /p/docutils/code/!svn/rvr
+svn-rev-stub: /p/docutils/code/!svn/rev
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:options-response xmlns:D="DAV:">
+<D:activity-collection-set><D:href>/p/docutils/code/!svn/act/</D:href></D:activity-collection-set></D:options-response>

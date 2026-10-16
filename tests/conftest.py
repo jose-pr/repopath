@@ -3,6 +3,7 @@ import tempfile
 import pytest
 
 import api_fakes
+import svn_fakes
 import hermetic
 from hermetic import NetworkAccessBlocked  # noqa: F401  (re-exported for tests)
 
@@ -49,6 +50,25 @@ def gitlab_api_server(fixture_tree):
     """A fake of the GitLab REST API v4 serving `fixture_tree`; yields
     `(base_url, owner, repo)` (see `api_fakes.gitlab_api`)."""
     with api_fakes.gitlab_api(fixture_tree) as served:
+        yield served
+
+
+@pytest.fixture
+def svn_recorded():
+    """A fake Subversion server that replays the recordings of `tests/data/svn`
+    (see `svn_fakes`); yields its `Served` log. A request with no recording is
+    answered 404 and fails the test at teardown."""
+    with svn_fakes.svn_server() as served:
+        yield served
+    assert not served.unrecorded, f"requests with no recording: {served.unrecorded}"
+
+
+@pytest.fixture
+def svn_fixture_server(fixture_tree):
+    """A fake Subversion server serving `fixture_tree` under `/svn/fixture`;
+    yields its `Served` log."""
+    tree = lambda: svn_fakes.snapshot_directory(fixture_tree)  # noqa: E731
+    with svn_fakes.svn_server(recorded=(), tree=tree) as served:
         yield served
 
 

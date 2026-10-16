@@ -1,0 +1,7 @@
+GET https://sourceforge.net/rest/p/no-such-project-xyz-000/
+
+HTTP 404 Not Found
+Content-Type: text/html; charset=utf-8
+Server: cloudflare
+
+<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>404</h1></body></html>

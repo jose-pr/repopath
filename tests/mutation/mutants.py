@@ -54,8 +54,8 @@ _REPLIES = "tests/test_replies.py"
 mutant(
     "backend-token-is-not-sent",
     "_backend.py",
-    '            auth=f"Bearer {self.token}" if self.token else None,\n',
-    "            auth=None,\n",
+    '            auth=f"Bearer {self.token}" if self.token else self.auth,\n',
+    "            auth=self.auth,\n",
     f"{_REQUESTS}::test_token_over_plain_http_to_another_host_warns_and_is_still_sent",
     "the bearer token never reaches the API",
 )
@@ -78,8 +78,8 @@ mutant(
 mutant(
     "backend-header-credential-does-not-warn",
     "_backend.py",
-    '        authorized = bool(self.token) or any(\n            name.lower() == "authorization" for name in (*self.headers, *sent)\n        )\n',
-    "        authorized = bool(self.token)\n",
+    '        authorized = (\n            bool(self.token)\n            or self.auth is not None\n            or any(name.lower() == "authorization" for name in (*self.headers, *sent))\n        )\n',
+    "        authorized = bool(self.token) or self.auth is not None\n",
     f"{_REQUESTS}::test_authorization_header_over_plain_http_warns",
     "an Authorization header given in headers= goes over plain http without a warning",
 )
@@ -410,4 +410,137 @@ mutant(
     '    def is_local(self) -> bool:\n        """Whether the tree is on this machine: never. The host of the URI is\n        a hosting service and is not resolved."""\n        return True\n',
     f"{_URI}::test_a_uri_path_is_never_this_machine",
     "a repository path is taken for a local one",
+)
+
+# --- the Subversion kind ----------------------------------------------------------------
+
+_SVN = "tests/test_svn.py"
+
+mutant(
+    "svn-reply-may-declare-a-document-type",
+    "_svn.py",
+    "        if _DECLARATION.search(data):\n",
+    "        if False:\n",
+    f"{_SVN}::test_a_reply_that_is_not_a_multistatus_is_a_bad_reply",
+    "a reply with a DOCTYPE, whose entities can expand without bound, is parsed",
+)
+mutant(
+    "svn-a-missing-property-hides-one-the-server-has",
+    "_svn.py",
+    "                if prop is not None and _STATUS_OK.match(status.strip()):\n",
+    "                if prop is not None:\n",
+    f"{_SVN}::test_a_property_the_server_does_not_have_does_not_hide_one_it_has",
+    "the properties of a 404 propstat overwrite the ones the server found",
+)
+mutant(
+    "svn-redirects-are-followed",
+    "_svn.py",
+    "                allow_redirects=False,\n",
+    "                allow_redirects=True,\n",
+    f"{_SVN}::test_a_redirect_of_a_read_is_a_bad_reply_and_is_not_followed",
+    "a read follows a redirect, to another scheme or host",
+)
+mutant(
+    "svn-status-is-not-checked",
+    "_svn.py",
+    "        if resp.status != status:\n            drop_body(resp)\n",
+    "        if False:\n            drop_body(resp)\n",
+    f"{_SVN}::test_a_reply_that_is_not_a_multistatus_is_a_bad_reply",
+    "a 200 where a multistatus is due is read as one",
+)
+mutant(
+    "svn-repository-root-may-not-hold-the-instance",
+    "_svn.py",
+    '        if not (path == repository or path.startswith(repository + "/")):\n',
+    "        if False:\n",
+    f"{_SVN}::test_a_repository_root_that_does_not_hold_the_instance_is_refused",
+    "a server that names a repository elsewhere builds the revision URL",
+)
+mutant(
+    "svn-stub-may-not-be-a-path",
+    "_svn.py",
+    '            if not value.startswith("/") or "?" in value:\n',
+    '            if "?" in value:\n',
+    f"{_SVN}::test_a_server_that_names_no_usable_stub_is_a_bad_reply",
+    "a revision stub that is a URL is joined into the request URL",
+)
+mutant(
+    "svn-dot-segments-reach-the-server",
+    "_svn.py",
+    '        if any(part in (".", "..") for part in names.split("/")):\n',
+    "        if False:\n",
+    f"{_SVN}::test_a_dot_segment_is_refused_before_anything_is_sent",
+    "a .. name leaves the tree on the server",
+)
+mutant(
+    "svn-listing-keeps-unsafe-names",
+    "_svn.py",
+    "            if not _providers.is_safe_child_name(name):\n",
+    "            if False:\n",
+    f"{_SVN}::test_a_name_that_is_not_one_component_is_left_out_of_a_listing",
+    "a listed name holding a slash or .. becomes a child path",
+)
+mutant(
+    "svn-instance-scheme-is-not-checked",
+    "_svn.py",
+    '        parts.scheme.lower() not in ("http", "https")\n',
+    "        False\n",
+    f"{_SVN}::test_the_place_is_checked",
+    "an instance can be a URL of another scheme",
+)
+mutant(
+    "svn-instance-may-hold-credentials",
+    "_svn.py",
+    '        or "@" in parts.netloc\n',
+    "        or False\n",
+    f"{_SVN}::test_the_place_is_checked",
+    "credentials in the instance reach every message that shows it",
+)
+mutant(
+    "svn-digest-of-a-link-is-returned",
+    "_svn.py",
+    "        if self._is_link(props):\n            raise NotImplementedError",
+    "        if False:\n            raise NotImplementedError",
+    f"{_SVN}::test_a_digest_the_server_cannot_state_is_not_implemented",
+    "the digest of the stored text of a link stands for the file it names",
+)
+mutant(
+    "svn-revision-stub-is-asked-every-time",
+    "_svn.py",
+    "        if cache is not None and key in cache:\n            return cache[key]\n        resp = self._exchange(",
+    "        if False:\n            return cache[key]\n        resp = self._exchange(",
+    f"{_SVN}::test_the_revision_stub_is_asked_once_per_backend",
+    "every path with a revision sends an OPTIONS request",
+)
+mutant(
+    "svn-revision-accepts-a-bool",
+    "_svn.py",
+    "    if isinstance(value, bool) or not isinstance(value, (int, str)):\n",
+    "    if not isinstance(value, (int, str)):\n",
+    f"{_SVN}::test_a_revision_of_another_type_is_a_type_error",
+    "ref=True reads revision 1",
+)
+mutant(
+    "svn-propfind-is-sent-without-depth",
+    "_svn.py",
+    '        headers = {"Depth": depth, **_XML_HEADERS}\n',
+    "        headers = {**_XML_HEADERS}\n",
+    f"{_SVN}::test_a_directory_of_thousands_of_entries_is_one_request",
+    "a server reads a PROPFIND without Depth as infinity and refuses it",
+)
+mutant(
+    "svn-backend-drops-the-basic-credentials",
+    "_backend.py",
+    '            auth=f"Bearer {self.token}" if self.token else self.auth,\n',
+    '            auth=f"Bearer {self.token}" if self.token else None,\n',
+    f"{_SVN}::test_a_user_and_password_are_sent_as_basic",
+    "auth=(user, password) is accepted and never sent",
+)
+mutant(
+    "svn-credentials-may-be-mixed-with-a-backend",
+    "_svn.py",
+    "        if backend is not None and (token or username is not None or password):\n",
+    "        if False:\n",
+    f"{_SVN}::test_credentials_are_exclusive_and_paired",
+    "credentials are silently dropped when a backend is given",
 )

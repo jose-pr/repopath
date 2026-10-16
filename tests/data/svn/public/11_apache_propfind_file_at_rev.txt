@@ -1,0 +1,43 @@
+PROPFIND https://svn.apache.org/repos/asf/!svn/rvr/1932863/subversion/trunk/README
+> Depth: 0
+> Content-Type: text/xml
+
+HTTP 207 Multi-Status
+Server: Apache
+Content-Type: text/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/!svn/rvr/1932863/subversion/trunk/README</D:href>
+<D:propstat>
+<D:prop>
+<S:keywords>LastChangedDate</S:keywords>
+<S:eol-style>native</S:eol-style>
+<lp1:resourcetype/>
+<lp1:getcontentlength>2222</lp1:getcontentlength>
+<lp1:getcontenttype>text/xml; charset="utf-8"</lp1:getcontenttype>
+<lp1:getetag>"1932863//subversion/trunk/README"</lp1:getetag>
+<lp1:creationdate>2026-04-06T09:05:44.623642Z</lp1:creationdate>
+<lp1:getlastmodified>Mon, 06 Apr 2026 09:05:44 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1932863/subversion/trunk/README</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1932863</lp1:version-name>
+<lp1:creator-displayname>dsahlberg</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk/README</lp3:baseline-relative-path>
+<lp3:md5-checksum>e831366f8998bb3e9695d952fd2cc022</lp3:md5-checksum>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<lp3:sha1-checksum>56d347e9953e71b32bd39d3193911cc0c12f5ac6</lp3:sha1-checksum>
+<D:supportedlock>
+<D:lockentry>
+<D:lockscope><D:exclusive/></D:lockscope>
+<D:locktype><D:write/></D:locktype>
+</D:lockentry>
+</D:supportedlock>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+</D:multistatus>

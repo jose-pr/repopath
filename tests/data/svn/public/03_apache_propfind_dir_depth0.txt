@@ -1,0 +1,240 @@
+PROPFIND https://svn.apache.org/repos/asf/subversion/trunk/
+> Depth: 0
+> Content-Type: text/xml
+
+HTTP 207 Multi-Status
+Server: Apache
+Content-Type: text/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8"?>
+<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">
+<D:response xmlns:S="http://subversion.tigris.org/xmlns/svn/" xmlns:C="http://subversion.tigris.org/xmlns/custom/" xmlns:V="http://subversion.tigris.org/xmlns/dav/" xmlns:lp1="DAV:" xmlns:lp3="http://subversion.tigris.org/xmlns/dav/" xmlns:lp2="http://apache.org/dav/props/">
+<D:href>/repos/asf/subversion/trunk/</D:href>
+<D:propstat>
+<D:prop>
+<S:mergeinfo>/subversion/branches/1.10-cache-improvements:1669168-1694487
+/subversion/branches/1.11.x:1841316,1841548
+/subversion/branches/1.5.x-r30215:870312
+/subversion/branches/1.7.x-fs-verify:1146708,1161180
+/subversion/branches/1.9-cache-improvements:1678948-1679863
+/subversion/branches/1.9.x:1735680
+/subversion/branches/10Gb:1388102,1388163-1388190,1388195,1388202,1388205,1388211,1388276,1388362,1388375,1388394,1388636,1388639-1388640,1388643-1388644,1388654,1388720,1388789,1388795,1388801,1388805,1388807,1388810,1388816,1389044,1389276,1389289,1389662,1389867,1390017,1390209,1390216,1390407,1390409,1390414,1390419,1390955
+/subversion/branches/atomic-revprop:965046-1000689
+/subversion/branches/authzperf:1613053-1776831
+/subversion/branches/auto-props-sdc:1384106-1401643
+/subversion/branches/bdb-reverse-deltas:872050-872529
+/subversion/branches/better-pristines:1807118-1843075,1931314
+/subversion/branches/cache-server:1458643-1476567
+/subversion/branches/cmake:1918598-1920716
+/subversion/branches/decouple-shelving-cli:1874630-1875035
+/subversion/branches/diff-callbacks3:870059-870761
+/subversion/branches/diff-optimizations:1031270-1037352
+/subversion/branches/diff-optimizations-bytes:1037353-1067789
+/subversion/branches/dont-save-plaintext-passwords-by-default:870728-871118
+/subversion/branches/double-delete:870511-872970
+/subversion/branches/dump-load-cross-check:1654853-1657295
+/subversion/branches/ev2-export:1325914,1332738,1413107
+/subversion/branches/explore-wc:875486,875493,875497,875507,875511,875514,875559,875580-875581,875584,875587,875611,875627,875647,875667-875668,875711-875712,875733-875734,875736,875744-875748,875751,875758,875782,875795-875796,875830,875836,875838,875842,875852,875855,875864,875870,875873,875880,875885-875888,875890,875897-875898,875905,875907-875909,875935,875943-875944,875946,875979,875982-875983,875985-875986,875990,875997
+/subversion/branches/file-externals:871779-873302
+/subversion/branches/fs-rep-sharing:869036-873803
+/subversion/branches/fsfs-format7:1426304,1430673,1433848,1438408,1438982,1441129,1442051,1442068,1442504,1442910,1443171,1443803,1444690,1444693,1444695,1445040,1445080,1446103,1451129,1453590,1454307,1460579,1461851,1461865,1462837,1462904,1463120,1467362,1467382,1469487,1471208,1477166,1478055,1481447,1489817,1489949,1490673-1490674,1491784,1493042,1498029,1498103,1498155,1500054,1507729-1507731,1507735-1507736
+/subversion/branches/fsfs-improvements:1499981-1547039
+/subversion/branches/fsfs-lock-many:1571740-1577217
+/subversion/branches/fsfs-pack:873717-874575
+/subversion/branches/fsx:1507845-1509914
+/subversion/branches/fsx-1.10:1658219-1694500
+/subversion/branches/fsx-id:1645603-1649011
+/subversion/branches/gnome-keyring:870558-871410
+/subversion/branches/gpg-agent-password-store:1005036-1150766
+/subversion/branches/gtest_addition:1452117-1502138
+/subversion/branches/http-protocol-v2:874395-876041
+/subversion/branches/in-memory-cache:869829-871452
+/subversion/branches/in-repo-authz:1414342-1424779
+/subversion/branches/inheritable-props:1297080-1395089
+/subversion/branches/integrate-cache-item-serialization:1068724-1068739
+/subversion/branches/integrate-cache-membuffer:998649-998852
+/subversion/branches/integrate-compression-level:1068651-1072287
+/subversion/branches/integrate-io-improvements:1068684-1072297
+/subversion/branches/integrate-is-cachable:1072568-1074082
+/subversion/branches/integrate-partial-getter:1072558-1076552
+/subversion/branches/integrate-readline-speedup:1072553-1072555
+/subversion/branches/integrate-stream-api-extensions:1068695-1072516
+/subversion/branches/integrate-string-improvements:1068251-1190617
+/subversion/branches/integrate-txdelta-caching:1072541-1078213
+/subversion/branches/issue-2779-dev:965496-984198
+/subversion/branches/issue-2843-dev:871432-874179
+/subversion/branches/issue-3000:871713,871716-871719,871721-871726,871728,871734
+/subversion/branches/issue-3067-deleted-subtrees:873375-874084
+/subversion/branches/issue-3148-dev:875193-875204
+/subversion/branches/issue-3220-dev:872210-872226
+/subversion/branches/issue-3242-dev:879653-896436
+/subversion/branches/issue-3334-dirs:875156-875867
+/subversion/branches/issue-3975:1152931-1160746
+/subversion/branches/issue-4116-dev:1424719-1425040
+/subversion/branches/issue-4194-dev:1410507-1414880
+/subversion/branches/issue-4869:1885862-1885981
+/subversion/branches/issue-4908:1903812-1904192
+/subversion/branches/java10-compat:1840620-1841179
+/subversion/branches/javahl-1.14-fixes:1882126-1886028
+/subversion/branches/javahl-1.15:1933993-1934312
+/subversion/branches/javahl-ra:991978-1494640
+/subversion/branches/kwallet:870785-871314
+/subversion/branches/log-addressing:1509279-1546844
+/subversion/branches/log-g-performance:870941-871032
+/subversion/branches/merge-skips-obstructions:874525-874615
+/subversion/branches/move-tracking-2:1606692-1714632
+/subversion/branches/multi-layer-moves:1239019-1300930
+/subversion/branches/multi-wc-format:1843076-1898186
+/subversion/branches/nfc-nfd-aware-client:870276,870376
+/subversion/branches/node_pool:1304828-1305388
+/subversion/branches/patch-exec:1692717-1705390
+/subversion/branches/performance:979193,980118,981087,981090,981189,981194,981287,981684,981827,982043,982355,983398,983406,983430,983474,983488,983490,983760,983764,983766,983770,984927,984973,984984,985014,985037,985046,985472,985477,985482,985487-985488,985493,985497,985500,985514,985601,985603,985606,985669,985673,985695,985697,986453,986465,986485,986491-986492,986517,986521,986605,986608,986817,986832,987865,987868-987869,987872,987886-987888,987893,988319,988898,990330,990533,990535-990537,990541,990568,990572,990574-990575,990600,990759,992899,992904,992911,993127,993141,994956,995478,995507,995603,998012,998858,999098,1001413,1001417,1004291,1022668,1022670,1022676,1022715,1022719,1025660,1025672,1027193,1027203,1027206,1027214,1027227,1028077,1028092,1028094,1028104,1028107,1028111,1028354,1029038,1029042-1029043,1029054-1029055,1029062-1029063,1029078,1029080,1029090,1029092-1029093,1029111,1029151,1029158,1029229-1029230,1029232,1029335-1029336,1029339-1029340,1029342,1029344,1030763,1030827,1031203,1031235,1032285,1032333,1033040,1033057,1033294,1035869,1035882,1039511,1043705,1053735,1056015,1066452,1067683,1067697-1078365
+/subversion/branches/pin-externals:1643757-1659392
+/subversion/branches/pristines-on-demand:1892643-1897945
+/subversion/branches/pristines-on-demand-on-mwf:1897945-1905954
+/subversion/branches/py-tests-as-modules:956579-1033052
+/subversion/branches/ra-svn-tuning:1658201-1694489
+/subversion/branches/ra_serf-digest-authn:875693-876404
+/subversion/branches/reintegrate-improvements:873853-874164
+/subversion/branches/remote-only-status:1581845-1586090
+/subversion/branches/resolve-incoming-add:1762797-1764284
+/subversion/branches/revprop-cache:1298521-1326293
+/subversion/branches/revprop-caching-ng:1620597,1620599
+/subversion/branches/revprop-packing:1143907,1143971,1143997,1144017,1144499,1144568,1146145
+/subversion/branches/shelve:1802592-1815226
+/subversion/branches/shelve-checkpoint:1801593-1801923,1801970,1817320,1828508,1828521
+/subversion/branches/shelving-v3:1853394-1853901
+/subversion/branches/subtree-mergeinfo:876734-878766
+/subversion/branches/svn-auth-x509:1603509-1655900
+/subversion/branches/svn-info-detail:1660035-1662618
+/subversion/branches/svn-mergeinfo-enhancements:870119-870195,870197-870288
+/subversion/branches/svn-mergeinfo-normalizer:1642232-1695991
+/subversion/branches/svn-patch-improvements:918519-934609
+/subversion/branches/svn_mutex:1141683-1182099
+/subversion/branches/svnpatch-diff:865738-876477
+/subversion/branches/svnraisetc:874709-875149
+/subversion/branches/svnserve-logging:869828-870893
+/subversion/branches/swig-py3:1813660-1869353
+/subversion/branches/tc-issue-3334:874697-874773
+/subversion/branches/tc-merge-notify:874017-874062
+/subversion/branches/tc-resolve:874191-874239
+/subversion/branches/tc_url_rev:874351-874483
+/subversion/branches/tree-conflicts:868291-873154
+/subversion/branches/tree-conflicts-notify:873926-874008
+/subversion/branches/tristate-chunked-request:1502394-1502681
+/subversion/branches/tweak-build-take-two:1424288-1425049,1425051-1425613
+/subversion/branches/uris-as-urls:1060426-1064427
+/subversion/branches/utf8-cmdline:1932344-1935601
+/subversion/branches/utf8-cmdline-prototype:1925721-1932343
+/subversion/branches/verify-at-commit:1462039-1462408
+/subversion/branches/verify-keep-going:1439280-1546110
+/subversion/branches/wc-collate-path:1402685-1480384
+/subversion/branches/windows-shared-ra-modules:1920808-1921005
+/subversion/branches/xml-schema-validation-improvements:1935580-1935771</S:mergeinfo>
+<S:ignore>ChangeLog*
+Makefile
+config.cache
+config.log
+config.nice
+config.status
+configure
+libtool
+.gdb_history
+.swig_checked
+*.orig
+*.rej
+TAGS
+tags
+neon
+build-outputs.mk
+aclocal.m4
+autogen-standalone.mk
+autom4te.cache
+gen-make.opts
+tests.log*
+fails.log*
+db4-win32
+db
+*.o
+*~
+.*~
+apr
+apr-util
+apr-iconv
+Release
+release_win32
+release_win32_static
+release_x64
+release_ARM64
+Debug
+debug_win32
+debug_win32_static
+debug_x64
+debug_ARM64
+ipch
+subversion_msvc.dsw
+subversion_msvc.ncb
+subversion_msvc.opt
+subversion_msvc.plg
+subversion_vcnet.*
+mkmf.log
+.project
+.classpath
+.cdtproject
+.settings
+.cproject
+py3c
+zlib
+sqlite-amalgamation
+serf
+googlemock
+.git
+.gitignore
+.idea
+.clangd
+compile_commands.json
+.kdev4
+*.kdev4
+.vs
+.swig_pl_checked
+.swig_py_checked
+.swig_rb_checked
+out
+CMakeSettings.json
+</S:ignore>
+<S:global-ignores>__pycache__
+</S:global-ignores>
+<S:auto-props>*.c = svn:eol-style=native
+*.cpp = svn:eol-style=native
+*.h = svn:eol-style=native
+*.hpp = svn:eol-style=native
+*.java = svn:eol-style=native
+*.m4 = svn:eol-style=native
+*.py = svn:eol-style=native
+*.pl = svn:eol-style=native
+*.rb = svn:eol-style=native
+*.sql = svn:eol-style=native
+*.txt = svn:eol-style=native
+*.yml = svn:eol-style=native
+README = svn:eol-style=native
+BRANCH-README = svn:eol-style=native
+STATUS = svn:eol-style=native
+</S:auto-props>
+<lp1:resourcetype><D:collection/></lp1:resourcetype>
+<lp1:getcontenttype>text/html; charset=UTF-8</lp1:getcontenttype>
+<lp1:getetag>W/"1939086//subversion/trunk"</lp1:getetag>
+<lp1:creationdate>2026-10-13T09:35:07.729908Z</lp1:creationdate>
+<lp1:getlastmodified>Tue, 13 Oct 2026 09:35:07 GMT</lp1:getlastmodified>
+<lp1:checked-in><D:href>/repos/asf/!svn/ver/1939086/subversion/trunk</D:href></lp1:checked-in>
+<lp1:version-controlled-configuration><D:href>/repos/asf/!svn/vcc/default</D:href></lp1:version-controlled-configuration>
+<lp1:version-name>1939086</lp1:version-name>
+<lp1:creator-displayname>kotkov</lp1:creator-displayname>
+<lp3:baseline-relative-path>subversion/trunk</lp3:baseline-relative-path>
+<lp3:repository-uuid>13f79535-47bb-0310-9956-ffa450edef68</lp3:repository-uuid>
+<lp3:deadprop-count>1</lp3:deadprop-count>
+<D:lockdiscovery/>
+</D:prop>
+<D:status>HTTP/1.1 200 OK</D:status>
+</D:propstat>
+</D:response>
+</D:multistatus>
