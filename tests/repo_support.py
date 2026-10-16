@@ -45,7 +45,11 @@ def make_path(
         )
     from repopath import uri
 
-    cls = {"github": uri.GitHubURIPath, "gitlab": uri.GitLabURIPath}[kind]
+    cls = {
+        "github": uri.GitHubURIPath,
+        "gitlab": uri.GitLabURIPath,
+        "gitea": uri.GiteaURIPath,
+    }[kind]
     segments = owner.split("/") + [repo]
     if "/" in owner or "-" in name.split("/"):
         segments.append("-")

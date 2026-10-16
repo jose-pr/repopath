@@ -8,7 +8,7 @@ self-contained. Development documentation lives with the source at
 
 Names are imported from `repopath` (the paths, the backends, the exceptions, the
 warning and `__version__`), from `repopath.exceptions` (the exceptions and the
-warning) and from `repopath.uri` (the `repo:`, `github:`, `gitlab:`, `svn+https:`,
+warning) and from `repopath.uri` (the `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`,
 `svn+http:` and `sourceforge:` schemes of `uripath`). Every module whose name starts with `_` is private. `import
 repopath` imports no third-party library and never `uripath`. The classes are
 read-only clients of the REST APIs of GitHub, GitLab and Gitea or Forgejo (Codeberg), and of a Subversion
@@ -22,7 +22,7 @@ that names the extra:
 
 | Extra | Adds | For |
 | --- | --- | --- |
-| `uri` | `uripath` | `repopath.uri`: the `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes |
+| `uri` | `uripath` | `repopath.uri`: the `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes |
 | `all` | all of the above | |
 
 `repopath.__version__` is the installed version, read from the distribution's
@@ -391,7 +391,7 @@ module documents applies:
   a transport the backend built, never one it was given. It may be shared between
   threads.
 
-## The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes (`repopath.uri`)
+## The `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes (`repopath.uri`)
 
 ```python
 class RepoURIPath(DelegatingURIPath):
@@ -406,6 +406,8 @@ class RepoURIPath(DelegatingURIPath):
 class GitHubURIPath(RepoURIPath): ...
 
 class GitLabURIPath(RepoURIPath): ...
+
+class GiteaURIPath(RepoURIPath): ...
 
 class SVNURIPath(DelegatingURIPath):
     kind: str
@@ -430,7 +432,7 @@ Importing `repopath.uri` needs `uripath` (`pip install "repopath[uri]"`).
 `uripath` loads it by itself, through its `uripath.schemes` entry points, the
 first time a path of one of the schemes is used; `URIPath("github://...")`
 returns a `GitHubURIPath`. Each class is a `uripath.schemes.DelegatingURIPath`
-that hands every read to the `GitHubPath` or `GitLabPath` of its URI, built once
+that hands every read to the `GitHubPath`, `GitLabPath` or `GiteaPath` of its URI, built once
 per instance on the backend of the URI path, so everything above holds for a URI
 path too, and an error names the URI.
 
@@ -439,12 +441,14 @@ path too, and an error names the URI.
   GitLab's own `/-/` ending the project path: `gitlab://host/group/subgroup/
   project/-/path`. Without the separator the first two segments are owner and
   repository; a `-` name needs it in front (`.../repo/-/-/x`), and the child
-  `path / "-"` writes it. Any `host` is allowed: the kind is the scheme's.
+  `path / "-"` writes it. `gitea://[TOKEN@]host[:port]/owner/repo/path?ref=REF` is a
+  `GiteaURIPath` (the host defaults to `codeberg.org`; the API is at
+  `https://<host>/api/v1`). Any `host` is allowed: the kind is the scheme's.
 - `repo://host/owner/repo/path?ref=REF` is a `RepoURIPath`, whose kind is
   detected from the host (`github.com`, `gitlab.com`, with or without `www.`,
-  in any case). Any other host raises `URISyntaxError` (a `ValueError`) when the
-  path is built, naming `github://host/...` and `gitlab://host/...`, which pin the
-  kind on any host. `git:`, `git+github:` and `git+gitlab:` are not schemes of
+  and `codeberg.org`, in any case). Any other host raises `URISyntaxError` (a
+  `ValueError`) when the path is built, naming `github://host/...`,
+  `gitlab://host/...` and `gitea://host/...`, which pin the kind on any host. `git:`, `git+github:` and `git+gitlab:` are not schemes of
   this package.
 - `path.repo_owner`, `repo`, `repo_path`, `ref`, `instance` and `kind` are read from
   the URI; a URI that holds no owner and repository (`github://github.com/acme`)
@@ -486,7 +490,7 @@ path too, and an error names the URI.
   host when the text is relative, rooted on the same host when it starts with `/`),
   `checksum()` and `supported_checksums()` are the core path's.
 - `uripath` knows the names `repo`, `github` and `gitlab` as provided by this
-  distribution when it is not installed; the other three are found only through this
+  distribution when it is not installed; the other four are found only through this
   distribution's entry points, so without it a `svn+https:` URI is a plain `URIPath`.
 
 ## Exceptions (`repopath.exceptions`)

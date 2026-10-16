@@ -466,3 +466,81 @@ def test_writing_is_not_supported(gitea_recorded):
         path.open("w")
     with pytest.raises(NotImplementedError):
         path.write_text("x")
+
+
+# --- the gitea: scheme and repo:// on codeberg.org ----------------------------------
+
+
+def uri_path(served, text, **options):
+    pytest.importorskip("uripath")
+    from uripath import URIPath
+
+    backend = RepoBackend(api_base=f"{served.base_url}/api/v1", **options)
+    return URIPath(text, backend=backend)
+
+
+def test_a_gitea_uri_reads_the_tree_of_its_repository(gitea_recorded):
+    from repopath import uri
+
+    root = uri_path(gitea_recorded, "gitea://git.example:3000/lab/pub?ref=main")
+    assert type(root) is uri.GiteaURIPath
+    assert (root.kind, root.instance, root.repo_owner, root.repo) == (
+        "gitea",
+        "git.example:3000",
+        "lab",
+        "pub",
+    )
+    assert root.ref == "main"
+    readme = root / "README.md"
+    assert readme.repo_path == "README.md"
+    assert readme.read_text() == "hello\n"
+    assert readme.stat().st_size == 6
+    assert {child.name for child in root.iterdir()} >= {"src", "docs", "sub"}
+    assert (root / "sub").is_dir()
+
+
+def test_a_ref_with_a_slash_travels_in_the_query(gitea_recorded):
+    path = uri_path(gitea_recorded, "gitea://h/lab/pub/src/a.txt?ref=feat%2Fx")
+    assert path.ref == "feat/x"
+    assert path.read_text() == "one\ntwo on other\n"
+    assert path.as_uri().endswith("/lab/pub/src/a.txt?ref=feat%2Fx")
+
+
+def test_the_core_path_of_a_uri_is_a_gitea_path(gitea_recorded):
+    path = uri_path(gitea_recorded, "gitea://h/lab/pub/README.md?ref=main")
+    core = path._core_path
+    assert type(core) is GiteaPath
+    assert core.as_uri() == "gitea://h/lab/pub/README.md?ref=main"
+
+
+def test_repo_on_codeberg_detects_the_kind(gitea_recorded):
+    path = uri_path(gitea_recorded, "repo://codeberg.org/lab/pub/README.md?ref=main")
+    assert path.kind == "gitea"
+    assert path.read_text() == "hello\n"
+
+
+def test_the_token_of_a_gitea_uri_is_sent_and_never_shown(gitea_recorded):
+    from repopath import uri
+
+    text = "gitea://tok_SECRET@h/lab/priv/secret.txt?ref=main"
+
+    path = uri.GiteaURIPath(text)
+    assert path.backend.token == "tok_SECRET"
+    assert "tok_SECRET" not in repr(path) + str(path) + path.as_uri(sanitize=True)
+    path = uri.GiteaURIPath(
+        text,
+        backend=RepoBackend(
+            token="tok_SECRET", api_base=f"{gitea_recorded.base_url}/api/v1"
+        ),
+    )
+    assert path.read_text() == "secret\n"
+    assert set(gitea_recorded.authorizations) == {"Bearer tok_SECRET"}
+
+
+def test_a_gitea_uri_without_a_repository_does_not_exist():
+    pytest.importorskip("uripath")
+    from uripath import URIPath
+
+    for text in ("gitea://codeberg.org", "gitea://codeberg.org/lab"):
+        path = URIPath(text)
+        assert not path.exists()

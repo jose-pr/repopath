@@ -71,6 +71,32 @@ class TestRepoURIPathContractOnGitHub(ReadPathContract):
         )
 
 
+class TestGiteaURIPathContract(ReadPathContract):
+    supports_empty_directories = False
+
+    @pytest.fixture
+    def root(self, gitea_api_server, http_transport_kind):
+        pytest.importorskip("uripath")
+        pytest.importorskip("repopath.uri")
+        return gitea("uri", gitea_api_server)
+
+
+class TestRepoURIPathContractOnGitea(ReadPathContract):
+    supports_empty_directories = False
+
+    @pytest.fixture
+    def root(self, gitea_api_server, http_transport_kind):
+        pytest.importorskip("uripath")
+        from repopath import uri
+        from repo_support import fake_backend
+
+        owner, repo = gitea_api_server[1:]
+        return uri.RepoURIPath(
+            f"repo://codeberg.org/{owner}/{repo}",
+            backend=fake_backend("gitea", gitea_api_server),
+        )
+
+
 class TestRepoURIPathContractOnGitLab(ReadPathContract):
     supports_empty_directories = False
 

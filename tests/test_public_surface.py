@@ -46,6 +46,7 @@ DOCUMENTED = {
 }
 URI_DOCUMENTED = {
     "repopath.uri": {
+        "GiteaURIPath",
         "GitHubURIPath",
         "GitLabURIPath",
         "RepoURIPath",

@@ -52,6 +52,7 @@ docs = ['mkdocs', 'mkdocs-material', 'mkdocstrings[python]']
 repo = "repopath.uri:RepoURIPath"
 github = "repopath.uri:GitHubURIPath"
 gitlab = "repopath.uri:GitLabURIPath"
+gitea = "repopath.uri:GiteaURIPath"
 "svn+https" = "repopath.uri:SVNURIPath"
 "svn+http" = "repopath.uri:SVNURIPath"
 sourceforge = "repopath.uri:SourceForgeURIPath"

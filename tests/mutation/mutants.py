@@ -711,3 +711,22 @@ mutant(
     "tests/test_kinds.py::test_an_alias_another_kind_holds_is_refused",
     "an alias can shadow the name of another kind",
 )
+
+_URI_REPO = "tests/test_uri_repo.py"
+
+mutant(
+    "gitea-uri-shows-the-token",
+    "uri.py",
+    '    if isinstance(table, frozenset) and "gitea" not in table:\n',
+    "    if False:\n",
+    f"{_URI_REPO}::test_the_token_is_the_password_or_else_the_bare_user_and_is_never_shown",
+    "the token in the user slot of a gitea: URI is shown by str(), repr() and every message",
+)
+mutant(
+    "gitea-uri-does-not-pin-the-kind",
+    "uri.py",
+    '    __SCHEMES = ("gitea",)\n    __slots__ = ()\n    _KIND = GiteaPath\n',
+    '    __SCHEMES = ("gitea",)\n    __slots__ = ()\n    _KIND = None\n',
+    f"{_URI_REPO}::test_github_and_gitlab_pin_the_kind_whatever_the_host",
+    "a gitea: URI on a host no kind is detected for is refused",
+)

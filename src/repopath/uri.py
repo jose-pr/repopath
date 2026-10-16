@@ -1,6 +1,7 @@
-"""The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and
-`sourceforge:` schemes of `uripath`: `RepoURIPath`, `GitHubURIPath` and
-`GitLabURIPath`, URI paths that delegate to a `GitHubPath` or a `GitLabPath`;
+"""The `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and
+`sourceforge:` schemes of `uripath`: `RepoURIPath`, `GitHubURIPath`,
+`GitLabURIPath` and `GiteaURIPath`, URI paths that delegate to a `GitHubPath`,
+a `GitLabPath` or a `GiteaPath`;
 `SVNURIPath` and `SourceForgeURIPath`, which delegate to an `SVNPath` and a
 `SourceForgePath`.
 
@@ -30,6 +31,7 @@ from uripath.schemes import DelegatingURIPath
 from uripath.source import compose_host, fold_host
 
 from ._backend import RepoBackend
+from ._gitea import GiteaPath
 from ._github import GitHubPath
 from ._gitlab import GitLabPath
 from ._hosted import HostedRepoPath
@@ -38,6 +40,7 @@ from ._sourceforge import SourceForgePath
 from ._svn import SVNPath, _AnywherePath
 
 __all__ = [
+    "GiteaURIPath",
     "GitHubURIPath",
     "GitLabURIPath",
     "RepoURIPath",
@@ -46,13 +49,29 @@ __all__ = [
 ]
 
 
+def _list_gitea_as_token_scheme() -> None:
+    # uripath 0.1 keeps the schemes whose user name is a token in one table,
+    # and lists only the three it names; `gitea:` joins it as it is loaded.
+    try:
+        from uripath.schemes import _elsewhere
+    except ImportError:  # pragma: no cover
+        return
+    table = getattr(_elsewhere, "TOKEN_SCHEMES", None)
+    if isinstance(table, frozenset) and "gitea" not in table:
+        _elsewhere.TOKEN_SCHEMES = table | {"gitea"}
+
+
+_list_gitea_as_token_scheme()
+
+
 class RepoURIPath(DelegatingURIPath):
     """`repo:` scheme (`repo://instance/owner/repo/path?ref=REF`): read-only
     access to a repository on a hosting service, done by the path of its kind
-    (a `GitHubPath` or a `GitLabPath`) on the backend of this path. The kind is
-    detected from the host: `github.com` and `gitlab.com` (and `www.`); any
-    other host is a `ValueError` that names `github://host/...` and
-    `gitlab://host/...`, which pin the kind on any host. `ref` (branch, tag or
+    (a `GitHubPath`, a `GitLabPath` or a `GiteaPath`) on the backend of this
+    path. The kind is detected from the host: `github.com`, `gitlab.com` (and
+    `www.`) and `codeberg.org`; any other host is a `ValueError` that names
+    `github://host/...`, `gitlab://host/...` and `gitea://host/...`, which pin
+    the kind on any host. `ref` (branch, tag or
     commit) is optional and carried in the `?ref=` query; without one the
     service's default branch is read.
 
@@ -67,6 +86,8 @@ class RepoURIPath(DelegatingURIPath):
     __SCHEMES = ("repo",)
     __slots__ = ()
     _DELEGATED = ("_scandir", "_listdir", "_open")
+    #: The user name of these schemes is an access token: no display form shows it.
+    _SECRET_USERINFO = True
 
     #: The kind this class pins, or None to detect it from the host.
     _KIND: "type[HostedRepoPath] | None" = None
@@ -103,8 +124,8 @@ class RepoURIPath(DelegatingURIPath):
                 source, path, query, fragment, sanitize=True
             )
             raise URISyntaxError(
-                f"repo: can only auto-detect github.com and gitlab.com; "
-                f"use github: or gitlab: for {shown!r}"
+                f"repo: can only auto-detect github.com, gitlab.com and "
+                f"codeberg.org; use github:, gitlab: or gitea: for {shown!r}"
             )
         return kind
 
@@ -125,7 +146,7 @@ class RepoURIPath(DelegatingURIPath):
     @property
     def kind(self) -> str:
         """The name of the kind of repository this path reads (`"github"`,
-        `"gitlab"`)."""
+        `"gitlab"`, `"gitea"`)."""
         return self._kind_of(self.source).TYPE
 
     @property
@@ -262,6 +283,19 @@ class GitLabURIPath(RepoURIPath):
                 self.source, "/".join(segments), self.query, self.fragment
             )
         return super(GitLabURIPath, parent)._make_child_relpath(name, **kwargs)
+
+
+class GiteaURIPath(RepoURIPath):
+    """`gitea:` scheme (`gitea://[TOKEN@]host[:port]/owner/repo/path?ref=REF`):
+    read-only access to a repository on Gitea or Forgejo (Codeberg runs
+    Forgejo) via the REST API under `/api/v1`, done by a `GiteaPath`. `host`
+    defaults to `codeberg.org`; a self-hosted server is just a different host
+    (and port), always at `https://{host}/api/v1`. The kind is fixed whatever
+    the host. See `RepoURIPath` for the token and the ref."""
+
+    __SCHEMES = ("gitea",)
+    __slots__ = ()
+    _KIND = GiteaPath
 
 
 _NO_SOURCE = Source(None, None, None, None)

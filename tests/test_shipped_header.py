@@ -370,7 +370,7 @@ def test_the_sections_come_in_the_order_a_user_meets_them():
     assert [t.split(" (")[0] for t in titles] == [
         "Paths",
         "Backends",
-        "The `repo:`, `github:`, `gitlab:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes",
+        "The `repo:`, `github:`, `gitlab:`, `gitea:`, `svn+https:`, `svn+http:` and `sourceforge:` schemes",
         "Exceptions",
         "Gotchas",
     ]

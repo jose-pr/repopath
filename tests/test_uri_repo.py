@@ -16,7 +16,7 @@ uripath = pytest.importorskip("uripath")
 from child import run
 from http_fakes import reply
 from repo_support import fake_backend, gitlab
-from repopath import BaseRepoBackend, GitHubPath, GitLabPath, RepoBackend
+from repopath import BaseRepoBackend, GiteaPath, GitHubPath, GitLabPath, RepoBackend
 from repopath import uri
 from uripath import Source, URIPath
 from uripath.exceptions import URISyntaxError
@@ -48,6 +48,8 @@ class _Recording(BaseRepoBackend):
         ("github://127.0.0.1/o/r/f", uri.GitHubURIPath),
         ("github://ghe.internal/o/r/f", uri.GitHubURIPath),
         ("gitlab://git.example/o/r/f", uri.GitLabURIPath),
+        ("gitea://git.example/o/r/f", uri.GiteaURIPath),
+        ("repo://codeberg.org/o/r/f", uri.RepoURIPath),
         ("repo://github.com/o/r/f", uri.RepoURIPath),
         ("repo://gitlab.com/o/r/f", uri.RepoURIPath),
     ],
@@ -66,18 +68,25 @@ def test_a_uri_gets_the_class_of_its_scheme(text, cls):
         ("www.github.com", "github"),
         ("WWW.GitLab.com", "gitlab"),
         ("gitlab.com", "gitlab"),
+        ("codeberg.org", "gitea"),
+        ("Codeberg.ORG", "gitea"),
     ],
 )
 def test_repo_detects_the_kind_from_the_host_in_any_case(host, kind):
     path = URIPath(f"repo://{host}/o/r/x")
     assert path.kind == kind
-    assert type(path._core_path) is {"github": GitHubPath, "gitlab": GitLabPath}[kind]
+    assert (
+        type(path._core_path)
+        is {"github": GitHubPath, "gitlab": GitLabPath, "gitea": GiteaPath}[kind]
+    )
 
 
 def test_github_and_gitlab_pin_the_kind_whatever_the_host():
     assert URIPath("github://gitlab.com/o/r").kind == "github"
     assert URIPath("gitlab://github.com/o/r").kind == "gitlab"
     assert URIPath("github://ghe.example:8443/o/r").kind == "github"
+    assert URIPath("gitea://github.com/o/r").kind == "gitea"
+    assert URIPath("gitea://gitlab.com/o/r").kind == "gitea"
 
 
 @pytest.mark.parametrize(
@@ -96,6 +105,7 @@ def test_repo_refuses_a_host_it_cannot_detect_and_names_the_pinned_schemes(text)
     assert isinstance(excinfo.value, URISyntaxError)
     message = str(excinfo.value)
     assert "github:" in message and "gitlab:" in message
+    assert "gitea:" in message and "codeberg.org" in message
 
 
 def test_repo_refuses_such_a_host_when_the_class_is_called_directly():
@@ -132,7 +142,7 @@ def test_the_git_schemes_are_not_dispatched_to_this_distribution(text):
         path.stat()
 
 
-def test_the_entry_points_name_the_six_schemes_and_nothing_else():
+def test_the_entry_points_name_the_seven_schemes_and_nothing_else():
     run_result = run("""
         import importlib.metadata as metadata
 
@@ -152,6 +162,7 @@ def test_the_entry_points_name_the_six_schemes_and_nothing_else():
     assert run_result.returncode == 0, run_result.stderr
     assert run_result.stdout.strip() == str(
         [
+            ("gitea", "repopath.uri:GiteaURIPath"),
             ("github", "repopath.uri:GitHubURIPath"),
             ("gitlab", "repopath.uri:GitLabURIPath"),
             ("repo", "repopath.uri:RepoURIPath"),
@@ -266,6 +277,10 @@ def test_a_uri_without_an_owner_and_a_repository_asks_nothing_and_is_not_there()
         ("gitlab://[fd00::5]:8443/o/r", "https://[fd00::5]:8443/api/v4"),
         ("gitlab://GitLab.Example:9/o/r", "https://gitlab.example:9/api/v4"),
         ("github://ghe.internal:8443/o/r", "https://ghe.internal:8443/api/v3"),
+        ("gitea://git.internal:3000/o/r", "https://git.internal:3000/api/v1"),
+        ("gitea://[fd00::5]/o/r", "https://[fd00::5]/api/v1"),
+        ("gitea:///o/r", "https://codeberg.org/api/v1"),
+        ("repo://Codeberg.org/o/r", "https://codeberg.org/api/v1"),
         ("github://[fd00::5]/o/r", "https://[fd00::5]/api/v3"),
         ("github://github.com/o/r", "https://api.github.com"),
         ("github://GitHub.com/o/r", "https://api.github.com"),
@@ -294,11 +309,11 @@ def test_the_api_root_comes_from_the_host_and_port_of_the_uri(text, expected):
         ("oauth2:glpat-REAL789", "glpat-REAL789"),
     ],
 )
-@pytest.mark.parametrize("scheme", ["github", "gitlab", "repo"])
+@pytest.mark.parametrize("scheme", ["github", "gitlab", "gitea", "repo"])
 def test_the_token_is_the_password_or_else_the_bare_user_and_is_never_shown(
     scheme, userinfo, token
 ):
-    host = "gitlab.com" if scheme == "gitlab" else "github.com"
+    host = {"gitlab": "gitlab.com", "gitea": "codeberg.org"}.get(scheme, "github.com")
     p = URIPath(f"{scheme}://{userinfo}@{host}/acme/widgets/a.txt")
     assert p.backend.token == token
     user = userinfo.partition(":")[0]
