@@ -136,9 +136,11 @@ def test_moving_a_repo_path_to_a_host_that_has_no_kind_is_refused():
     "text", ["git://github.com/o/r/f", "git+github://h/o/r/f", "git+gitlab://h/o/r/f"]
 )
 def test_the_git_schemes_are_not_dispatched_to_this_distribution(text):
-    path = URIPath(text)
-    assert type(path) is URIPath
-    with pytest.raises(NotImplementedError):
+    # uripath 0.1 answers with a plain URIPath whose I/O is NotImplementedError;
+    # a later one refuses the unknown scheme with an ImportError.
+    with pytest.raises((ImportError, NotImplementedError)):
+        path = URIPath(text)
+        assert not isinstance(path, uri.RepoURIPath)
         path.stat()
 
 
