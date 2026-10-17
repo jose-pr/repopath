@@ -49,21 +49,6 @@ __all__ = [
 ]
 
 
-def _list_gitea_as_token_scheme() -> None:
-    # uripath 0.1 keeps the schemes whose user name is a token in one table,
-    # and lists only the three it names; `gitea:` joins it as it is loaded.
-    try:
-        from uripath.schemes import _elsewhere
-    except ImportError:  # pragma: no cover
-        return
-    table = getattr(_elsewhere, "TOKEN_SCHEMES", None)
-    if isinstance(table, frozenset) and "gitea" not in table:
-        _elsewhere.TOKEN_SCHEMES = table | {"gitea"}
-
-
-_list_gitea_as_token_scheme()
-
-
 class RepoURIPath(DelegatingURIPath):
     """`repo:` scheme (`repo://instance/owner/repo/path?ref=REF`): read-only
     access to a repository on a hosting service, done by the path of its kind

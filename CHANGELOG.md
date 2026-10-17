@@ -45,6 +45,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `ALIASES`, a class attribute of a kind: other names `type=` takes for it. `RepoPath.kinds()`
   lists `TYPE` only.
 
+### Changed
+
+- **The `uri` extra requires `pathapi-uri>=0.1.1,<0.2`** (it allowed `>=0.1.0`):
+  0.1.1 hides the userinfo of every scheme whose class marks it a secret, which the
+  `repo:`, `github:`, `gitlab:` and `gitea:` classes do, so a token is never shown in
+  `str()` or `repr()` of a `Source`. `pip install "repopath[uri]"` upgrades it.
+
 ## [0.1.0] - 2026-10-14
 
 The first release of `repopath`: the `github:`, `gitlab:` and `git:` schemes of

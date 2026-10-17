@@ -34,7 +34,8 @@ dependencies = [
 [project.optional-dependencies]
 # The repo:, github: and gitlab: schemes of uripath. `import repopath` never
 # imports uripath.
-uri = ["pathapi-uri>=0.1.0,<0.2"]
+# 0.1.1 hides the userinfo of a scheme whose class sets _SECRET_USERINFO.
+uri = ["pathapi-uri>=0.1.1,<0.2"]
 all = ["repopath[uri]"]
 dev = [
     'build',
