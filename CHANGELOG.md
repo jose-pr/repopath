@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-17
+
 ### Added
 
 - `SVNPath`: a read-only path in a Subversion repository served over HTTP by
@@ -151,5 +153,6 @@ name `pathlib_next`); the old names below are the ones before the move.
 - `uritools` is not a dependency of anything here, and `requests` is not installed with
   the package.
 
-[Unreleased]: https://github.com/jose-pr/repopath/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/jose-pr/repopath/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/jose-pr/repopath/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/jose-pr/repopath/releases/tag/v0.1.0

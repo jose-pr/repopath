@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "repopath"
-version = "0.1.0"
+version = "0.1.1"
 authors = [{ name = "Jose A" }]
 description = "pathlib-style, read-only paths for the repository trees of GitHub, GitLab and Gitea, and the repo:, github:, gitlab: and gitea: schemes for uripath"
 readme = "README.md"
